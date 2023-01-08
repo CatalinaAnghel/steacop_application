@@ -3,7 +3,7 @@
     <the-navbar :drawer="drawer" @update:drawerValue="updateDrawerValue"></the-navbar>
     <the-navigation-drawer :drawer="drawer" @update:drawerValue="updateDrawerValue"></the-navigation-drawer>
     <v-main id="main-container" class="overflow-y-auto pt-16">
-      <v-row no-gutters justify="center">
+      <v-row no-gutters justify="center" class="pt-5">
         <v-col cols="12" sm="12" md="10" lg="10" xl="10">
           <router-view />
         </v-col>
@@ -22,7 +22,8 @@ export default defineComponent({
   data: () => {
     return {
       drawer: false,
-      group: null
+      group: null,
+      overlay: false
     }
   },
   components: {
@@ -30,7 +31,7 @@ export default defineComponent({
     TheNavigationDrawer
   },
   methods: {
-    updateDrawerValue: function (value: boolean) {
+    updateDrawerValue: function(value: boolean) {
       this.drawer = value;
     }
   }
