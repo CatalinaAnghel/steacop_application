@@ -8,6 +8,7 @@ import ErrorHandler from './ErrorHandler'
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/common/constants'
 import { AxiosResponse } from 'axios'
 import LoginResponseDto from '@/dtos/LoginResponseDto'
+import UserDto from '@/dtos/UserDto'
 
 
 export default class AuthService{
@@ -48,13 +49,13 @@ export default class AuthService{
         return Vue.$cookies.isKey(REFRESH_TOKEN)? Vue.$cookies.get(REFRESH_TOKEN): null;
     }
 
-    static parseToken(token: string): Array<any>{
+    static parseToken(token: string): UserDto|null{
         try{
             return VueJwtDecode.decode(token);
         }catch(e){
             console.error("Error decoding token: ", e);
         }
         
-        return [];
+        return null;
     }
 }
