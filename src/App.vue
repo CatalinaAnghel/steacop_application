@@ -14,8 +14,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TheNavbar from './components/TheNavbar.vue';
-import TheNavigationDrawer from './components/TheNavigationDrawer.vue';
+import TheNavbar from './components/navbar/TheNavbar.vue';
+import TheNavigationDrawer from './components/navbar/TheNavigationDrawer.vue';
 
 export default defineComponent({
   name: 'App',

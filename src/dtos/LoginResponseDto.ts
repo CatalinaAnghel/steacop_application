@@ -1,3 +1,5 @@
 export default interface LoginResponseDto{
-    token: string
+    token: string,
+    refreshToken: string,
+    refreshTokenExpiration: number
 };

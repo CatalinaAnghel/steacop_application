@@ -1,7 +1,7 @@
 import AuthService from '@/services/AuthService';
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import { Roles } from './helpers/roles';
+import { Roles } from '../common/roles';
 
 Vue.use(VueRouter)
 
@@ -50,13 +50,13 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const authorize = to.meta?.requiresAuth;
   const token = AuthService.getAccessToken();
 
   if (authorize) {
-      if (!token) {
+      if (token === null || !(await AuthService.isLoggedIn())) {
           // not logged in so redirect to login page with the return url
           return next({ name: 'login', query: { returnUrl: to.path } });
       }
