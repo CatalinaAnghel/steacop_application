@@ -92,7 +92,8 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+  import Vue from 'vue';
+  import axios from '@/plugins/axios/index';
 
   export default Vue.extend({
     name: 'Hello-World',
@@ -149,5 +150,8 @@
         },
       ],
     }),
+    created: async function(){
+      // axios.get('/departments');
+    }
   })
 </script>

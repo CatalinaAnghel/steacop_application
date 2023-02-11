@@ -10,12 +10,22 @@
         </v-list-item>
 
         <div v-if="isAdmin">
-                 <base-dropdown v-for="menu in admin" :key="menu.title" :menuOptions="menu.menuOptions"
+          <base-dropdown v-for="menu in admin" :key="menu.title" :menuOptions="menu.menuOptions" :icon="menu.icon"
             :title="menu.title"></base-dropdown>
         </div>
-
+        <v-list-item v-else>
+          <v-list-item-icon>
+            <v-icon>mdi-login-variant</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title><router-link :to="{ name: 'login' }">Log in</router-link></v-list-item-title>
+        </v-list-item>
+        <v-list-item v-if="isAdmin || isStudent || isSupervisor">
+          <v-list-item-icon>
+            <v-icon>mdi-logout-variant</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title @click="logout">Log out</v-list-item-title>
+        </v-list-item>
         <v-divider></v-divider>
-
         <v-list-item>
           <v-list-item-icon>
             <v-icon>mdi-information-variant</v-icon>
@@ -29,9 +39,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import AuthService from '@/services/AuthService';
-import { Roles, ROLE_ADMIN } from '@/common/roles';
+import AuthService from '@/services/auth-service';
+import { Roles } from '@/common/roles';
 import BaseDropdown from "./BaseDropdown.vue";
+import { eventBus } from "@/main";
+import { EVENT_BUS_AUTH_EVENT } from '@/common/constants';
 
 export default defineComponent({
   props: {
@@ -50,6 +62,7 @@ export default defineComponent({
       admin: [
         {
           title: "User management",
+          icon: "mdi-account-group",
           menuOptions: [
             {
               title: "Students",
@@ -64,7 +77,8 @@ export default defineComponent({
           ]
         },
         {
-          title: "System configuration",
+          title: "System settings",
+          icon: "mdi-cogs",
           menuOptions: [
             {
               title: "Students",
@@ -91,22 +105,42 @@ export default defineComponent({
       }
     }
   },
-  created: async function () {
-    const role = await AuthService.isAuthorized();
-    console.log(role);
-    if (role !== null) {
-
-      switch (role) {
-        case Roles.ROLE_ADMIN:
-          this.isAdmin = true;
-          break;
-        case Roles.ROLE_STUDENT:
-          this.isStudent = true;
-          break;
-        default:
-          this.isSupervisor = true;
+  methods: {
+    logout: function (): void {
+      AuthService.logout();
+      this.setProperties();
+      this.$router.push({ name: 'login' });
+    },
+    setProperties: function () {
+      const role = AuthService.isAuthorized();
+      if (role !== null) {
+        switch (role) {
+          case Roles.ROLE_ADMIN:
+            this.isAdmin = true;
+            break;
+          case Roles.ROLE_STUDENT:
+            this.isStudent = true;
+            break;
+          default:
+            this.isSupervisor = true;
+        }
+      } else {
+        this.isAdmin = false;
+        this.isStudent = false;
+        this.isSupervisor = false;
       }
     }
+  },
+  created: function () {
+    this.setProperties();
+  },
+  mounted: function () {
+    eventBus.$on(EVENT_BUS_AUTH_EVENT, () => {
+      this.setProperties();
+    });
+  },
+  destroyed: function () {
+    eventBus.$off(EVENT_BUS_AUTH_EVENT);
   }
 });
 </script>

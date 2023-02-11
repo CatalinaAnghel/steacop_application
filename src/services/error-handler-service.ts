@@ -1,5 +1,5 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import ResponseDto from "@/dtos/ResponseDto";
+import ResponseDto from "@/modules/Response";
 
 export default class ErrorHandler {
     public static handleError(error:  any): ResponseDto {

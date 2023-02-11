@@ -1,4 +1,4 @@
-import AuthService from '@/services/AuthService';
+import AuthService from '@/services/auth-service';
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import { Roles } from '../common/roles';
@@ -58,6 +58,7 @@ router.beforeEach(async (to, from, next) => {
   if (authorize) {
       if (token === null || !(await AuthService.isLoggedIn())) {
           // not logged in so redirect to login page with the return url
+          AuthService.logout();
           return next({ name: 'login', query: { returnUrl: to.path } });
       }
       const userInfo = AuthService.parseToken(token);

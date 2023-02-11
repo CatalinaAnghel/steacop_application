@@ -35,8 +35,10 @@
 <script lang="ts">
 require('@/validation/index')
 import { defineComponent } from "vue"
-import AuthService from "@/services/AuthService"
+import AuthService from "@/services/auth-service"
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
+import { eventBus } from "@/main";
+import { EVENT_BUS_AUTH_EVENT } from "@/common/constants";
 
 export default defineComponent({
     data: () => {
@@ -61,8 +63,9 @@ export default defineComponent({
                 password: this.password
             });
 
-            if (response.success) {
+            if (response.success) {                
                 this.loading = !this.loading;
+                eventBus.$emit(EVENT_BUS_AUTH_EVENT);
                 this.$router.push({ name: "home" });
             }
         },
