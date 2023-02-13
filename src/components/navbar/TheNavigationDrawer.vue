@@ -2,35 +2,36 @@
   <v-navigation-drawer v-model="value" absolute temporary>
     <v-list nav dense>
       <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
-        <v-list-item>
+        <v-list-item :to="{ name: 'home' }" v-if="isAdmin || isStudent || isSupervisor">
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
           </v-list-item-icon>
-          <v-list-item-title><router-link :to="{ name: 'home' }">Home</router-link></v-list-item-title>
+          <v-list-item-title>Dashboard</v-list-item-title>
         </v-list-item>
-
-        <div v-if="isAdmin">
-          <base-dropdown v-for="menu in admin" :key="menu.title" :menuOptions="menu.menuOptions" :icon="menu.icon"
-            :title="menu.title"></base-dropdown>
-        </div>
-        <v-list-item v-else>
-          <v-list-item-icon>
-            <v-icon>mdi-login-variant</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title><router-link :to="{ name: 'login' }">Log in</router-link></v-list-item-title>
-        </v-list-item>
-        <v-list-item v-if="isAdmin || isStudent || isSupervisor">
+        <v-list-item v-if="isAdmin || isStudent || isSupervisor" @click="logout">
           <v-list-item-icon>
             <v-icon>mdi-logout-variant</v-icon>
           </v-list-item-icon>
-          <v-list-item-title @click="logout">Log out</v-list-item-title>
+          <v-list-item-title>Log out</v-list-item-title>
+        </v-list-item>
+        <v-list-item v-else :to="{ name: 'login' }">
+          <v-list-item-icon>
+            <v-icon>mdi-login-variant</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Log in</v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
-        <v-list-item>
+
+        <div v-if="isAdmin">
+          <base-menu-dropdown v-for="menu in admin" :key="menu.title" :menuOptions="menu.menuOptions" :icon="menu.icon"
+            :title="menu.title"></base-menu-dropdown>
+        </div>
+        <v-divider></v-divider>
+        <v-list-item :to="{ name: 'about' }">
           <v-list-item-icon>
             <v-icon>mdi-information-variant</v-icon>
           </v-list-item-icon>
-          <v-list-item-title><router-link :to="{ name: 'about' }">About us</router-link></v-list-item-title>
+          <v-list-item-title>About us</v-list-item-title>
         </v-list-item>
       </v-list-item-group>
     </v-list>
@@ -41,16 +42,17 @@
 import { defineComponent } from "vue";
 import AuthService from '@/services/auth-service';
 import { Roles } from '@/common/roles';
-import BaseDropdown from "./BaseDropdown.vue";
+import BaseMenuDropdown from "./BaseMenuDropdown.vue";
 import { eventBus } from "@/main";
-import { EVENT_BUS_AUTH_EVENT } from '@/common/constants';
+import { EVENT_BUS_AUTH, MENU_OPTIONS_ADMIN } from '@/common/constants';
+
 
 export default defineComponent({
   props: {
     drawer: Boolean
   },
   components: {
-    BaseDropdown
+    BaseMenuDropdown
   },
   emits: ["update:drawerValue"],
   data() {
@@ -59,40 +61,7 @@ export default defineComponent({
       isAdmin: false,
       isStudent: false,
       isSupervisor: false,
-      admin: [
-        {
-          title: "User management",
-          icon: "mdi-account-group",
-          menuOptions: [
-            {
-              title: "Students",
-              icon: "mdi-account-school",
-              link: ""
-            },
-            {
-              title: "Supervisors",
-              icon: "mdi-account-supervisor",
-              link: ""
-            }
-          ]
-        },
-        {
-          title: "System settings",
-          icon: "mdi-cogs",
-          menuOptions: [
-            {
-              title: "Students",
-              icon: "mdi-account-school",
-              link: ""
-            },
-            {
-              title: "Supervisors",
-              icon: "mdi-account-supervisor",
-              link: ""
-            }
-          ]
-        }
-      ]
+      admin: MENU_OPTIONS_ADMIN
     };
   },
   computed: {
@@ -135,12 +104,12 @@ export default defineComponent({
     this.setProperties();
   },
   mounted: function () {
-    eventBus.$on(EVENT_BUS_AUTH_EVENT, () => {
+    eventBus.$on(EVENT_BUS_AUTH, () => {
       this.setProperties();
     });
   },
   destroyed: function () {
-    eventBus.$off(EVENT_BUS_AUTH_EVENT);
+    eventBus.$off(EVENT_BUS_AUTH);
   }
 });
 </script>

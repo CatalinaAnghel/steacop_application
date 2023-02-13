@@ -41,6 +41,34 @@ const routes: Array<RouteConfig> = [
       requiresAuth: false,
     }
   },
+  {
+    path: '/cms/settings',
+    name: 'settings',
+    component: () => import('../pages/admin/SystemConfigurationView.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: [
+        Roles.ROLE_ADMIN
+      ]
+    },
+    children: [
+      {
+        path: '',
+        name: 'details',
+        component: () => import('../components/settings/SettingsDetails.vue'),
+      },
+      {
+        path: 'weights',
+        name: 'weights',
+        component: () => import('../components/settings/CollaborationWeightsForm.vue'),
+      },
+      {
+        path: 'supervisory-plan',
+        name: 'supervisoryPlan',
+        component: () => import('../components/settings/SupervisoryPlanForm.vue'),
+      },
+    ]
+  }
 ];
 
 

@@ -4,10 +4,10 @@
         <template v-slot:activator>
             <v-list-item-title>{{ title }}</v-list-item-title>
         </template>
-        <v-list-item v-for="option in menuOptions" :key="option.title" link>
-            <v-list-item-title><router-link :to="{ name: option.link }">{{
+        <v-list-item v-for="option in menuOptions" :key="option.title" link :to="{ name: option.to }">
+            <v-list-item-title>{{
                 option.title
-            }}</router-link></v-list-item-title>
+            }}</v-list-item-title>
             <v-list-item-icon>
                 <v-icon v-text="option.icon"></v-icon>
             </v-list-item-icon>

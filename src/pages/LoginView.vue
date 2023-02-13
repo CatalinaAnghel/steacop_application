@@ -20,7 +20,7 @@
                                         type="password" :error-messages="errors" :hint="hints.password"
                                         class="mt-3"></v-text-field>
                                 </validation-provider>
-                                <v-btn color="teal" :dark="!invalid" type="submit" :disabled="invalid" large
+                                <v-btn color="teal" block :dark="!invalid" type="submit" :disabled="invalid" large
                                     class="my-3" @click="toggleLoader">Log
                                     in</v-btn>
                             </v-form>
@@ -38,7 +38,7 @@ import { defineComponent } from "vue"
 import AuthService from "@/services/auth-service"
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { eventBus } from "@/main";
-import { EVENT_BUS_AUTH_EVENT } from "@/common/constants";
+import { EVENT_BUS_AUTH } from "@/common/constants";
 
 export default defineComponent({
     data: () => {
@@ -65,7 +65,7 @@ export default defineComponent({
 
             if (response.success) {                
                 this.loading = !this.loading;
-                eventBus.$emit(EVENT_BUS_AUTH_EVENT);
+                eventBus.$emit(EVENT_BUS_AUTH);
                 this.$router.push({ name: "home" });
             }
         },

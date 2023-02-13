@@ -1,5 +1,5 @@
 import { extend } from 'vee-validate';
-import { required, email, min } from 'vee-validate/dist/rules';
+import { required, email, min, max_value, min_value, between } from 'vee-validate/dist/rules';
 
 extend('required', {
     ...required,
@@ -13,8 +13,24 @@ extend('email', {
 
 extend('min', {
     ...min,
-    message: '{_field_} must have more than {length} characters'
+    message: '{_field_} must have at least {length} characters'
 });
+
+extend('min_value', {
+    ...min_value,
+});
+
+extend('max_value', {
+    ...max_value,
+});
+
+extend('between', {
+    ...between,
+});
+// extend('max', {
+//     ...max,
+//     message: '{_field_} must have less than or equal to {length} characters'
+// });
 
 // extend('password',  value: string => {
 //     if()

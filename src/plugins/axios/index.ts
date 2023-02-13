@@ -2,8 +2,6 @@ import axios, { RawAxiosRequestHeaders } from 'axios';
 import { AUTHENTICATION_TOKEN_URL, REFRESH_TOKEN_URL, AUTH_URL_PATTERN } from './constants';
 import AuthService from '@/services/auth-service';
 import router from '@/router';
-import { eventBus } from '@/main';
-import { EVENT_BUS_AUTH_EVENT } from '@/common/constants';
 
 const axiosInstance = axios.create({
     baseURL: 'https://localhost:8000/api',
@@ -19,6 +17,10 @@ axiosInstance.interceptors.request.use(
                 logout();
             }
             config["headers"] = config.headers ?? {};
+            console.log(config.method);
+            if(config.method === 'patch'){
+                (config.headers as RawAxiosRequestHeaders)["Content-Type"] = 'application/merge-patch+json';
+            }
             (config.headers as RawAxiosRequestHeaders)["Authorization"] = `Bearer ${AuthService.getAccessToken()}`;
         }
         return config;
