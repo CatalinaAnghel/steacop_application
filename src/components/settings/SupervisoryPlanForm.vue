@@ -78,9 +78,9 @@ export default defineComponent({
     methods: {
         async updateSupervisoryPlan(): Promise<void> {
             const requestStatus = await this.$store.dispatch(planNamespace + '/update', {
-                id: (this.plan! as PlanInterface).id,
-                numberOfAssignments: (this.plan! as PlanInterface).numberOfAssignments as number,
-                numberOfGuidanceMeetings: (this.plan! as PlanInterface).numberOfGuidanceMeetings as number
+                id: (this.plan as PlanInterface).id,
+                numberOfAssignments: (this.plan as PlanInterface).numberOfAssignments as number,
+                numberOfGuidanceMeetings: (this.plan as PlanInterface).numberOfGuidanceMeetings as number
             });
             this.showAlert = true;
             if (requestStatus.success) {

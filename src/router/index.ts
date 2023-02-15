@@ -9,7 +9,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/access-denied',
     name: 'access_denied',
-    component: () => import('../pages/AccessDeniedView.vue'),
+    component: () => import('../pages/auth/AccessDeniedView.vue'),
     meta: {
       requiresAuth: false
     }
@@ -45,6 +45,7 @@ const routes: Array<RouteConfig> = [
     path: '/cms/settings',
     name: 'settings',
     component: () => import('../pages/admin/SystemConfigurationView.vue'),
+    alias:'details',
     meta: {
       requiresAuth: true,
       roles: [
@@ -53,7 +54,7 @@ const routes: Array<RouteConfig> = [
     },
     children: [
       {
-        path: '',
+        path: 'details',
         name: 'details',
         component: () => import('../components/settings/SettingsDetails.vue'),
       },
@@ -67,8 +68,24 @@ const routes: Array<RouteConfig> = [
         name: 'supervisoryPlan',
         component: () => import('../components/settings/SupervisoryPlanForm.vue'),
       },
+      
     ]
-  }
+  },
+  { 
+    path: '/cms/students',
+    name: 'viewStudents',
+    component: () => import('../pages/admin/StudentsManagementView.vue') 
+  },
+  { 
+    path: '/cms/supervisors',
+    name: 'viewSupervisors',
+    component: () => import('../pages/admin/SupervisorsManagementView.vue') 
+  },
+  { 
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('../pages/auth/NotFoundView.vue') 
+  },
 ];
 
 

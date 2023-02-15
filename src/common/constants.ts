@@ -14,12 +14,12 @@ export const MENU_OPTIONS_ADMIN = [
       {
         title: "Students",
         icon: "mdi-account-school",
-        to: ""
+        to: "viewStudents"
       },
       {
         title: "Supervisors",
         icon: "mdi-account-supervisor",
-        to: ""
+        to: "viewSupervisors"
       }
     ]
   },
@@ -29,9 +29,19 @@ export const MENU_OPTIONS_ADMIN = [
     multiple: true,
     menuOptions: [
       {
+        title: "Details",
+        icon: "mdi-notebook",
+        to: "details"
+      },
+      {
         title: "Supervisory plans",
         icon: "mdi-notebook",
-        to: ""
+        to: "supervisoryPlan"
+      },
+      {
+        title: "Compatibility weights",
+        icon: "mdi-notebook",
+        to: "weights"
       }
     ]
   }

@@ -1,5 +1,5 @@
 <template>
-    
+    <p>Students Management</p>
 </template>
 
 <script lang="ts">

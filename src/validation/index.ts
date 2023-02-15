@@ -27,11 +27,3 @@ extend('max_value', {
 extend('between', {
     ...between,
 });
-// extend('max', {
-//     ...max,
-//     message: '{_field_} must have less than or equal to {length} characters'
-// });
-
-// extend('password',  value: string => {
-//     if()
-// });

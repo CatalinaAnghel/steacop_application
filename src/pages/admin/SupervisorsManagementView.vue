@@ -1,5 +1,5 @@
 <template>
-    
+    <p>Supervisors Management</p>
 </template>
 
 <script lang="ts">
