@@ -45,7 +45,7 @@ const routes: Array<RouteConfig> = [
     path: '/cms/settings',
     name: 'settings',
     component: () => import('../pages/admin/SystemConfigurationView.vue'),
-    alias:'details',
+    alias:'/details',
     meta: {
       requiresAuth: true,
       roles: [

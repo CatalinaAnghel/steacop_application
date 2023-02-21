@@ -12,13 +12,12 @@
                         <validation-observer ref="observer" v-slot="{ invalid, handleSubmit }">
                             <v-form v-model="valid" @submit.prevent="handleSubmit(login)">
                                 <validation-provider rules="required|email" v-slot="{ errors }">
-                                    <v-text-field label="Email" hide-details="auto" v-model="email"
-                                        :error-messages="errors" class="mt-3"></v-text-field>
+                                    <v-text-field label="Email" hide-details="auto" v-model="email" :error-messages="errors"
+                                        class="mt-3"></v-text-field>
                                 </validation-provider>
                                 <validation-provider rules="required|min:4" v-slot="{ errors }" name="Password">
-                                    <v-text-field label="Password" hide-details="auto" v-model="password"
-                                        type="password" :error-messages="errors" :hint="hints.password"
-                                        class="mt-3"></v-text-field>
+                                    <v-text-field label="Password" hide-details="auto" v-model="password" type="password"
+                                        :error-messages="errors" class="mt-3"></v-text-field>
                                 </validation-provider>
                                 <v-btn color="teal" block :dark="!invalid" type="submit" :disabled="invalid" large
                                     class="my-3" @click="toggleLoader">Log
@@ -29,10 +28,11 @@
                 </v-row>
             </v-card>
         </v-col>
-    </v-row>
+</v-row>
 </template>
 
 <script lang="ts">
+
 require('@/validation/index')
 import { defineComponent } from "vue"
 import AuthService from "@/services/auth-service"
@@ -46,9 +46,6 @@ export default defineComponent({
             valid: false,
             email: "",
             password: "",
-            hints: {
-                password: "Password must contain symbols, numbers and upper and lower case characters"
-            },
             loading: false
         }
     },
@@ -63,7 +60,7 @@ export default defineComponent({
                 password: this.password
             });
 
-            if (response.success) {                
+            if (response.success) {
                 this.loading = !this.loading;
                 eventBus.$emit(EVENT_BUS_AUTH);
                 this.$router.push({ name: "home" });
