@@ -1,3 +1,5 @@
+import { PayloadInterface } from "../common/types";
+
 export interface PlanInterface {
     id: number;
     name: string;
@@ -11,7 +13,7 @@ export interface PlanState {
     plans: Array<PlanInterface>
 }
 
-export interface PatchPlanInterface {
+export interface PatchPlanInterface extends PayloadInterface {
     id: number;
     numberOfAssignments: number;
     numberOfGuidanceMeetings: number;

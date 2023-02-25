@@ -5,7 +5,7 @@ import { ValidationObserver, ValidationProvider } from "vee-validate";
 import BaseAlert from "../alerts/BaseAlert.vue";
 
 import Vue from 'vue'
-import ResponseDto from "@/modules/Response";
+import { ResponseDto } from "@/modules/common";
 
 import { ERROR_SERVER } from '@/common/errors';
 import { SUCCESS_UPDATE_MESSAGE } from '@/common/constants';

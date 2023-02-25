@@ -10,10 +10,5 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-    data: () => {
-        return {
-            loading: false,
-        }
-    }
 });
 </script>

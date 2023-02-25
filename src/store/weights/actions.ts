@@ -3,7 +3,7 @@ import axios from '@/plugins/axios';
 import ErrorHandler from '@/services/error-handler-service';
 import { AxiosResponse } from 'axios';
 import { WeightInterface, PatchWeightInterface } from './types';
-import ResponseDto from '@/modules/Response';
+import { ResponseDto } from '@/modules/common';
 
 export default {
     async loadWeights(context: any): Promise<void> {

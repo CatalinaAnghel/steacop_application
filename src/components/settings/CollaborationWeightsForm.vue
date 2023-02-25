@@ -55,9 +55,9 @@ import mixins from "vue-typed-mixins";
 import FormMixin from '../mixins/FormMixin.vue';
 import { weightNamespace } from "@/store/weights";
 import { WeightInterface } from "@/store/weights/types";
+import { storeService } from "@/store";
 
 export default mixins(FormMixin).extend({
-
     data() {
         return {
             collaborationScore: {
@@ -88,8 +88,8 @@ export default mixins(FormMixin).extend({
     },
     created() {
         this.toggleLoader();
-        this.$store.dispatch(weightNamespace + '/loadWeights').then(() => {
-            let weights = this.$store.getters[weightNamespace + '/weights'];
+        storeService.weights.load().then(() => {
+            let weights = storeService.weights.getWeights();
             weights.forEach((element: WeightInterface) => {
                 switch (element.name) {
                     case 'RatingWeight':

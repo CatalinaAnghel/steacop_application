@@ -17,20 +17,23 @@
                 <validation-observer ref="observer" v-slot="{ invalid, handleSubmit }">
                     <v-form v-model="valid" @submit.prevent="handleSubmit(updateSupervisoryPlan)">
                         <validation-provider rules="required" v-slot="{ errors }">
-                            <v-select label="Supervisory plan" :items="plans" item-text="name" item-value="id"
-                                return-object single-line :error-messages="errors" v-model="plan" required
-                                :disabled="disableDropdown" color="light-blue accent-4"></v-select>
+                            <v-select label="Supervisory plan" :items="plans" item-text="name" item-value="id" return-object
+                                single-line :error-messages="errors" v-model="plan" required :disabled="disableDropdown"
+                                color="light-blue accent-4"></v-select>
                         </validation-provider>
-                        <validation-provider v-if="showInputs" rules="required|between:1,10" name="Number of assignments" v-slot="{ errors }">
+                        <validation-provider v-if="showInputs" rules="required|between:1,10" name="Number of assignments"
+                            v-slot="{ errors }">
                             <v-text-field type="number" label="Number of assignments" hide-details="auto"
                                 v-model="plan.numberOfAssignments" :error-messages="errors" class="mt-3"></v-text-field>
                         </validation-provider>
-                        <validation-provider v-if="showInputs" rules="required|between:1,10"  name="Number of meetings" v-slot="{ errors }">
+                        <validation-provider v-if="showInputs" rules="required|between:1,10" name="Number of meetings"
+                            v-slot="{ errors }">
                             <v-text-field label="Number of guidance meetings" type="number" hide-details="auto"
-                                v-model="plan.numberOfGuidanceMeetings" :error-messages="errors" class="mt-3"></v-text-field>
+                                v-model="plan.numberOfGuidanceMeetings" :error-messages="errors"
+                                class="mt-3"></v-text-field>
                         </validation-provider>
-                        <v-btn block color="teal accent-4 white--text" type="submit" :disabled="invalid || disableButton" large
-                            class="my-3 w-100" @click="toggleLoader">Update plan</v-btn>
+                        <v-btn block color="teal accent-4 white--text" type="submit" :disabled="invalid || disableButton"
+                            large class="my-3 w-100" @click="toggleLoader">Update plan</v-btn>
                     </v-form>
                 </validation-observer>
             </v-col>
@@ -39,10 +42,10 @@
 </template>
 
 <script lang="ts">
-import { planNamespace } from '@/store/plans';
 import { PlanInterface } from "@/store/plans/types";
 import mixins from "vue-typed-mixins";
 import FormMixin from '../mixins/FormMixin.vue';
+import { storeService } from '@/store';
 
 export default mixins(FormMixin).extend({
     data() {
@@ -58,31 +61,32 @@ export default mixins(FormMixin).extend({
     },
     computed: {
         plans() {
-            return this.$store.getters[planNamespace + '/plans'];
+            return storeService.plans.getPlans();
         },
         showInputs(): boolean {
             return this.plan.id !== 0;
         },
-        disableButton(): boolean{
+        disableButton(): boolean {
             return this.plans.length == 0 || !this.showInputs;
         },
-        disableDropdown(): boolean{
+        disableDropdown(): boolean {
             return this.plans.length == 0;
         }
     },
-    
+
     methods: {
         async updateSupervisoryPlan(): Promise<void> {
-            const requestStatus = await this.$store.dispatch(planNamespace + '/update', {
+            const requestStatus = await storeService.plans.update({
                 id: (this.plan as PlanInterface).id,
                 numberOfAssignments: (this.plan as PlanInterface).numberOfAssignments as number,
                 numberOfGuidanceMeetings: (this.plan as PlanInterface).numberOfGuidanceMeetings as number
             });
+
             this.handleResponse(requestStatus);
         },
     },
     created() {
-        this.$store.dispatch(planNamespace + '/loadSupervisoryPlans');
+        storeService.plans.load();
     }
 });
 </script>

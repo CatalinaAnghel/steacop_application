@@ -6,10 +6,12 @@ import { PlanState } from './plans/types';
 import planModule, { planNamespace } from '@/store/plans/index'
 import userModule, { userNamespace } from '@/store/user/index'
 import weightModule, { weightNamespace } from '@/store/weights/index'
+import { WeightState } from './weights/types';
+import StoreService from './store-service';
 
 Vue.use(Vuex);
 
-const modules: { [id: string]: object } = {}
+const modules: { [id: string]: object } = {};
 modules[studentNamespace] = studentModule;
 modules[planNamespace] = planModule;
 modules[userNamespace] = userModule;
@@ -17,11 +19,15 @@ modules[weightNamespace] = weightModule;
 
 export interface State {
   students: Array<StudentState>,
-  plans: Array<PlanState>
+  plans: Array<PlanState>,
+  weights: Array<WeightState>
 }
 
 const store: StoreOptions<State> = {
   modules
 }
 
-export default new Vuex.Store<State>(store)
+const instance = new Vuex.Store<State>(store);
+export const storeService: StoreService = StoreService.getInstance(instance);
+
+export default instance;
