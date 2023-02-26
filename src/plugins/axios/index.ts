@@ -17,10 +17,10 @@ axiosInstance.interceptors.request.use(
                 logout();
             }
             config["headers"] = config.headers ?? {};
-            console.log(config.method);
             if(config.method === 'patch'){
                 (config.headers as RawAxiosRequestHeaders)["Content-Type"] = 'application/merge-patch+json';
             }
+
             (config.headers as RawAxiosRequestHeaders)["Authorization"] = `Bearer ${AuthService.getAccessToken()}`;
         }
         return config;

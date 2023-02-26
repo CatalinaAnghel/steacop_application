@@ -1,7 +1,15 @@
-import { ResponseDto } from "@/modules/common";
+import { DataTableHeadersInterface, ResponseDto } from "@/modules/common";
 
-export interface ServiceInterface {
+export interface LoadableInterface{
     load(): Promise<void>;
+}
+
+export interface HeaderInterface{
+    getHeaders(): DataTableHeadersInterface[];
+}
+
+export interface ServiceInterface extends LoadableInterface {
+    
     update(context: any, payload: PayloadInterface): Promise<ResponseDto>;
 }
 

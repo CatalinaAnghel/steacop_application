@@ -1,11 +1,10 @@
 <template>
   <v-app>
-    
     <the-navbar :drawer="drawer" @update:drawerValue="updateDrawerValue"></the-navbar>
     <the-navigation-drawer :drawer="drawer" @update:drawerValue="updateDrawerValue"></the-navigation-drawer>
     <v-main id="main-container">
       <v-row no-gutters justify="center" class="pt-5">
-        <v-col cols="12" sm="12" md="10" lg="10" xl="10">
+        <v-col cols="11" sm="11" md="10" lg="10" xl="10">
           <router-view />
         </v-col>
       </v-row>

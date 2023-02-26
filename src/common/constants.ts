@@ -46,3 +46,5 @@ export const MENU_OPTIONS_ADMIN = [
     ]
   }
 ];
+
+export const DATA_TABLE_DEFAULT_ITEMS_PER_PAGE = 10;

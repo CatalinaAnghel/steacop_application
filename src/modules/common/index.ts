@@ -6,7 +6,7 @@ export interface DataTableHeadersInterface {
 };
 
 export interface DataTableItemInterface{
-    id: number;
+    id: number|string;
 }
 
 export interface ResponseDto {

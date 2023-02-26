@@ -1,13 +1,4 @@
-import { ProjectState } from "../projects/types";
-
-export interface StudentInterface {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    project: ProjectState|null;
-    specialization: number;
-}
+import { StudentInterface } from "@/modules/student";
 
 export interface StudentState {
     students: Array<StudentInterface>

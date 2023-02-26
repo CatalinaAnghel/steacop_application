@@ -1,7 +1,7 @@
 import { Store } from 'vuex';
 import { ResponseDto } from '@/modules/common';
 import { ServiceInterface } from '../common/types';
-import { planNamespace } from './index';
+import { planNamespace } from '.';
 import { PatchPlanInterface, PlanInterface } from './types';
 import { State } from '..';
 
