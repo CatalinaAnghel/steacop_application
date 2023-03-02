@@ -70,7 +70,6 @@ export default mixins(FormMixin).extend({
     },
     computed: {
         invalidPercentages: function (): boolean {
-            console.log(this.collaborationScore);
             return Number(this.collaborationScore.supportWeight) + Number(this.collaborationScore.structureWeight) !== 100;
         }
     },

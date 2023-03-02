@@ -32,11 +32,11 @@ export default Vue.extend({
         updateShowAlert(value: boolean): void {
             this.showAlert = value;
         },
-        handleResponse(requestStatus: ResponseDto): void {
+        handleResponse(requestStatus: ResponseDto, successMessage :string|false = false): void {
             this.showAlert = true;
             if (requestStatus.success) {
                 this.color = 'light-blue accent-4';
-                this.alertMessage = SUCCESS_UPDATE_MESSAGE;
+                this.alertMessage = !successMessage? SUCCESS_UPDATE_MESSAGE: successMessage;
             } else {
                 this.color = 'red accent-2';
                 this.alertMessage = ERROR_SERVER;

@@ -11,5 +11,10 @@ export interface DataTableItemInterface{
 
 export interface ResponseDto {
     error: string,
-    success: boolean
+    success: boolean,
+    data?: string
 };
+
+export interface FileUploadResponseInterface{
+    contentUrl: string;
+}
