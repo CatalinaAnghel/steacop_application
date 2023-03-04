@@ -17,7 +17,7 @@
                     <v-dialog v-if="hasDialog" v-model="dialog" max-width="500px">
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-                                New Item
+                                {{ buttonText }}
                             </v-btn>
                         </template>
                         <v-card>
@@ -28,7 +28,7 @@
                             <v-card-text>
                                 <v-container>
                                     <v-row>
-                                        <v-col cols="12" sm="6" md="4">
+                                        <v-col col="12" sm="12" md="12">
                                             <slot name="dialogContent"></slot>
                                         </v-col>
                                     </v-row>
@@ -105,6 +105,11 @@ export default defineComponent({
             type: Boolean,
             required: false,
             default: false
+        },
+        buttonText: {
+            type: String,
+            required: false,
+            default: 'Import'
         }
     },
     data() {

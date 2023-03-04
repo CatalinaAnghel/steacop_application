@@ -17,10 +17,9 @@ axiosInstance.interceptors.request.use(
                 logout();
             }
             config["headers"] = config.headers ?? {};
-            console.log(config);
             if(config.method === 'patch'){
                 (config.headers as RawAxiosRequestHeaders)["Content-Type"] = 'application/merge-patch+json';
-            } else if (config.method === 'post' && config.url === '/student-import-files'){
+            } else if (config.method === 'post' && (config.url === '/student-import-files' || config.url === '/supervisor-import-files')){
                 (config.headers as RawAxiosRequestHeaders)["Content-Type"] = 'multipart/form-data';
             }
 

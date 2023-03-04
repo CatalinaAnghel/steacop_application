@@ -1,6 +1,7 @@
 import PlanStoreService from '@/store/plans/service';
 import WeightStoreService from '@/store/weights/service';
 import StudentStoreService from '@/store/students/service';
+import SupervisorStoreService from '@/store/supervisors/service';
 import { Store } from 'vuex';
 import { State } from '.';
 
@@ -11,12 +12,14 @@ export default class StoreService {
     private plansStoreService: PlanStoreService;
     private weightsStoreService: WeightStoreService;
     private studentsStoreService: StudentStoreService;
+    private supervisorsStoreService: SupervisorStoreService;
 
     private constructor(store: Store<State>){
         this.store = store;
         this.plansStoreService = new PlanStoreService(this.store);
         this.weightsStoreService = new WeightStoreService(this.store);
         this.studentsStoreService = new StudentStoreService(this.store);
+        this.supervisorsStoreService = new SupervisorStoreService(this.store);
     }
 
     public static getInstance(store: Store<State>): StoreService {
@@ -36,5 +39,9 @@ export default class StoreService {
 
     public get students(): StudentStoreService {
         return this.studentsStoreService;
+    }
+
+    public get supervisors(): SupervisorStoreService {
+        return this.supervisorsStoreService;
     }
 }

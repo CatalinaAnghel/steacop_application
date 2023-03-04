@@ -8,11 +8,13 @@ import userModule, { userNamespace } from '@/store/user/index'
 import weightModule, { weightNamespace } from '@/store/weights/index'
 import { WeightState } from './weights/types';
 import StoreService from './store-service';
+import supervisorModule, { supervisorNamespace } from './supervisors';
 
 Vue.use(Vuex);
 
 const modules: { [id: string]: object } = {};
 modules[studentNamespace] = studentModule;
+modules[supervisorNamespace] = supervisorModule;
 modules[planNamespace] = planModule;
 modules[userNamespace] = userModule;
 modules[weightNamespace] = weightModule;

@@ -1,14 +1,13 @@
 <template>
-    <p>Supervisors Management</p>
+    <data-table></data-table>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-
+import DataTable from '@/components/supervisors/DataTable.vue';
 export default defineComponent({
-    data: () => {
-        return {
-        }
+    components: {
+        DataTable
     }
 });
 </script>

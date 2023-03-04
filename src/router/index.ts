@@ -15,14 +15,6 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
-    path: '/',
-    name: 'home',
-    component: () => import('../pages/HomeView.vue'),
-    meta: {
-      requiresAuth: false
-    }
-  },
-  {
     path: '/about',
     name: 'about',
     component: () => import('../pages/AboutView.vue'),
@@ -80,6 +72,14 @@ const routes: Array<RouteConfig> = [
     path: '/cms/supervisors',
     name: 'viewSupervisors',
     component: () => import('../pages/admin/SupervisorsManagementView.vue') 
+  },
+  {
+    path: '/',
+    name: 'home',
+    component: () => import('../pages/HomeView.vue'),
+    meta: {
+      requiresAuth: false
+    }
   },
   { 
     path: '/:pathMatch(.*)*',

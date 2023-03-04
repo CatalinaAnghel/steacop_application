@@ -24,4 +24,26 @@ export default class FileUploadService{
 
         return requestStatus;
     }
+
+    static async uploadSupervisorsImportFile(formData: FormData): Promise<ResponseDto>{
+        const requestStatus = {
+            success: true,
+            error: '',
+            data: ''
+        };
+
+        await axios.post('/supervisor-import-files', formData)
+            .then(response => {
+                
+                console.log(response);
+                requestStatus.data = (response.data as FileUploadResponseInterface).contentUrl;
+            })
+            .catch(error => {
+                const requestStatusTemp = ErrorHandler.handleError(error);
+                requestStatus.success = requestStatusTemp.success;
+                requestStatus.error = requestStatusTemp.error;
+            });
+
+        return requestStatus;
+    }
 }
