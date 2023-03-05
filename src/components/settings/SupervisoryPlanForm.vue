@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 <template>
     <v-card elevation="3" :loading="loading">
         <v-row justify="center" class="pt-3">

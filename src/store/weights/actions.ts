@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from '@/plugins/axios';
 import ErrorHandler from '@/services/error-handler-service';
 import { AxiosResponse } from 'axios';
-import { WeightInterface, PatchWeightInterface } from './types';
+import { WeightInterface, PatchWeightInterface, WeightState } from './types';
 import { ResponseDto } from '@/modules/common';
+import { ActionContext, Commit } from 'vuex';
+import { State } from '..';
 
 export default {
-    async loadWeights(context: any): Promise<void> {
+    async loadWeights({ commit }: { commit: Commit }): Promise<void> {
         let requestStatus = {
             success: true,
             error: ''
@@ -19,10 +20,10 @@ export default {
         if (requestStatus.success) {
             // the request has been successfully performed
             const weights: WeightInterface[] = (response as AxiosResponse).data;
-            context.commit('storeWeights', weights);
+            commit('storeWeights', weights);
         }
     },
-    async update(context: any, payload: PatchWeightInterface): Promise<ResponseDto> {
+    async update(context: ActionContext<State, WeightState>, payload: PatchWeightInterface): Promise<ResponseDto> {
         let requestStatus = {
             success: true,
             error: ''

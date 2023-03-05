@@ -1,4 +1,5 @@
 import { DataTableHeadersInterface, ResponseDto } from "@/modules/common";
+import { Commit } from "vuex";
 
 export interface LoadableInterface{
     load(): Promise<void>;
@@ -15,4 +16,9 @@ export interface ServiceInterface extends LoadableInterface {
 
 export interface PayloadInterface {
 
+}
+
+export interface CommitStateInterface<Type>{
+    commit: Commit;
+    state: Type
 }

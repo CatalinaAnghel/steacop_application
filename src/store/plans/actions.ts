@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from '@/plugins/axios';
 import ErrorHandler from '@/services/error-handler-service';
 import { AxiosResponse } from 'axios';
-import { PlanInterface, PatchPlanInterface } from './types';
+import { PlanInterface, PatchPlanInterface, PlanState } from './types';
 import { ResponseDto } from '@/modules/common';
+import { ActionContext, Commit } from 'vuex';
+import { State } from '..';
 
 export default {
-    async loadSupervisoryPlans(context: any): Promise<void> {
+    async loadSupervisoryPlans({ commit }: { commit: Commit }): Promise<void> {
         let requestStatus = {
             success: true,
             error: ''
@@ -19,10 +20,11 @@ export default {
         if (requestStatus.success) {
             // the request has been successfully performed
             const plans: PlanInterface[] = (response as AxiosResponse).data;
-            context.commit('storePlans', plans);
+            commit('storePlans', plans);
         }
+
     },
-    async update(context: any, payload: PatchPlanInterface): Promise<ResponseDto> {
+    async update(context: ActionContext<State, PlanState>, payload: PatchPlanInterface): Promise<ResponseDto> {
         let requestStatus = {
             success: true,
             error: ''
