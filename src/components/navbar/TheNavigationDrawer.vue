@@ -95,7 +95,7 @@ export default defineComponent({
       this.$router.push({ name: 'login' });
     },
     setProperties: function () {
-      const role = AuthService.isAuthorized();
+      const role = AuthService.getRole();
       if (role !== null) {
         switch (role) {
           case Roles.ROLE_ADMIN:

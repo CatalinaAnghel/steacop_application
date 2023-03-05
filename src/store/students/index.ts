@@ -5,7 +5,7 @@ import getters from '@/store/students/getters'
 
 export const studentNamespace = "student";
 
-function initialize(): StudentState {
+export function initialize(): StudentState {
     return {
         students: []
     }

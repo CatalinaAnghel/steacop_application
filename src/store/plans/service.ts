@@ -1,17 +1,15 @@
 import { Store } from 'vuex';
 import { ResponseDto } from '@/modules/common';
-import { ServiceInterface } from '../common/types';
+import { AbstractStoreService, ServiceInterface } from '../common/types';
 import { planNamespace } from '.';
 import { PatchPlanInterface, PlanInterface } from './types';
 import { State } from '..';
 
-export default class implements ServiceInterface {
-    private store: Store<State>;
+export default class extends AbstractStoreService implements ServiceInterface  {
     constructor(store: Store<State>){
-        this.store = store;
+        super(store);
     }
-
-    private appendNamespace(method: string): string {
+    protected appendNamespace(method: string): string {
         return `${planNamespace}/${method}`;
     }
 
@@ -26,4 +24,5 @@ export default class implements ServiceInterface {
     public getPlans(): PlanInterface[]{
         return this.store.getters[this.appendNamespace('plans')];
     }
+    
 }

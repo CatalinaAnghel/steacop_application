@@ -10,6 +10,8 @@ import { LoginResponse, LoginRequestData } from '@/modules/login'
 import { UserData } from '@/modules/user'
 import { ERROR_INVALID_TOKEN } from '@/common/errors'
 import { AUTHENTICATION_TOKEN_URL } from '@/plugins/axios/constants'
+import { Roles } from '@/common/roles'
+import { storeService } from '@/store'
 
 export default class AuthService {
     static isLoggedIn(): boolean {
@@ -42,9 +44,25 @@ export default class AuthService {
     }
 
     static logout(): void {
-        Vue.$cookies.remove(ACCESS_TOKEN);
-        Vue.$cookies.remove(REFRESH_TOKEN);
-        Vue.$cookies.remove(REFRESH_TOKEN_EXPIRATION);
+        const role = this.getRole();
+        if (role !== null) {
+            switch (role) {
+                case Roles.ROLE_ADMIN:
+                    storeService.students.reset();
+                    storeService.supervisors.reset();
+                    storeService.plans.reset();
+                    storeService.weights.reset();
+                    break;
+                case Roles.ROLE_STUDENT:
+                    storeService.plans.reset();
+                    break;
+                default:
+                    storeService.students.reset();
+            }
+            Vue.$cookies.remove(ACCESS_TOKEN);
+            Vue.$cookies.remove(REFRESH_TOKEN);
+            Vue.$cookies.remove(REFRESH_TOKEN_EXPIRATION);
+        }
     }
 
     static getAccessToken(): string {
@@ -81,7 +99,7 @@ export default class AuthService {
         return null;
     }
 
-    static isAuthorized(): string | null {
+    static getRole(): string | null {
         if (!this.isLoggedIn()) {
             return null;
         }

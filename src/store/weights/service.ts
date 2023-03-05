@@ -1,17 +1,16 @@
 import { Store } from 'vuex';
 import { ResponseDto } from '@/modules/common';
-import { ServiceInterface } from '../common/types';
+import { AbstractStoreService, ServiceInterface } from '../common/types';
 import { weightNamespace } from './index';
 import { State } from '..';
 import { PatchWeightInterface, WeightInterface } from './types';
 
-export default class implements ServiceInterface {
-    private store: Store<State>;
+export default class extends AbstractStoreService implements ServiceInterface {
     constructor(store: Store<State>){
-        this.store = store;
+        super(store);
     }
 
-    private appendNamespace(method: string): string {
+    protected appendNamespace(method: string): string {
         return `${weightNamespace}/${method}`;
     }
 

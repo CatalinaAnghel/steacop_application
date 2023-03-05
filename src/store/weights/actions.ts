@@ -20,7 +20,7 @@ export default {
         if (requestStatus.success) {
             // the request has been successfully performed
             const weights: WeightInterface[] = (response as AxiosResponse).data;
-            commit('storeWeights', weights);
+            commit('_storeWeights', weights);
         }
     },
     async update(context: ActionContext<State, WeightState>, payload: PatchWeightInterface): Promise<ResponseDto> {
@@ -37,9 +37,12 @@ export default {
         if (requestStatus.success) {
             // the request has been successfully performed
             const updatedWeight: WeightInterface = (response as AxiosResponse).data;
-            context.commit('updateWeights', updatedWeight);
+            context.commit('_updateWeights', updatedWeight);
         }
 
         return requestStatus;
+    },
+    reset({commit}: {commit: Commit}): void{
+        commit('_reset');
     }
 }

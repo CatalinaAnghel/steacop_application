@@ -5,7 +5,7 @@ import { WeightState } from './types';
 
 export const weightNamespace = "weight";
 
-function initialize(): WeightState {
+export function initialize(): WeightState {
     return {
         weights: []
     }

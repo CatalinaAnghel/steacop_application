@@ -5,7 +5,7 @@ import getters from '@/store/supervisors/getters'
 
 export const supervisorNamespace = "supervisor";
 
-function initialize(): SupervisorState {
+export function initialize(): SupervisorState {
     return {
         supervisors: []
     }

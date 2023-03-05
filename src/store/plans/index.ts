@@ -5,7 +5,7 @@ import { PlanState } from './types';
 
 export const planNamespace = "plan";
 
-function initialize(): PlanState {
+export function initialize(): PlanState {
     return {
         plans: []
     }

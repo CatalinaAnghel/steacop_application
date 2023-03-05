@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios';
 import { StudentInterface } from '@/modules/student';
 import { CommitStateInterface } from '../common/types';
 import { StudentState } from './types';
+import { Commit } from 'vuex';
 
 export default {
     async loadStudents({ commit, state }: CommitStateInterface<StudentState>): Promise<void> {
@@ -27,8 +28,11 @@ export default {
                 students.forEach((student: StudentInterface, index: number) => {
                     students[index].expanded = student.project !== null ? student.project?.description : '';
                 });
-                commit('storeStudents', students);
+                commit('_storeStudents', students);
             }
         }
+    },
+    reset({commit}: {commit: Commit}): void{
+        commit('_reset');
     }
 }

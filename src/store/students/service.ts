@@ -1,17 +1,16 @@
 import { Store } from 'vuex';
-import { HeaderInterface, LoadableInterface } from '../common/types';
+import { AbstractStoreService, HeaderInterface, LoadableInterface } from '../common/types';
 import { studentNamespace } from '.';
 import { StudentInterface } from '@/modules/student'
 import { State } from '..';
 import { DataTableHeadersInterface } from '@/modules/common';
 
-export default class implements LoadableInterface, HeaderInterface {
-    private store: Store<State>;
+export default class extends AbstractStoreService implements LoadableInterface, HeaderInterface {
     constructor(store: Store<State>) {
-        this.store = store;
+        super(store);
     }
 
-    private appendNamespace(method: string): string {
+    protected appendNamespace(method: string): string {
         return `${studentNamespace}/${method}`;
     }
 
@@ -52,5 +51,13 @@ export default class implements LoadableInterface, HeaderInterface {
 
     public getStudents(): StudentInterface[] {
         return this.store.getters[this.appendNamespace('students')];
+    }
+
+    public getSupervisees(): StudentInterface[] {
+        return this.store.getters[this.appendNamespace('supervisees')];
+    }
+
+    public reset(): void{
+        this.store.dispatch(this.appendNamespace('reset'));
     }
 }

@@ -1,5 +1,6 @@
 import { DataTableHeadersInterface, ResponseDto } from "@/modules/common";
-import { Commit } from "vuex";
+import { Commit, Store } from "vuex";
+import { State } from "..";
 
 export interface LoadableInterface{
     load(): Promise<void>;
@@ -9,11 +10,24 @@ export interface HeaderInterface{
     getHeaders(): DataTableHeadersInterface[];
 }
 
-export interface ServiceInterface extends LoadableInterface {
-    
-    update(context: any, payload: PayloadInterface): Promise<ResponseDto>;
+export abstract class AbstractStoreService {
+    protected store: Store<State>;
+    constructor(store: Store<State>){
+        this.store = store;
+    }
+
+    public reset(): void{
+        this.store.dispatch(this.appendNamespace('reset'));
+    }
+
+    protected abstract appendNamespace(method: string): string;
 }
 
+export interface ServiceInterface extends LoadableInterface {
+    update(payload: PayloadInterface): Promise<ResponseDto>;
+}
+
+// eslint-disable-next-line
 export interface PayloadInterface {
 
 }

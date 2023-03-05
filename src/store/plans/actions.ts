@@ -20,7 +20,7 @@ export default {
         if (requestStatus.success) {
             // the request has been successfully performed
             const plans: PlanInterface[] = (response as AxiosResponse).data;
-            commit('storePlans', plans);
+            commit('_storePlans', plans);
         }
 
     },
@@ -41,9 +41,12 @@ export default {
         if (requestStatus.success) {
             // the request has been successfully performed
             const updatedPlan: PlanInterface = (response as AxiosResponse).data;
-            context.commit('updatePlan', updatedPlan);
+            context.commit('_updatePlan', updatedPlan);
         }
 
         return requestStatus;
+    },
+    reset({commit}: {commit: Commit}): void{
+        commit('_reset');
     }
 }
