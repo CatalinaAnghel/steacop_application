@@ -3,20 +3,26 @@ import ErrorHandler from '@/services/error-handler-service';
 import { AxiosResponse } from 'axios';
 import { StudentInterface } from '@/modules/student';
 import { CommitStateInterface } from '../common/types';
-import { StudentState } from './types';
+import { GetSuperviseesPayload, StudentState } from './types';
 import { Commit } from 'vuex';
 
 export default {
-    async loadStudents({ commit, state }: CommitStateInterface<StudentState>): Promise<void> {
+    async loadStudents({ commit, state }: CommitStateInterface<StudentState>, payload: GetSuperviseesPayload|null = null): Promise<void> {
         if (state.students.length === 0) {
             let requestStatus = {
                 success: true,
                 error: ''
             };
+
+            let params = {
+                pagination: false
+            }
+            if(payload !== null){
+                params = {...params, ...payload};
+            }
+
             const response = await axios.get('/students', {
-                params: {
-                    pagination: false
-                }
+                params: params
             })
                 .catch(error => {
                     requestStatus = ErrorHandler.handleError(error);

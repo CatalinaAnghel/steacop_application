@@ -25,6 +25,14 @@
           <base-menu-dropdown v-for="menu in admin" :key="menu.title" :menuOptions="menu.menuOptions" :icon="menu.icon"
             :title="menu.title"></base-menu-dropdown>
         </div>
+        <template v-if="isSupervisor">
+          <v-list-item :to="{ name: 'supervisees' }">
+          <v-list-item-icon>
+            <v-icon>mdi-account-school</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Supervisees</v-list-item-title>
+        </v-list-item>
+      </template>
         <v-divider></v-divider>
         <v-list-item :to="{ name: 'about' }">
           <v-list-item-icon>

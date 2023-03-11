@@ -81,6 +81,30 @@ const routes: Array<RouteConfig> = [
       requiresAuth: false
     }
   },
+  {
+    path: '/supervisees',
+    name: 'supervisees',
+    component: () => import('../pages/supervisor/SuperviseesView.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: [
+        Roles.ROLE_TEACHER
+      ]
+    }
+  },
+  {
+    path: '/project/:id',
+    name: 'project',
+    props: true,
+    component: () => import('../pages/common/ProjectDetailsView.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: [
+        Roles.ROLE_TEACHER,
+        Roles.ROLE_STUDENT
+      ]
+    }
+  },
   { 
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

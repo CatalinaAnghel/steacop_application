@@ -3,7 +3,7 @@ import { Commit, Store } from "vuex";
 import { State } from "..";
 
 export interface LoadableInterface{
-    load(): Promise<void>;
+    load(payload: PayloadInterface|null): Promise<void>;
 }
 
 export interface HeaderInterface{

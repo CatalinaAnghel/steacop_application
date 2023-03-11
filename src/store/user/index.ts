@@ -9,7 +9,9 @@ function initialize(): UserData {
     return {
         roles: [],
         username: "",
-        exp: 0
+        exp: 0,
+        id: 0,
+        code: ""
     }
 }
 

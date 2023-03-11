@@ -4,6 +4,7 @@ import { studentNamespace } from '.';
 import { StudentInterface } from '@/modules/student'
 import { State } from '..';
 import { DataTableHeadersInterface } from '@/modules/common';
+import { GetSuperviseesPayload } from './types';
 
 export default class extends AbstractStoreService implements LoadableInterface, HeaderInterface {
     constructor(store: Store<State>) {
@@ -14,8 +15,8 @@ export default class extends AbstractStoreService implements LoadableInterface, 
         return `${studentNamespace}/${method}`;
     }
 
-    public load(): Promise<void> {
-        return this.store.dispatch(this.appendNamespace('loadStudents'));
+    public load(payload: GetSuperviseesPayload|null = null): Promise<void> {
+        return this.store.dispatch(this.appendNamespace('loadStudents'), payload);
     }
 
     public getHeaders(): DataTableHeadersInterface[] {
@@ -47,6 +48,17 @@ export default class extends AbstractStoreService implements LoadableInterface, 
                 value: "specialization.department.name"
             }
         ] as DataTableHeadersInterface[];
+    }
+
+    public getExtendedHeaders(): DataTableHeadersInterface[] {
+        const headers = this.getHeaders();
+        headers.push({
+            text: "Actions",
+            value: "actions",
+            align: '',
+            filterable: false
+        });
+        return headers as DataTableHeadersInterface[];
     }
 
     public getStudents(): StudentInterface[] {

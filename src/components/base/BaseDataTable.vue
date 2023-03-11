@@ -48,6 +48,9 @@
                     </v-dialog>
                 </v-toolbar>
             </template>
+            <template v-slot:[`item.actions`]="{ item }" >
+                <slot name="itemActions" v-bind="item" :props="item"></slot>
+            </template>
         </v-data-table>
     </v-card>
 </template>
