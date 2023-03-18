@@ -32,7 +32,7 @@ export default Vue.extend({
         updateShowAlert(value: boolean): void {
             this.showAlert = value;
         },
-        handleResponse(requestStatus: ResponseDto, successMessage :string|false = false): void {
+        handleResponse(requestStatus: ResponseDto, successMessage :string|false = false, applyLoader: boolean|true = true): void {
             this.showAlert = true;
             if (requestStatus.success) {
                 this.color = 'light-blue accent-4';
@@ -41,7 +41,10 @@ export default Vue.extend({
                 this.color = 'red accent-2';
                 this.alertMessage = ERROR_SERVER;
             }
-            this.toggleLoader();
+            if(applyLoader){
+                this.toggleLoader();
+            }
+            
         }
     }
 });

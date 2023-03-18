@@ -1,12 +1,12 @@
-import { ProjectState } from "@/store/projects/types";
 import { DataTableItemInterface } from "../common";
+import { ProjectInterface } from "../project";
 
 export interface StudentInterface extends DataTableItemInterface {
     firstName: string;
     lastName: string;
     email: string;
     phoneNumber: string;
-    project: ProjectState|null;
+    project: ProjectInterface|null;
     specialization: number;
     expanded: string;
 }

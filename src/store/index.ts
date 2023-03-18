@@ -9,6 +9,7 @@ import weightModule, { weightNamespace } from '@/store/weights/index'
 import { WeightState } from './weights/types';
 import StoreService from './store-service';
 import supervisorModule, { supervisorNamespace } from './supervisors';
+import { SupervisorState } from './supervisors/types';
 
 Vue.use(Vuex);
 
@@ -21,6 +22,7 @@ modules[weightNamespace] = weightModule;
 
 export interface State {
   students: Array<StudentState>,
+  supervisors: Array<SupervisorState>,
   plans: Array<PlanState>,
   weights: Array<WeightState>
 }

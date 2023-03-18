@@ -3,15 +3,32 @@
         <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
             @update:showAlert="updateShowAlert"></base-alert>
         <base-data-table title="Supervisees" :headers="headers" :items="students" :items-per-page="itemsPerPage"
-            :loading="loading" expandable>
+            :loading="loading" expandable hasDialog :openDialog="openDialog" @close:dialog="observeCloseDialogEvent">
+            <template v-slot:expandContent="item">
+                <p class="text-h6 mt-2">Project description</p>
+                <p class="text-justify">{{ item.expanded }}</p>
+                <v-divider></v-divider>
+                <p class="text-h6 mt-2">Supervisory plan</p>
+                <p class="text-justify text-subtitle-1 font-italic">Laissez faire</p>
+            </template>
             <template v-slot:itemActions="item">
-                <v-icon medium class="mr-2" v-if="checkProject(item)" @click="viewProject(item)">
+                <v-icon small class="mr-2" v-if="checkProject(item)" @click="viewProject(item)">
                     mdi-information-outline
                 </v-icon>
+                <v-icon small class="mr-2" @click="openPlanProposalDialog(item)">
+                    mdi-pencil
+                </v-icon>
             </template>
-    </base-data-table>
-</div></template>
+            <template v-slot:dialogContent>
+                <plan-proposal-dialog :projectId="targetProjectId" :open="dialog"
+                    @submitted:form="payload => handleResponse(payload, 'Plan proposal has been sent', false)" @close:dialog="closeDialog"
+                    form-title="Propose a supervisory plan"></plan-proposal-dialog>
+            </template>
+        </base-data-table>
+    </div>
+</template>
 <script lang="ts">
+require('@/validation/index')
 import { DATA_TABLE_DEFAULT_ITEMS_PER_PAGE } from '@/common/constants';
 import { DataTableHeadersInterface } from '@/modules/common';
 import { StudentInterface } from '@/modules/student';
@@ -20,17 +37,19 @@ import BaseDataTable from '../base/BaseDataTable.vue';
 import mixins from "vue-typed-mixins";
 import FormMixin from '../mixins/FormMixin.vue';
 import AuthService from '@/services/auth-service';
+import PlanProposalDialog from '../dialogs/students/PlanProposalDialog.vue';
 
 export default mixins(FormMixin).extend({
     components: {
-        BaseDataTable
+        BaseDataTable,
+        PlanProposalDialog,
     },
     data() {
         return {
             itemsPerPage: DATA_TABLE_DEFAULT_ITEMS_PER_PAGE,
             loading: false,
-            valid: false,
-            selectedFile: null,
+            dialog: false,
+            targetProjectId: 0
         }
     },
     computed: {
@@ -56,14 +75,34 @@ export default mixins(FormMixin).extend({
         }
     },
     methods: {
-        viewProject(item: StudentInterface){
-            const id = item.project!.id.toString();
-            this.$router.push({name: "project", params: {
-                id
-            }});
+        viewProject(item: StudentInterface): void {
+            if (item.project !== null) {
+                const id = item.project.id.toString();
+                this.$router.push({
+                    name: "project", params: {
+                        id
+                    }
+                });
+            }
         },
-        checkProject(item: StudentInterface){
+        checkProject(item: StudentInterface): boolean {
             return item.project !== null;
+        },
+        openPlanProposalDialog(item: StudentInterface): void {
+            this.dialog = true;
+            if (item.project !== null) {
+                this.targetProjectId = item.project.id;
+            }
+        },
+        observeCloseDialogEvent(): void {
+            this.dialog = false;
+            this.targetProjectId = 0;
+        },
+        openDialog(): void {
+            this.dialog = true;
+        },
+        closeDialog(): void {
+            this.dialog = false;
         }
     }
 });
