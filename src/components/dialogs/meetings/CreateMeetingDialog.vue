@@ -57,7 +57,7 @@
                                                         prepend-icon="mdi-clock-time-four-outline" readonly v-bind="attrs"
                                                         v-on="on" :error-messages="errors"></v-text-field>
                                                 </template>
-                                                <v-time-picker v-if="timePicker" v-model="meetingDetails.time" full-width
+                                                <v-time-picker format="24hr" v-if="timePicker" v-model="meetingDetails.time" full-width
                                                     @click:minute="getMenuInstance().save(meetingDetails.time)"></v-time-picker>
                                             </v-menu>
                                         </validation-provider>

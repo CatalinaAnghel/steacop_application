@@ -21,7 +21,7 @@ export default class MeetingService {
         if(null !== range){
             const paramsTemp = {
                 "scheduledAt": {
-                    "before": range.end.date,
+                    "strictly_before": range.end.date,
                     "after": range.start.date
                 } 
             };
@@ -56,7 +56,7 @@ export default class MeetingService {
         if(null !== range){
             const paramsTemp = {
                 "scheduledAt":{
-                    "before": range.end.date,
+                    "strictly_before": range.end.date,
                     "after": range.start.date
                 } 
             };

@@ -145,7 +145,16 @@ export default defineComponent({
       nativeEvent.stopPropagation()
     },
     updateRange({ start, end }: CalendarRangeInterface): void {
-      this.$emit('update:calendar', { start, end });
+      let endDate = new Date(end.date);
+      endDate.setDate(endDate.getDate() + 1);
+      let endDay = {
+        date: endDate.toISOString().split('T')[0],
+        day: endDate.getDay(),
+        month: endDate.getMonth(),
+        year: endDate.getFullYear()
+      }
+      
+      this.$emit('update:calendar', { start, end: endDay });
     },
     rnd(a: number, b: number): number {
       return Math.floor((b - a + 1) * Math.random()) + a
