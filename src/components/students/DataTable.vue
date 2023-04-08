@@ -3,27 +3,34 @@
         <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
             @update:showAlert="updateShowAlert"></base-alert>
         <base-data-table title="Students" :headers="headers" :items="students" :items-per-page="itemsPerPage"
-            :loading="loading" expandable form-title="Upload a CSV file" has-dialog :hideTopButton="false" :openDialog="openDialog">
+            :loading="loading" expandable form-title="Upload a CSV file" has-dialog :hideTopButton="false"
+            :openDialog="openDialog">
             <template v-slot:toolbarCustomButtons>
-                <v-btn color="primary" dark class="mb-2" @click="openDialog">
+                <v-btn color="secondary" dark class="mb-2" @click="openDialog">
                     Import
-                    </v-btn>
+                </v-btn>
+            </template>
+            <template v-slot:expandContent="item">
+                <p class="text-h6 mt-2 primary--text">Project description</p>
+                <p class="text-justify">{{ item.expanded }}</p>
             </template>
             <template v-slot:dialogContent>
-                <upload-file-dialog :open="dialog" @toggle:loader="toggleLoader" @submitted:form="handleResponse" @close:dialog="closeDialog"></upload-file-dialog>
+                <upload-file-dialog :open="dialog" @toggle:loader="toggleLoader" @submitted:form="handleResponse"
+                    @close:dialog="closeDialog"></upload-file-dialog>
             </template>
         </base-data-table>
     </div>
 </template>
 <script lang="ts">
-import { DATA_TABLE_DEFAULT_ITEMS_PER_PAGE, SUCCESS_UPLOAD_MESSAGE } from '@/common/constants';
+import { DATA_TABLE_DEFAULT_ITEMS_PER_PAGE } from '@/common/constants';
+import { SUCCESS_UPLOAD_MESSAGE } from '@/common/messages';
 import { DataTableHeadersInterface, ResponseDto } from '@/modules/common';
 import { StudentInterface } from '@/modules/student';
 import { storeService } from '@/store';
 import BaseDataTable from '../base/BaseDataTable.vue';
 import mixins from "vue-typed-mixins";
 import FormMixin from '../mixins/FormMixin.vue';
-import UploadFileDialog from '../dialogs/students/UploadFileDialog.vue';
+import UploadFileDialog from '@/components/dialogs/students/UploadFileDialog.vue';
 
 export default mixins(FormMixin).extend({
     components: {
@@ -53,13 +60,13 @@ export default mixins(FormMixin).extend({
 
     },
     methods: {
-        handleSubmit(payload: ResponseDto): void{
+        handleSubmit(payload: ResponseDto): void {
             this.handleResponse(payload, SUCCESS_UPLOAD_MESSAGE);
         },
-        openDialog():void{
+        openDialog(): void {
             this.dialog = true;
         },
-        closeDialog():void{
+        closeDialog(): void {
             this.dialog = false;
         }
     }

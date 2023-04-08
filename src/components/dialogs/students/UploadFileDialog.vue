@@ -2,7 +2,7 @@
     <v-dialog v-model="dialog" max-width="500px">
         <v-card>
             <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
+                <span class="text-h5 primary--text  text--darken-3">{{ formTitle }}</span>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="close()">
                     <v-icon>mdi-close</v-icon>
@@ -15,7 +15,7 @@
                         <v-col col="12" sm="12" md="12">
                             <v-form @submit.prevent="submit" v-model="valid">
                                 <v-file-input v-model="selectedFile" counter></v-file-input>
-                                <v-btn color="teal" block dark type="submit" large class="my-3" @click="toggleLoader">Upload
+                                <v-btn color="secondary" block dark type="submit" large class="my-3" @click="toggleLoader">Upload
                                     file</v-btn>
                             </v-form>
                         </v-col>

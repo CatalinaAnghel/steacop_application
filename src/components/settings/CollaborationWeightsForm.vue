@@ -41,7 +41,7 @@
                                 v-model="collaborationScore.structureWeight" :error-messages="errors"
                                 class="mt-3"></v-text-field>
                         </validation-provider>
-                        <v-btn block color="teal accent-4 white--text" type="submit"
+                        <v-btn block color="secondary" type="submit"
                             :disabled="invalid || invalidPercentages" large class="my-3 w-100" @click="toggleLoader">Update
                             plan</v-btn>
                     </v-form>

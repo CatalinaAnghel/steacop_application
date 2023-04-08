@@ -5,17 +5,17 @@
         <base-data-table title="Supervisees" :headers="headers" :items="students" :items-per-page="itemsPerPage"
             :loading="loading" expandable hasDialog :openDialog="openDialog" @close:dialog="observeCloseDialogEvent">
             <template v-slot:expandContent="item">
-                <p class="text-h6 mt-2">Project description</p>
+                <p class="text-h6 mt-2 primary--text">Project description</p>
                 <p class="text-justify">{{ item.expanded }}</p>
-                <v-divider></v-divider>
+                <!-- <v-divider></v-divider>
                 <p class="text-h6 mt-2">Supervisory plan</p>
-                <p class="text-justify text-subtitle-1 font-italic">Laissez faire</p>
+                <p class="text-justify text-subtitle-1 font-italic">Laissez faire</p> -->
             </template>
             <template v-slot:itemActions="item">
-                <v-icon small class="mr-2" v-if="checkProject(item)" @click="viewProject(item)">
+                <v-icon color="secondary" small class="mr-2" v-if="checkProject(item)" @click="viewProject(item)">
                     mdi-information-outline
                 </v-icon>
-                <v-icon small class="mr-2" @click="openPlanProposalDialog(item)">
+                <v-icon color="secondary" small class="mr-2" @click="openPlanProposalDialog(item)">
                     mdi-pencil
                 </v-icon>
             </template>
@@ -71,6 +71,8 @@ export default mixins(FormMixin).extend({
                 }).then(() => {
                     this.toggleLoader();
                 });
+                console.log(storeService.students.getStudents());
+
             }
         }
     },

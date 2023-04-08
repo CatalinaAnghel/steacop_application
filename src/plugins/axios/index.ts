@@ -37,6 +37,7 @@ axiosInstance.interceptors.response.use(
         return res;
     },
     async (err) => {
+        console.log(err);
         const originalConfig = err.config;
 
         if (originalConfig.url !== AUTHENTICATION_TOKEN_URL && originalConfig.url !== REFRESH_TOKEN_URL && err.response) {

@@ -55,6 +55,7 @@ export default class AuthService {
                     break;
                 case Roles.ROLE_STUDENT:
                     storeService.plans.reset();
+                    storeService.students.reset();
                     break;
                 default:
                     storeService.students.reset();

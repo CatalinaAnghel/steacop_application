@@ -1,8 +1,8 @@
 <template>
     <v-dialog v-model="dialog" max-width="500px">
-        <v-card :loading="processing">
+        <v-card :loading="processing? 'secondary': false">
             <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
+                <span class="text-h5 primary--text  text--darken-3">{{ formTitle }}</span>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="close()">
                     <v-icon>mdi-close</v-icon>
@@ -47,8 +47,8 @@
                                             </template>
                                         </v-text-field>
                                     </validation-provider>
-                                    <v-btn color="teal" :disabled="processing" block dark type="submit" large
-                                        class="my-3">Save</v-btn>
+                                    <v-btn :disabled="processing" block dark type="submit" large
+                                        class="my-3" color="secondary">Save</v-btn>
                                 </v-form>
                             </validation-observer>
 

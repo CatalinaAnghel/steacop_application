@@ -5,7 +5,7 @@
         <base-data-table title="Supervisors" :headers="headers" :items="supervisors" :items-per-page="itemsPerPage" :loading="loading"
             form-title="Upload a CSV file" has-dialog :hideTopButton="false" :openDialog="openDialog">
             <template v-slot:toolbarCustomButtons>
-                <v-btn color="primary" dark class="mb-2" @click="openDialog">
+                <v-btn color="secondary" dark class="mb-2" @click="openDialog">
                     Import
                     </v-btn>
             </template>
@@ -17,7 +17,8 @@
     
 </template>
 <script lang="ts">
-import { DATA_TABLE_DEFAULT_ITEMS_PER_PAGE, SUCCESS_UPLOAD_MESSAGE } from '@/common/constants';
+import { DATA_TABLE_DEFAULT_ITEMS_PER_PAGE } from '@/common/constants';
+import { SUCCESS_UPLOAD_MESSAGE } from '@/common/messages';
 import { DataTableHeadersInterface, ResponseDto } from '@/modules/common';
 import { storeService } from '@/store';
 import BaseDataTable from '../base/BaseDataTable.vue';

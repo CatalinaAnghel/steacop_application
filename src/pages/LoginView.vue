@@ -20,7 +20,7 @@
                                     <v-text-field label="Password" hide-details="auto" v-model="password" type="password"
                                         :error-messages="errors" class="mt-3" @input="hideErrorMessage"></v-text-field>
                                 </validation-provider>
-                                <v-btn color="teal" block :dark="!invalid" type="submit" :disabled="invalid" large
+                                <v-btn color="secondary" block :dark="!invalid" type="submit" :disabled="invalid" large
                                     class="my-3" @click="toggleLoader">Log
                                     in</v-btn>
                             </v-form>

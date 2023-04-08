@@ -8,7 +8,7 @@ import Vue from 'vue'
 import { ResponseDto } from "@/modules/common";
 
 import { ERROR_SERVER } from '@/common/errors';
-import { SUCCESS_UPDATE_MESSAGE } from '@/common/constants';
+import { SUCCESS_UPDATE_MESSAGE } from '@/common/messages';
 
 export default Vue.extend({
     data() {
@@ -35,10 +35,10 @@ export default Vue.extend({
         handleResponse(requestStatus: ResponseDto, successMessage :string|false = false, applyLoader: boolean|true = true): void {
             this.showAlert = true;
             if (requestStatus.success) {
-                this.color = 'light-blue accent-4';
+                this.color = 'success';
                 this.alertMessage = !successMessage? SUCCESS_UPDATE_MESSAGE: successMessage;
             } else {
-                this.color = 'red accent-2';
+                this.color = 'error';
                 this.alertMessage = ERROR_SERVER;
             }
             if(applyLoader){

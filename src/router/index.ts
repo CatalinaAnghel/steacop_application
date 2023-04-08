@@ -1,4 +1,5 @@
 import AuthService from '@/services/auth-service';
+import ProjectService from '@/services/project-service';
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import { Roles } from '../common/roles';
@@ -9,7 +10,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/access-denied',
     name: 'access_denied',
-    component: () => import('../pages/auth/AccessDeniedView.vue'),
+    component: () => import('../pages/routing/AccessDeniedView.vue'),
     meta: {
       requiresAuth: false
     }
@@ -96,6 +97,7 @@ const routes: Array<RouteConfig> = [
     path: '/project/:id',
     name: 'project',
     props: true,
+    redirect: { name: 'projectStatistics' },
     component: () => import('../pages/common/ProjectDetailsView.vue'),
     meta: {
       requiresAuth: true,
@@ -103,12 +105,42 @@ const routes: Array<RouteConfig> = [
         Roles.ROLE_TEACHER,
         Roles.ROLE_STUDENT
       ]
-    }
+    },
+    beforeEnter: async (to, from, next) => {
+      const project = await ProjectService.getProjectInfo(Number(to.params.id));
+      if(project === null){
+        next('NotFound');
+      }else{
+        next();
+      }
+    },
+    children: [
+      {
+        path: '',
+        name: 'projectStatistics',
+        component: () => import('../components/projects/statistics/StatisticsView.vue'),
+      },
+      {
+        path: 'meetings',
+        name: 'projectMeetings',
+        component: () => import('../components/projects/meetings/MeetingsCalendar.vue'),
+      },
+      {
+        path: 'assignments',
+        name: 'projectAssignments',
+        component: () => import('../components/projects/assignments/AssignmentsView.vue'),
+      },
+      {
+        path: 'functionalities',
+        name: 'projectFunctionalities',
+        component: () => import('../components/projects/kanban-board/KanbanBoardCard.vue'),
+      },
+    ]
   },
   { 
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('../pages/auth/NotFoundView.vue') 
+    component: () => import('../pages/routing/NotFoundView.vue') 
   },
 ];
 

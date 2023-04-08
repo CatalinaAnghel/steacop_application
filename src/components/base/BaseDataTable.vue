@@ -1,8 +1,9 @@
 <template>
     <v-card>
-        <v-data-table :headers="headers" :items="items" :search="search" :items-per-page="itemsPerPage" :loading="loading"
+        <v-data-table :headers="headers" :items="items" :search="search" :items-per-page="itemsPerPage" :loading="loading? 'secondary': false"
             :loading-text="loadingMessage" :show-expand="expandable" :single-expand="singleExpandable"
             :expanded.sync="expanded">
+            <template v-slot:progress></template>
             <template v-if="expandable" v-slot:expanded-item="{ headers, item }">
                 <td :colspan="headers.length">
                     <slot name="expandContent" v-bind="item" :props="item"></slot>

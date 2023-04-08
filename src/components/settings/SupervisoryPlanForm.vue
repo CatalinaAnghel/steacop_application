@@ -8,7 +8,7 @@
         </v-row>
         <v-row justify="center" class="pt-3">
             <v-col cols="auto">
-                <h2>Set up a supervisory plan</h2>
+                <h2 class="primary--text text--darken-3">Set up a supervisory plan</h2>
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -18,7 +18,7 @@
                         <validation-provider rules="required" v-slot="{ errors }">
                             <v-select label="Supervisory plan" :items="plans" item-text="name" item-value="id" return-object
                                 single-line :error-messages="errors" v-model="plan" required :disabled="disableDropdown"
-                                color="light-blue accent-4"></v-select>
+                                color="primary"></v-select>
                         </validation-provider>
                         <validation-provider v-if="showInputs" rules="required|between:1,10" name="Number of assignments"
                             v-slot="{ errors }">
@@ -31,7 +31,7 @@
                                 v-model="plan.numberOfGuidanceMeetings" :error-messages="errors"
                                 class="mt-3"></v-text-field>
                         </validation-provider>
-                        <v-btn block color="teal accent-4 white--text" type="submit" :disabled="invalid || disableButton"
+                        <v-btn block color="secondary" type="submit" :disabled="invalid || disableButton"
                             large class="my-3 w-100" @click="toggleLoader">Update plan</v-btn>
                     </v-form>
                 </validation-observer>

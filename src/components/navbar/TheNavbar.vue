@@ -1,7 +1,8 @@
 <template>
-    <v-app-bar color="teal darken-4" dark fixed app>
+    <v-app-bar color="primary darken-4" fixed app elevate-on-scroll dark scroll-target="#main-container">
         <v-app-bar-nav-icon @click="value = true"></v-app-bar-nav-icon>
-        <v-toolbar-title><router-link :to="{name:'home'}" class="logo-link">Steacop</router-link></v-toolbar-title>
+        <v-toolbar-title>
+            <router-link :to="{ name: 'home' }" class="logo-link">Steacop</router-link></v-toolbar-title>
     </v-app-bar>
 </template>
 
@@ -30,11 +31,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.logo-link{
+.logo-link {
     text-decoration: none;
-    color: white;
-    &:hover{
+    color: var(--v-neutral-base);
+
+    &:hover {
         cursor: pointer;
+        color: var(--v-secondary-lighten4);
     }
 }
 </style>
