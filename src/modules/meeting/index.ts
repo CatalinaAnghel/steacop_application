@@ -2,6 +2,7 @@ export interface MeetingInterface{
     id: number;
     isCompleted: boolean;
     description: string;
+    duration: number;
     link: string|null;
     scheduledAt: string;
     isCanceled: boolean;
@@ -14,13 +15,7 @@ export interface MilestoneMeetingInterface extends MeetingInterface{
 
 export interface CreateMeetingPayloadInterface {
     projectId: number;
-    description: string;
-    link: string|null;
-    scheduledAt: string;
-}
-
-export interface CreateMeetingPayloadInterface {
-    projectId: number;
+    duration: number;
     description: string;
     link: string|null;
     scheduledAt: string;
@@ -31,6 +26,7 @@ export interface UpdateMeetingInterface {
     link: string|null;
     date: string;
     time: string;
+    duration: number;
     isCompleted: boolean;
     grade: number|null;
 }

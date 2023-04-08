@@ -56,13 +56,17 @@
                                                 transition="scale-transition" offset-y max-width="290px" min-width="290px">
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-text-field v-model="meetingDetails.time" label="Picker in menu"
-                                                        prepend-icon="mdi-clock-time-four-outline" readonly v-bind="attrs"
+                                                        prepend-icon="mdi-calendar-clock" readonly v-bind="attrs"
                                                         v-on="on" :error-messages="errors"></v-text-field>
                                                 </template>
                                                 <v-time-picker format="24hr" v-if="timePicker" v-model="meetingDetails.time" full-width
                                                     @click:minute="getMenuInstance().save(meetingDetails.time)"></v-time-picker>
                                             </v-menu>
                                         </validation-provider>
+                                        <v-slider class="mt-3" prepend-icon="mdi-clock-time-four-outline"
+                                            v-model="meetingDetails.duration" color="primary" label="Duration"
+                                            hint="Provide the duration (number of hours)" min="0.5" step="0.5" max="4" thumb-label></v-slider>
+
                                         <v-btn :disabled="processing" block dark type="submit" large class="my-3"
                                             color="secondary">Save</v-btn>
                                     </v-form>
@@ -122,6 +126,7 @@ export default mixins(FormMixin).extend({
                 link: "",
                 date: "",
                 time: "",
+                duration: 0,
                 grade: null,
                 isCompleted: false
             } as UpdateMeetingInterface,
@@ -136,7 +141,8 @@ export default mixins(FormMixin).extend({
                 this.close();
             } else if (null !== this.meeting) {
                 // const datetimeComponents = this.meeting.start.toLocaleString().split('T');
-                this.meetingDetails.description = this.meeting?.details;
+                this.meetingDetails.description = this.meeting.details;
+                this.meetingDetails.duration = this.meeting.duration;
                 this.meetingDetails.link = this.meeting.link;
                 this.meetingDetails.date = this.meeting.start.toLocaleDateString();
                 this.meetingDetails.time = this.meeting.start.toTimeString().substring(0, 5);
@@ -159,6 +165,7 @@ export default mixins(FormMixin).extend({
             this.toggleProcessingState();
             let payload = {
                 description: this.meetingDetails.description,
+                duration: this.meetingDetails.duration,
                 link: this.meetingDetails.link,
                 scheduledAt: new Date(this.meetingDetails.date + ' ' + this.meetingDetails.time).toLocaleString(),
                 isCompleted: this.meetingDetails.isCompleted
@@ -195,6 +202,7 @@ export default mixins(FormMixin).extend({
                 link: "",
                 date: "",
                 time: "",
+                duration: 0,
                 grade: null,
                 isCompleted: false
             } as UpdateMeetingInterface;

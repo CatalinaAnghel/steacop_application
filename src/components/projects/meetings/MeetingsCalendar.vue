@@ -32,11 +32,12 @@
                         </div>
                         <div class="pb-5">
                             <span class="mdi mdi-link pr-2"></span>
-                            <span><b>Link: </b><a target="_blank" :href="selectedEvent.link">{{ selectedEvent.link }}</a></span>
+                            <span><b>Link: </b><a target="_blank" :href="selectedEvent.link">{{ selectedEvent.link
+                            }}</a></span>
                         </div>
                         <div class="pb-5">
                             <span class="mdi mdi-link pr-2"></span>
-                            <span><b>Status: </b>{{ selectedEvent.isCompleted? "Finished": "Scheduled" }}</span>
+                            <span><b>Status: </b>{{ selectedEvent.isCompleted ? "Finished" : "Scheduled" }}</span>
                         </div>
                         <v-divider></v-divider>
                         <span class="pt-5">{{ selectedEvent.details }}</span>
@@ -93,7 +94,7 @@ export default defineComponent({
         CreateMeetingDialog
     },
     methods: {
-        toggleLoading: function(){
+        toggleLoading: function () {
             this.loading = !this.loading;
         },
         updateCalendarEvents: async function (payload: CalendarRangeInterface) {
@@ -104,13 +105,18 @@ export default defineComponent({
             if (null !== meetings) {
                 this.events = meetings.map(element => {
                     const scheduledAt = new Date(element.scheduledAt);
-                    const endingAt = (new Date(element.scheduledAt)).setHours(scheduledAt.getHours() + 2);
+                    const hours = Math.floor(element.duration);
+                    const minutes = element.duration > Math.floor(element.duration) ? 60 / (10 / (element.duration * 10 % 10)) : 0;
+                    let endingAt = (new Date(element.scheduledAt))
+                        .setHours(scheduledAt.getHours() + Number(hours));
+                    endingAt = (new Date(endingAt)).setMinutes((new Date(endingAt)).getMinutes() + Number(minutes));
                     return {
                         name: this.names[0],
                         start: scheduledAt,
                         end: new Date(endingAt),
                         color: this.colors[0],
                         timed: true,
+                        duration: element.duration,
                         details: element.description,
                         isCompleted: element.isCompleted,
                         link: element.link,
@@ -123,13 +129,18 @@ export default defineComponent({
             if (null !== milestoneMeetings) {
                 const tempEvents = milestoneMeetings.map(element => {
                     const scheduledAt = new Date(element.scheduledAt);
-                    const endingAt = (new Date(element.scheduledAt)).setHours(scheduledAt.getHours() + 2);
+                    const hours = Math.floor(element.duration);
+                    const minutes = element.duration > Math.floor(element.duration) ? 60 / (10 / (element.duration * 10 % 10)) : 0;
+                    let endingAt = (new Date(element.scheduledAt))
+                        .setHours(scheduledAt.getHours() + Number(hours));
+                    endingAt = (new Date(endingAt)).setMinutes((new Date(endingAt)).getMinutes() + Number(minutes));
                     return {
                         name: this.names[1],
                         start: scheduledAt,
                         end: new Date(endingAt),
                         color: this.colors[1],
                         timed: true,
+                        duration: element.duration,
                         details: element.description,
                         isCompleted: element.isCompleted,
                         link: element.link,
@@ -159,6 +170,7 @@ export default defineComponent({
             if (meeting.type === EventTypes.EVENT_TYPE_GUIDANCE_MEETING) {
                 let meetingPayload = {
                     id: meeting.id,
+                    duration: meeting.duration,
                     isCompleted: meeting.isCompleted,
                     description: meeting.details,
                     scheduledAt: meeting.start.toDateString(),
@@ -170,6 +182,7 @@ export default defineComponent({
             } else {
                 let meetingPayload = {
                     id: meeting.id,
+                    duration: meeting.duration,
                     isCompleted: meeting.isCompleted,
                     description: meeting.details,
                     scheduledAt: meeting.start.toDateString(),

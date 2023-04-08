@@ -28,6 +28,7 @@ export interface CalendarRangeInterface{
 
 export interface EventInterface {
     id: number;
+    duration: number;
     name: string;
     start: Date;
     end: Date;

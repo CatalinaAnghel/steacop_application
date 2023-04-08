@@ -17,7 +17,7 @@
             </v-icon>
           </v-btn>
           <v-btn fab text small color="grey darken-2" @click="createEvent">
-            <v-icon medium>
+            <v-icon medium color="secondary">
               mdi-calendar-plus-outline
             </v-icon>
           </v-btn>

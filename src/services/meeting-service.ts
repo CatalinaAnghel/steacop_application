@@ -85,6 +85,7 @@ export default class MeetingService {
 
         await axios.patch(`/guidance-meetings/${meetingId}`, {
             scheduledAt: meeting.scheduledAt,
+            duration: Number(meeting.duration),
             isCompleted: meeting.isCompleted,
             isCanceled: meeting.isCanceled,
             canceledAt: meeting.canceledAt,
@@ -106,6 +107,7 @@ export default class MeetingService {
 
         await axios.patch(`/milestone-meetings/${meetingId}`, {
             scheduledAt: meeting.scheduledAt,
+            duration: Number(meeting.duration),
             isCompleted: meeting.isCompleted,
             isCanceled: meeting.isCanceled,
             canceledAt: meeting.canceledAt,
@@ -133,6 +135,7 @@ export default class MeetingService {
 
         await axios.post(endpoint, {
             projectId: payload.projectId,
+            duration: Number(payload.duration),
             scheduledAt: payload.scheduledAt,
             description: payload.description,
             link: payload.link
