@@ -48,16 +48,18 @@
                                                 transition="scale-transition" offset-y max-width="290px" min-width="290px">
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-text-field v-model="meetingDetails.time" label="Picker in menu"
-                                                        prepend-icon="mdi-calendar-clock" readonly v-bind="attrs"
-                                                        v-on="on" :error-messages="errors"></v-text-field>
+                                                        prepend-icon="mdi-calendar-clock" readonly v-bind="attrs" v-on="on"
+                                                        :error-messages="errors"></v-text-field>
                                                 </template>
-                                                <v-time-picker format="24hr" v-if="timePicker" v-model="meetingDetails.time" full-width
+                                                <v-time-picker format="24hr" v-if="timePicker" v-model="meetingDetails.time"
+                                                    full-width
                                                     @click:minute="getMenuInstance().save(meetingDetails.time)"></v-time-picker>
                                             </v-menu>
                                         </validation-provider>
                                         <v-slider class="mt-3" prepend-icon="mdi-clock-time-four-outline"
                                             v-model="meetingDetails.duration" color="primary" label="Duration"
-                                            hint="Provide the duration (hours)" min="0.5" step="0.5" max="4" thumb-label></v-slider>
+                                            hint="Provide the duration (hours)" min="0.5" step="0.5" max="4"
+                                            thumb-label></v-slider>
 
                                         <v-btn :disabled="processing" block dark type="submit" large class="my-3"
                                             color="secondary">Save</v-btn>
@@ -160,7 +162,8 @@ export default mixins(FormMixin).extend({
             };
             let response = {
                 'success': true,
-                'error': ''
+                'error': '',
+                code: null as number | null
             };
 
             if (this.meeting !== null && this.meeting.type === EventTypes.EVENT_TYPE_MILESTONE_MEETING) {

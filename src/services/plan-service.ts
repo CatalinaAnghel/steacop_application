@@ -8,7 +8,8 @@ export default class PlanService {
     public static async getProjectPlan(projectId: number): Promise<CustomSupervisoryPlanInterface | null> {
         let requestStatus = {
             error: '',
-            success: true
+            success: true,
+            code: null as number|null
         }
         const response = await axios.get(`/project-supervisory-plan/${projectId}`).catch(error => {
             requestStatus = ErrorHandler.handleError(error);
@@ -26,7 +27,8 @@ export default class PlanService {
     public static async updateProjectPlan(projectId: number, plan: CustomSupervisoryPlanInterface): Promise<ResponseDto> {
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
 
         await axios.patch(`/project-supervisory-plan/${projectId}`, {
@@ -37,18 +39,14 @@ export default class PlanService {
                 requestStatus = ErrorHandler.handleError(error);
             });
 
-        // if (requestStatus.success) {
-        //     // the request has been successfully performed
-        //     const updatedPlan: CustomSupervisoryPlanInterface = (response as AxiosResponse).data;
-        // }
-
         return requestStatus;
     }
 
     public static async createProjectPlan(projectId: number, plan: CustomSupervisoryPlanInterface): Promise<ResponseDto> {
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
 
         await axios.post(`/project-supervisory-plans`, {
@@ -59,11 +57,6 @@ export default class PlanService {
             .catch(error => {
                 requestStatus = ErrorHandler.handleError(error);
             });
-
-        // if (requestStatus.success) {
-        //     // the request has been successfully performed
-        //     const createdPlan: CustomSupervisoryPlanInterface = (response as AxiosResponse).data;
-        // }
 
         return requestStatus;
     }

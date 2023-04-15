@@ -153,16 +153,13 @@ export default defineComponent({
         month: endDate.getMonth(),
         year: endDate.getFullYear()
       }
-      
+
       this.$emit('update:calendar', { start, end: endDay });
-    },
-    rnd(a: number, b: number): number {
-      return Math.floor((b - a + 1) * Math.random()) + a
     },
     getCalendarInstance(): Vue & CalendarInterface {
       return this.$refs.calendar as Vue & CalendarInterface;
     },
-    createEvent(): void{
+    createEvent(): void {
       this.$emit('create:event');
     }
   },

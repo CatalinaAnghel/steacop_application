@@ -63,7 +63,8 @@
                                         </validation-provider>
                                         <v-slider class="mt-3" prepend-icon="mdi-clock-time-four-outline"
                                             v-model="meetingDetails.duration" color="primary" label="Duration"
-                                            hint="Provide the duration (number of hours)" min="0.5" step="0.5" max="4" thumb-label></v-slider>
+                                            hint="Provide the duration (number of hours)" min="0.5" step="0.5" max="4"
+                                            thumb-label></v-slider>
                                         <v-btn :disabled="processing" block dark type="submit" large class="my-3"
                                             color="secondary">Save</v-btn>
                                     </v-form>
@@ -163,7 +164,8 @@ export default mixins(FormMixin).extend({
             };
             let response = {
                 'success': true,
-                'error': ''
+                'error': '',
+                code: null as number | null
             };
             response = await MeetingService.createMeeting(payload as CreateMeetingPayloadInterface, this.meetingDetails.type.id);
             this.handleResponse(response);

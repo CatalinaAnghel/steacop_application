@@ -24,7 +24,8 @@ export default class AuthService {
     static async login(loginDto: LoginRequestData): Promise<ResponseDto> {
         let requestStatus = {
             error: '',
-            success: true
+            success: true,
+            code: null as number|null
         };
         await axios.post(AUTHENTICATION_TOKEN_URL, { email: loginDto.email, password: loginDto.password })
             .then(response => {

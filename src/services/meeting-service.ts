@@ -9,7 +9,8 @@ export default class MeetingService {
     public static async getGuidanceMeetings(projectsIds: number[], range: CalendarRangeInterface|null = null): Promise<MeetingInterface[] | null> {
         let requestStatus = {
             error: '',
-            success: true
+            success: true,
+            code: null as number|null
         }
 
         let params = {
@@ -45,7 +46,8 @@ export default class MeetingService {
     public static async getMilestoneMeetings(projectsIds: number[], range: CalendarRangeInterface|null = null): Promise<MilestoneMeetingInterface[] | null> {
         let requestStatus = {
             error: '',
-            success: true
+            success: true,
+            code: null as number|null
         }
         let params = {
             "pagination": false,
@@ -80,7 +82,8 @@ export default class MeetingService {
     public static async updateGuidanceMeeting(meetingId: number, meeting: MeetingInterface): Promise<ResponseDto>{
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
 
         await axios.patch(`/guidance-meetings/${meetingId}`, {
@@ -102,7 +105,8 @@ export default class MeetingService {
     public static async gradeMilestoneMeeting(meetingId: number, grade: number): Promise<ResponseDto>{
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
 
         await axios.patch(`/milestone-meetings/${meetingId}`, {
@@ -118,7 +122,8 @@ export default class MeetingService {
     public static async updateMilestoneMeeting(meetingId: number, meeting: MilestoneMeetingInterface): Promise<ResponseDto>{
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
 
         await axios.patch(`/milestone-meetings/${meetingId}`, {
@@ -141,7 +146,8 @@ export default class MeetingService {
     public static async createMeeting(payload: CreateMeetingPayloadInterface, type: string): Promise<ResponseDto>{
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
 
         let endpoint = '/guidance-meetings';
@@ -166,7 +172,8 @@ export default class MeetingService {
     public static async finishMeeting(meetingId: number, type: string): Promise<ResponseDto>{
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
 
         let endpoint = '/guidance-meetings';

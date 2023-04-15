@@ -1,8 +1,8 @@
 <template>
-    <v-rating :background-color="backgroundColor" :color="color"
+    <v-rating :background-color="backgroundColor" :color="color" :readonly="readonly"
         empty-icon="mdi-star-outline" full-icon="mdi-star"
         half-icon="mdi-star-half-full" half-increments hover :length="length" size="32"
-        v-model="rating"></v-rating>
+        v-model="ratingValue" @input="updateRating"></v-rating>
 </template>
 
 <script lang="ts">
@@ -25,16 +25,30 @@ export default defineComponent({
             type: Number,
             required: false,
             default: 5
+        },
+        rating: {
+            type: Number,
+            required: true
+        },
+        readonly: {
+            type: Boolean,
+            required: false,
+            default: true
         }
     },
     data(){
         return {
-            rating: 0
+            ratingValue: 0
         }
     },
     watch: {
-        rating: function(value){
-            this.$emit('updated:rating', value);
+        rating: function(): void{
+            this.ratingValue = this.rating;
+        }
+    },
+    methods: {
+        updateRating: function(): void{
+            this.$emit('updated:rating', this.ratingValue);
         }
     }
 });

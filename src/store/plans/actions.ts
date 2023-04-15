@@ -10,7 +10,8 @@ export default {
     async loadSupervisoryPlans({ commit }: { commit: Commit }): Promise<void> {
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
         const response = await axios.get('/supervisory-plans')
             .catch(error => {
@@ -27,7 +28,8 @@ export default {
     async update(context: ActionContext<State, PlanState>, payload: PatchPlanInterface): Promise<ResponseDto> {
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
 
         const response = await axios.patch(`/supervisory-plans/${payload.id}`, {

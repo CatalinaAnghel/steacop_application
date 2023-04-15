@@ -32,7 +32,8 @@
                         </v-btn>
                     </v-toolbar>
                     <v-card-text>
-                        <base-rating v-if="selectedEvent.isCompleted" @updated:rating="updateRating"></base-rating>
+                        <base-rating :rating="rating.value" v-if="showRating(selectedEvent)"
+                            @updated:rating="ratingValue => editRating(ratingValue)" :readonly="readonlyRating"></base-rating>
                         <div class="pb-5">
                             <span class="mdi mdi-clock-outline pr-2"></span>
                             <span><b>Scheduled at: </b>{{ (new Date(selectedEvent.start)).toLocaleTimeString() }} - {{ (new
@@ -51,7 +52,7 @@
                         <span class="pt-5">{{ selectedEvent.details }}</span>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn text color="secondary" @click="selectedOpen = false">
+                        <v-btn text color="secondary" @click="closeMeetingPreview">
                             Close
                         </v-btn>
                     </v-card-actions>
@@ -74,6 +75,7 @@ import { ResponseDto } from '@/modules/common';
 import { MeetingInterface, MilestoneMeetingInterface } from '@/modules/meeting';
 import MeetingService from '@/services/meeting-service';
 import { defineComponent } from 'vue';
+import RatingService from '@/services/rating-service';
 
 export default defineComponent({
     data: function () {
@@ -95,7 +97,13 @@ export default defineComponent({
             calendarRange: {
 
             } as CalendarRangeInterface,
-            loading: false
+            loading: false,
+            rating: {
+                value: 0,
+                meetingId: 0,
+                id: 0
+            },
+            readonlyRating: true
         };
     },
     components: {
@@ -169,6 +177,11 @@ export default defineComponent({
             this.selectedOpen = selected;
             if (!selected) {
                 this.selectedMeeting = null;
+                this.rating = {
+                    id: 0,
+                    value: 0,
+                    meetingId: 0
+                };
             }
         },
         showEventOptions: function (isCompleted: boolean): boolean {
@@ -231,8 +244,23 @@ export default defineComponent({
         closeCreateDialog: function (): void {
             this.createDialog = false;
         },
-        registerEventOpen: function (selectedEvent: EventInterface): void {
+        registerEventOpen: async function (selectedEvent: EventInterface): Promise<void> {
             this.selectedMeeting = selectedEvent;
+            const response = await RatingService.getRating(this.selectedMeeting.id);
+            this.readonlyRating = response === false;
+            if (response !== false && response !== null) {
+                this.rating = {
+                    meetingId: selectedEvent.id,
+                    value: response.value,
+                    id: response.id
+                }
+            } else if (response === null) {
+                this.rating = {
+                    meetingId: selectedEvent.id,
+                    value: 0,
+                    id: 0
+                }
+            }
         },
         handleMeetingAction: function (response: ResponseDto): void {
             if (response.success) {
@@ -244,7 +272,8 @@ export default defineComponent({
                 this.toggleLoading();
                 let response = {
                     'success': true,
-                    'error': ''
+                    'error': '',
+                    code: null as number | null
                 };
                 if (this.selectedMeeting !== null) {
                     response = await MeetingService.finishMeeting(this.selectedMeeting.id, this.selectedMeeting.type);
@@ -257,8 +286,27 @@ export default defineComponent({
                 }
             }
         },
-        updateRating: function (rating: number): void {
-            console.log(rating);
+        editRating: async function (rating: number): Promise<void> {
+            this.rating.value = rating;
+
+            if(this.rating.id > 0){
+                await RatingService.updateRating(this.rating.id, rating);
+            }else{
+                await RatingService.createRating(this.rating);
+            }
+        },
+        showRating: function (selectedEvent: any): boolean {
+            return selectedEvent.isCompleted && selectedEvent.type === EventTypes.EVENT_TYPE_GUIDANCE_MEETING;
+        },
+        closeMeetingPreview: function (): void {
+            this.selectedOpen = false;
+            this.rating = {
+                id: 0,
+                value: 0,
+                meetingId: 0
+            };
+            this.selectedMeeting = null;
+            this.readonlyRating = true;
         }
     }
 });

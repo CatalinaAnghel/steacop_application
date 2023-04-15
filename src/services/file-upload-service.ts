@@ -7,7 +7,8 @@ export default class FileUploadService {
         const requestStatus = {
             success: true,
             error: '',
-            data: ''
+            data: '',
+            code: null as number|null
         };
 
         await axios.post('/student-import-files', formData)
@@ -27,7 +28,8 @@ export default class FileUploadService {
         const requestStatus = {
             success: true,
             error: '',
-            data: ''
+            data: '',
+            code: null as number|null
         };
 
         await axios.post('/supervisor-import-files', formData)

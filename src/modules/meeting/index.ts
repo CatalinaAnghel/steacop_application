@@ -43,3 +43,9 @@ export interface MeetingTypeInterface{
     id: string;
     name: string;
 }
+
+export interface RatingInterface{
+    id: number;
+    value: number;
+    meetingId: number;
+}

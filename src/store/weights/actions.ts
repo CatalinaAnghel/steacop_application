@@ -26,7 +26,8 @@ export default {
     async update(context: ActionContext<State, WeightState>, payload: PatchWeightInterface): Promise<ResponseDto> {
         let requestStatus = {
             success: true,
-            error: ''
+            error: '',
+            code: null as number|null
         };
 
         const response = await axios.post(`/score-weights/update-multiple`, payload)

@@ -6,7 +6,8 @@ export default class ErrorHandler {
         const errorData = error.response.data;
         return {
             error: errorData.message,
-            success: false
+            success: false,
+            code: Number(error.request.status)
         } as ResponseDto;
     }
 }
