@@ -71,8 +71,6 @@ export default mixins(FormMixin).extend({
                 }).then(() => {
                     this.toggleLoader();
                 });
-                console.log(storeService.students.getStudents());
-
             }
         }
     },

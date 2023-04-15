@@ -1,4 +1,4 @@
-import { CalendarRangeInterface, EVENT_TYPE_MILESTONE_MEETING } from "@/modules/calendar";
+import { CalendarRangeInterface, EVENT_TYPE_MILESTONE_MEETING, EventTypes } from "@/modules/calendar";
 import { CreateMeetingPayloadInterface, MeetingInterface, MilestoneMeetingInterface } from "@/modules/meeting";
 import axios from '@/plugins/axios';
 import { AxiosResponse } from "axios";
@@ -99,6 +99,22 @@ export default class MeetingService {
         return requestStatus;
     }
 
+    public static async gradeMilestoneMeeting(meetingId: number, grade: number): Promise<ResponseDto>{
+        let requestStatus = {
+            success: true,
+            error: ''
+        };
+
+        await axios.patch(`/milestone-meetings/${meetingId}`, {
+            grade
+        })
+            .catch(error => {
+                requestStatus = ErrorHandler.handleError(error);
+            });
+
+        return requestStatus;
+    }
+
     public static async updateMilestoneMeeting(meetingId: number, meeting: MilestoneMeetingInterface): Promise<ResponseDto>{
         let requestStatus = {
             success: true,
@@ -139,6 +155,26 @@ export default class MeetingService {
             scheduledAt: payload.scheduledAt,
             description: payload.description,
             link: payload.link
+        })
+            .catch(error => {
+                requestStatus = ErrorHandler.handleError(error);
+            });
+
+        return requestStatus;
+    }
+
+    public static async finishMeeting(meetingId: number, type: string): Promise<ResponseDto>{
+        let requestStatus = {
+            success: true,
+            error: ''
+        };
+
+        let endpoint = '/guidance-meetings';
+        if(type === EventTypes.EVENT_TYPE_MILESTONE_MEETING){
+            endpoint = '/milestone-meetings';
+        }
+        await axios.patch(`${endpoint}/${meetingId}`, {
+            isCompleted: true
         })
             .catch(error => {
                 requestStatus = ErrorHandler.handleError(error);

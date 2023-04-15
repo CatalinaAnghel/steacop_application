@@ -3,7 +3,7 @@ import axios from '@/plugins/axios';
 import ErrorHandler from './error-handler-service';
 
 export default class FileUploadService {
-    static async uploadStudentsImportFile(formData: FormData): Promise<ResponseDto>{
+    static async uploadStudentsImportFile(formData: FormData): Promise<ResponseDto> {
         const requestStatus = {
             success: true,
             error: '',
@@ -12,8 +12,6 @@ export default class FileUploadService {
 
         await axios.post('/student-import-files', formData)
             .then(response => {
-                
-                console.log(response);
                 requestStatus.data = (response.data as FileUploadResponseInterface).contentUrl;
             })
             .catch(error => {
@@ -25,7 +23,7 @@ export default class FileUploadService {
         return requestStatus;
     }
 
-    static async uploadSupervisorsImportFile(formData: FormData): Promise<ResponseDto>{
+    static async uploadSupervisorsImportFile(formData: FormData): Promise<ResponseDto> {
         const requestStatus = {
             success: true,
             error: '',

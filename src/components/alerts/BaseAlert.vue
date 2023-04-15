@@ -1,5 +1,5 @@
 <template>
-    <v-alert :type="type" :color="color" v-model="value" outlined dismissible :title="title">
+    <v-alert :type="type" :color="color" v-model="open" outlined dismissible :title="title">
         {{ text }}
     </v-alert>
 </template>
@@ -17,7 +17,7 @@ export default defineComponent({
     },
     emits: ['update:showAlert'],
     computed: {
-        value: {
+        open: {
             get(): boolean {
                 return this.showAlert;
             },
@@ -26,5 +26,14 @@ export default defineComponent({
             }
         }
     },
+    watch: {
+        open: function(value){
+            if(value){
+                setTimeout(() => {
+                    this.open = false;
+                }, 3000);
+            }
+        }
+    }
 });
 </script>

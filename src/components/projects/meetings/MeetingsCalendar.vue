@@ -7,6 +7,10 @@
             :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
             @close:dialog="closeEditDialog"
             @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></edit-meeting-dialog>
+        <grade-meeting-dialog :meeting="selectedMeeting" :open="gradeMeetingDialog"
+            :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
+            @close:dialog="closeGradeMeetingDialog"
+            @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></grade-meeting-dialog>
         <base-calendar :names="names" :colors="colors" :events="events"
             @update:calendar="payload => updateCalendarEvents(payload)"
             @selected:event="selected => updateSelectedEvent(selected)" :selected-open="selectedOpen"
@@ -16,6 +20,9 @@
                     <v-toolbar :color="selectedEvent.color" dark>
                         <v-toolbar-title>{{ selectedEvent.name }}</v-toolbar-title>
                         <v-spacer></v-spacer>
+                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted)" icon @click="completeMeeting">
+                            <v-icon>mdi-check</v-icon>
+                        </v-btn>
                         <v-btn v-if="showEventOptions(selectedEvent.isCompleted)" icon @click="editMeeting">
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>
@@ -25,6 +32,7 @@
                         </v-btn>
                     </v-toolbar>
                     <v-card-text>
+                        <base-rating v-if="selectedEvent.isCompleted" @updated:rating="updateRating"></base-rating>
                         <div class="pb-5">
                             <span class="mdi mdi-clock-outline pr-2"></span>
                             <span><b>Scheduled at: </b>{{ (new Date(selectedEvent.start)).toLocaleTimeString() }} - {{ (new
@@ -58,7 +66,9 @@
 import BaseCalendar from '@/components/base/BaseCalendar.vue';
 import EditMeetingDialog from '@/components/dialogs/meetings/EditMeetingDialog.vue';
 import CreateMeetingDialog from '@/components/dialogs/meetings/CreateMeetingDialog.vue';
+import GradeMeetingDialog from '@/components/dialogs/meetings/GradeMeetingDialog.vue';
 import BaseOverlay from '@/components/base/BaseOverlay.vue';
+import BaseRating from "@/components/base/BaseRating.vue";
 import { CalendarRangeInterface, EventInterface, EventTypes } from '@/modules/calendar';
 import { ResponseDto } from '@/modules/common';
 import { MeetingInterface, MilestoneMeetingInterface } from '@/modules/meeting';
@@ -81,6 +91,7 @@ export default defineComponent({
             selectedMeeting: null as EventInterface | null,
             editDialog: false,
             createDialog: false,
+            gradeMeetingDialog: false,
             calendarRange: {
 
             } as CalendarRangeInterface,
@@ -90,8 +101,10 @@ export default defineComponent({
     components: {
         BaseOverlay,
         BaseCalendar,
+        BaseRating,
+        CreateMeetingDialog,
         EditMeetingDialog,
-        CreateMeetingDialog
+        GradeMeetingDialog,
     },
     methods: {
         toggleLoading: function () {
@@ -173,7 +186,7 @@ export default defineComponent({
                     duration: meeting.duration,
                     isCompleted: meeting.isCompleted,
                     description: meeting.details,
-                    scheduledAt: meeting.start.toDateString(),
+                    scheduledAt: meeting.start.toISOString(),
                     isCanceled: true,
                     canceledAt: new Date(),
                     link: meeting.link
@@ -185,7 +198,7 @@ export default defineComponent({
                     duration: meeting.duration,
                     isCompleted: meeting.isCompleted,
                     description: meeting.details,
-                    scheduledAt: meeting.start.toDateString(),
+                    scheduledAt: meeting.start.toISOString(),
                     isCanceled: true,
                     canceledAt: new Date(),
                     link: meeting.link,
@@ -206,6 +219,12 @@ export default defineComponent({
         closeEditDialog: function (): void {
             this.editDialog = false;
         },
+        gradeMeeting: function (): void {
+            this.gradeMeetingDialog = true;
+        },
+        closeGradeMeetingDialog: function (): void {
+            this.gradeMeetingDialog = false;
+        },
         openCreateDialog: function (): void {
             this.createDialog = true;
         },
@@ -219,6 +238,27 @@ export default defineComponent({
             if (response.success) {
                 this.updateCalendarEvents(this.calendarRange);
             }
+        },
+        completeMeeting: async function (): Promise<void> {
+            if (this.selectedMeeting !== null) {
+                this.toggleLoading();
+                let response = {
+                    'success': true,
+                    'error': ''
+                };
+                if (this.selectedMeeting !== null) {
+                    response = await MeetingService.finishMeeting(this.selectedMeeting.id, this.selectedMeeting.type);
+                    this.toggleLoading();
+                    if (response.success && this.selectedMeeting !== null && this.selectedMeeting.type === EventTypes.EVENT_TYPE_MILESTONE_MEETING) {
+                        this.gradeMeeting();
+                    } else {
+                        this.handleMeetingAction(response);
+                    }
+                }
+            }
+        },
+        updateRating: function (rating: number): void {
+            console.log(rating);
         }
     }
 });

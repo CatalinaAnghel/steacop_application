@@ -30,14 +30,6 @@
                                                 :error-messages="errors" class="mt-3" prepend-icon="mdi-link">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider v-if="showGrade && meetingDetails.isCompleted"
-                                            rules="between:1,10" v-slot="{ errors }">
-                                            <v-text-field v-model="meetingDetails.grade" label="Grade" hide-details="auto"
-                                                :error-messages="errors" class="mt-3" type="number" prepend-icon="mdi-link">
-                                            </v-text-field>
-                                        </validation-provider>
-                                        <v-checkbox v-model="meetingDetails.isCompleted"
-                                            label="The meeting has been completed"></v-checkbox>
                                         <validation-provider rules="required" v-slot="{ errors }">
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
                                                 transition="scale-transition" offset-y min-width="auto">
@@ -65,7 +57,7 @@
                                         </validation-provider>
                                         <v-slider class="mt-3" prepend-icon="mdi-clock-time-four-outline"
                                             v-model="meetingDetails.duration" color="primary" label="Duration"
-                                            hint="Provide the duration (number of hours)" min="0.5" step="0.5" max="4" thumb-label></v-slider>
+                                            hint="Provide the duration (hours)" min="0.5" step="0.5" max="4" thumb-label></v-slider>
 
                                         <v-btn :disabled="processing" block dark type="submit" large class="my-3"
                                             color="secondary">Save</v-btn>
@@ -126,9 +118,7 @@ export default mixins(FormMixin).extend({
                 link: "",
                 date: "",
                 time: "",
-                duration: 0,
-                grade: null,
-                isCompleted: false
+                duration: 0
             } as UpdateMeetingInterface,
             datePicker: false,
             timePicker: false,
@@ -140,7 +130,6 @@ export default mixins(FormMixin).extend({
             if (!val) {
                 this.close();
             } else if (null !== this.meeting) {
-                // const datetimeComponents = this.meeting.start.toLocaleString().split('T');
                 this.meetingDetails.description = this.meeting.details;
                 this.meetingDetails.duration = this.meeting.duration;
                 this.meetingDetails.link = this.meeting.link;
@@ -167,8 +156,7 @@ export default mixins(FormMixin).extend({
                 description: this.meetingDetails.description,
                 duration: this.meetingDetails.duration,
                 link: this.meetingDetails.link,
-                scheduledAt: new Date(this.meetingDetails.date + ' ' + this.meetingDetails.time).toLocaleString(),
-                isCompleted: this.meetingDetails.isCompleted
+                scheduledAt: new Date(this.meetingDetails.date + ' ' + this.meetingDetails.time).toLocaleString()
             };
             let response = {
                 'success': true,
@@ -176,13 +164,6 @@ export default mixins(FormMixin).extend({
             };
 
             if (this.meeting !== null && this.meeting.type === EventTypes.EVENT_TYPE_MILESTONE_MEETING) {
-                if (Number(this.meetingDetails.grade) > 0) {
-                    const tempPayload = {
-                        grade: Number(this.meetingDetails.grade)
-                    };
-                    payload = { ...payload, ...tempPayload };
-                }
-
                 response = await MeetingService.updateMilestoneMeeting(this.meetingId, payload as MilestoneMeetingInterface);
             } else {
                 response = await MeetingService.updateGuidanceMeeting(this.meetingId, payload as MeetingInterface);
@@ -202,9 +183,7 @@ export default mixins(FormMixin).extend({
                 link: "",
                 date: "",
                 time: "",
-                duration: 0,
-                grade: null,
-                isCompleted: false
+                duration: 0
             } as UpdateMeetingInterface;
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
