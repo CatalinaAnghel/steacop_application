@@ -1,18 +1,18 @@
 <template>
   <v-navigation-drawer v-model="value" absolute temporary app>
     <template v-slot:prepend>
-      <v-list-item two-line>
+      <v-list-item two-line v-if="loggedIn">
         <v-list-item-avatar>
-          <img src="https://randomuser.me/api/portraits/women/81.jpg">
+          <img :src="avatarURL">
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title>Jane Smith</v-list-item-title>
+          <v-list-item-title>{{ fullName }}</v-list-item-title>
           <v-list-item-subtitle>Logged In</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </template>
-    <v-divider></v-divider>
+    <v-divider v-if="loggedIn"></v-divider>
     <v-list nav dense>
       <v-list-item-group v-model="group" active-class="secondary lighten-5">
         <v-list-item :to="{ name: 'home' }" v-if="isAdmin || isStudent || isSupervisor">
@@ -33,13 +33,7 @@
             <v-list-item-title>Supervisees</v-list-item-title>
           </v-list-item>
         </template>
-        <v-divider></v-divider>
-        <v-list-item :to="{ name: 'about' }">
-          <v-list-item-icon>
-            <v-icon>mdi-information-variant</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>About us</v-list-item-title>
-        </v-list-item>
+        <v-divider v-if="loggedIn"></v-divider>
         <v-list-item v-if="loggedIn" @click="logout">
           <v-list-item-icon>
             <v-icon>mdi-logout-variant</v-icon>
@@ -52,6 +46,13 @@
           </v-list-item-icon>
           <v-list-item-title>Log in</v-list-item-title>
         </v-list-item>
+        <v-list-item :to="{ name: 'about' }">
+          <v-list-item-icon>
+            <v-icon>mdi-information-variant</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>About us</v-list-item-title>
+        </v-list-item>
+        
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
@@ -80,7 +81,9 @@ export default defineComponent({
       isAdmin: false,
       isStudent: false,
       isSupervisor: false,
-      admin: MENU_OPTIONS_ADMIN
+      admin: MENU_OPTIONS_ADMIN,
+      fullName: "",
+      avatarURL: "https://ui-avatars.com/api/?name="
     };
   },
   computed: {
@@ -100,11 +103,19 @@ export default defineComponent({
     logout: function (): void {
       AuthService.logout();
       this.setProperties();
+      this.fullName = "";
+      this.avatarURL = "https://ui-avatars.com/api/?name=";
       this.$router.push({ name: 'login' });
     },
     setProperties: function () {
       const role = AuthService.getRole();
       if (role !== null) {
+        const parsedToken = AuthService.parseToken(AuthService.getAccessToken());
+        if(parsedToken !== null && typeof parsedToken.username !== 'undefined'){
+          this.fullName = parsedToken.fullName;
+          const processedFullName = this.fullName.includes(" ")? this.fullName.replace(" ", "+"): this.fullName;
+          this.avatarURL = this.avatarURL + processedFullName;
+        }
         switch (role) {
           case Roles.ROLE_ADMIN:
             this.isAdmin = true;
@@ -120,6 +131,7 @@ export default defineComponent({
         this.isStudent = false;
         this.isSupervisor = false;
       }
+      
     }
   },
   created: function () {

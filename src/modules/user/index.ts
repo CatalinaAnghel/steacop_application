@@ -3,5 +3,6 @@ export interface UserData {
     username: string,
     exp: number,
     id: number,
-    code: string
+    code: string,
+    fullName: string
 };

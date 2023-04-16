@@ -101,7 +101,8 @@ export default mixins(FormMixin).extend({
             this.toggleProcessingState();
             let response = {
                 'success': true,
-                'error': ''
+                'error': '',
+                'code': null as number|null
             };
 
             if (this.meeting !== null && this.meeting.type === EventTypes.EVENT_TYPE_MILESTONE_MEETING) {

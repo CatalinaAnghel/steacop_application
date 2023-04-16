@@ -11,7 +11,8 @@ function initialize(): UserData {
         username: "",
         exp: 0,
         id: 0,
-        code: ""
+        code: "",
+        fullName: ""
     }
 }
 
