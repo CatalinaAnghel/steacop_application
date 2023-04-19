@@ -44,4 +44,25 @@ export default class FileUploadService {
 
         return requestStatus;
     }
+
+    static async uploadAssignmentFile(formData: FormData): Promise<ResponseDto> {
+        const requestStatus = {
+            success: true,
+            error: '',
+            data: '',
+            code: null as number|null
+        };
+
+        await axios.post('/documents', formData)
+            .then(response => {
+                requestStatus.data = (response.data as FileUploadResponseInterface).contentUrl;
+            })
+            .catch(error => {
+                const requestStatusTemp = ErrorHandler.handleError(error);
+                requestStatus.success = requestStatusTemp.success;
+                requestStatus.error = requestStatusTemp.error;
+            });
+
+        return requestStatus;
+    }
 }

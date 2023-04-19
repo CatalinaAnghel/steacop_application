@@ -61,13 +61,13 @@
 /* eslint-disable */
 import { defineComponent } from "vue"
 import Vue from 'vue';
-import { CalendarRangeInterface, CalendarInterface, EventInterface, CalendarFormatInterface } from "@/modules/calendar";
+import { CalendarRangeInterface, CalendarInterface, CalendarFormatInterface, BaseEventInterface } from "@/modules/calendar";
 
 export default defineComponent({
   emits: ['update:calendar', 'selected:event', 'open:event', 'create:event'],
   props: {
     events: {
-      type: Array as () => EventInterface[],
+      type: Array as () => BaseEventInterface[],
       required: true,
     },
     names: {
@@ -91,7 +91,7 @@ export default defineComponent({
       month: 'Month',
       day: 'Day'
     } as CalendarFormatInterface,
-    selectedEvent: {} as EventInterface,
+    selectedEvent: {} as BaseEventInterface,
     selectedElement: null,
   }),
   mounted() {
@@ -115,7 +115,7 @@ export default defineComponent({
       this.focus = date
       this.type = 'day'
     },
-    getEventColor(event: EventInterface): string {
+    getEventColor(event: BaseEventInterface): string {
       return event.color
     },
     setToday(): void {

@@ -38,7 +38,7 @@ const routes: Array<RouteConfig> = [
     path: '/cms/settings',
     name: 'settings',
     component: () => import('../pages/admin/SystemConfigurationView.vue'),
-    alias:'/details',
+    alias: '/details',
     meta: {
       requiresAuth: true,
       roles: [
@@ -61,18 +61,30 @@ const routes: Array<RouteConfig> = [
         name: 'supervisoryPlan',
         component: () => import('../components/settings/SupervisoryPlanForm.vue'),
       },
-      
+
     ]
   },
-  { 
+  {
     path: '/cms/students',
     name: 'viewStudents',
-    component: () => import('../pages/admin/StudentsManagementView.vue') 
+    component: () => import('../pages/admin/StudentsManagementView.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: [
+        Roles.ROLE_ADMIN
+      ]
+    },
   },
-  { 
+  {
     path: '/cms/supervisors',
     name: 'viewSupervisors',
-    component: () => import('../pages/admin/SupervisorsManagementView.vue') 
+    component: () => import('../pages/admin/SupervisorsManagementView.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: [
+        Roles.ROLE_ADMIN
+      ]
+    },
   },
   {
     path: '/',
@@ -108,9 +120,9 @@ const routes: Array<RouteConfig> = [
     },
     beforeEnter: async (to, from, next) => {
       const project = await ProjectService.getProjectInfo(Number(to.params.id));
-      if(project === null){
+      if (project === null) {
         next('NotFound');
-      }else{
+      } else {
         next();
       }
     },
@@ -128,7 +140,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'assignments',
         name: 'projectAssignments',
-        component: () => import('../components/projects/assignments/AssignmentsView.vue'),
+        component: () => import('../components/projects/assignments/AssignmentsView.vue')
       },
       {
         path: 'functionalities',
@@ -137,10 +149,23 @@ const routes: Array<RouteConfig> = [
       },
     ]
   },
-  { 
+  {
+    path: '/assignment/:id',
+    name: 'assignment',
+    props: true,
+    component: () => import('../pages/common/AssignmentDetailsView.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: [
+        Roles.ROLE_TEACHER,
+        Roles.ROLE_STUDENT
+      ]
+    },
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('../pages/routing/NotFoundView.vue') 
+    component: () => import('../pages/routing/NotFoundView.vue')
   },
 ];
 
@@ -157,23 +182,23 @@ router.beforeEach(async (to, from, next) => {
   const token = AuthService.getAccessToken();
 
   if (authorize) {
-      if (token === null || !(await AuthService.isLoggedIn())) {
-          // not logged in so redirect to login page with the return url
-          AuthService.logout();
-          return next({ name: 'login', query: { returnUrl: to.path } });
-      }
-      const userInfo = AuthService.parseToken(token);
-      const roles = to.meta?.roles;
+    if (token === null || !(await AuthService.isLoggedIn())) {
+      // not logged in so redirect to login page with the return url
+      AuthService.logout();
+      return next({ name: 'login', query: { returnUrl: to.path } });
+    }
+    const userInfo = AuthService.parseToken(token);
+    const roles = to.meta?.roles;
 
-      // check if route is restricted by role
-      if (userInfo == null) {
-        // role not authorised so redirect to home page
-        return next({ name: 'home' });
-      }
+    // check if route is restricted by role
+    if (userInfo == null) {
+      // role not authorised so redirect to home page
+      return next({ name: 'home' });
+    }
 
-      if(!roles.includes(userInfo.roles[0])) {
-        return next({ name: 'access_denied' });
-      }
+    if (!roles.includes(userInfo.roles[0])) {
+      return next({ name: 'access_denied' });
+    }
   }
 
   next();

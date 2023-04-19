@@ -26,19 +26,26 @@ export interface CalendarRangeInterface{
     }
 }
 
-export interface EventInterface {
+export interface BaseEventInterface {
     id: number;
-    duration: number;
     name: string;
     start: Date;
     end: Date;
     color: string;
     timed: boolean;
     details: string;
+}
+
+export interface EventInterface extends BaseEventInterface{
+    duration: number;
     isCompleted: boolean;
     type: string;
     link: string|null;
     grade: number|null;
+}
+
+export interface AssignmentEventInterface extends BaseEventInterface{
+    documents: []|null;
 }
 
 export interface CalendarFormatInterface {

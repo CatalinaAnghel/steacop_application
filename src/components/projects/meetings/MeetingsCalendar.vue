@@ -2,14 +2,14 @@
     <div>
         <base-overlay :overlay="loading"></base-overlay>
         <create-meeting-dialog :open="createDialog" @close:dialog="closeCreateDialog"
-            @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></create-meeting-dialog>
+            @submitted:form="requestStatus => handleMeetingAction(requestStatus)" form-title="Schedule a meeting"></create-meeting-dialog>
         <edit-meeting-dialog :meeting="selectedMeeting" :open="editDialog"
             :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
-            @close:dialog="closeEditDialog"
+            @close:dialog="closeEditDialog" form-title="Update the details of the meeting"
             @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></edit-meeting-dialog>
         <grade-meeting-dialog :meeting="selectedMeeting" :open="gradeMeetingDialog"
             :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
-            @close:dialog="closeGradeMeetingDialog"
+            @close:dialog="closeGradeMeetingDialog" form-title="Grade the meeting"
             @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></grade-meeting-dialog>
         <base-calendar :names="names" :colors="colors" :events="events"
             @update:calendar="payload => updateCalendarEvents(payload)"
