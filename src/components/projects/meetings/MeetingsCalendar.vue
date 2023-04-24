@@ -11,7 +11,7 @@
             :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
             @close:dialog="closeGradeMeetingDialog" form-title="Grade the meeting"
             @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></grade-meeting-dialog>
-        <base-calendar :names="names" :colors="colors" :events="events"
+        <base-calendar :events="events"
             @update:calendar="payload => updateCalendarEvents(payload)"
             @selected:event="selected => updateSelectedEvent(selected)" :selected-open="selectedOpen"
             @open:event="selectedEvent => registerEventOpen(selectedEvent)" @create:event="openCreateDialog">

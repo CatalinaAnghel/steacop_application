@@ -70,14 +70,14 @@ export default defineComponent({
       type: Array as () => BaseEventInterface[],
       required: true,
     },
-    names: {
-      type: Array as () => string[],
-      required: true
-    },
-    colors: {
-      type: Array as () => string[],
-      required: true
-    },
+    // names: {
+    //   type: Array as () => string[],
+    //   required: false
+    // },
+    // colors: {
+    //   type: Array as () => string[],
+    //   required: false
+    // },
     selectedOpen: {
       type: Boolean,
       required: false,

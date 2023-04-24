@@ -15,8 +15,22 @@
                 <v-container>
                     <v-row>
                         <v-col col="12" sm="12" md="12">
-                            <assignment-upload-form v-if="checkStatus" :assignment-details="assignmentDetails" @toggled:loader="toggleLoader"/>
                             
+                            <assignment-upload-form v-if="editable" :assignment-details="assignmentDetails"
+                                @toggled:loader="toggleLoader" @updated:assignment="response => handleUpdateAssignmentDetails(response)"
+                                @refresh:documents="refreshDocuments"/>
+                            <v-btn v-if="!checkStatus && showForm" color="neutral" block @click="unsubmit" large class="my-3">Unsubmit</v-btn>
+                            <assignment-upload-list v-if="assignmentDetails.documents.length"
+                                :assignmentDetails="assignmentDetails" :deletable="editable"
+                                @refresh:documents="refreshDocuments"></assignment-upload-list>
+                            <div v-else>
+                                <v-icon medium color="warning">
+                                    mdi-book-alert-outline
+                                </v-icon>
+                                <span class="text-center subtitle-1">
+                                    The assignment was not turned in
+                                </span>
+                            </div>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -30,8 +44,11 @@ import { AssignmentInterface, AssignmentStatus, AssignmentStatusInterface } from
 import { defineComponent } from "vue";
 import { getStatus } from "@/modules/assignment";
 import AssignmentUploadForm from "./AssignmentUploadForm.vue";
+import AssignmentUploadList from "./AssignmentUploadList.vue";
+import AssignmentService from "@/services/assignment-service";
 
 export default defineComponent({
+    emits: ["updated:assignment", "refresh:documents"],
     props: {
         assignmentDetails: {
             type: Object as () => AssignmentInterface,
@@ -44,7 +61,8 @@ export default defineComponent({
         }
     },
     components: {
-        AssignmentUploadForm
+        AssignmentUploadForm,
+        AssignmentUploadList
     },
     data: function () {
         return {
@@ -57,13 +75,28 @@ export default defineComponent({
         status: function (): AssignmentStatusInterface {
             return getStatus(new Date(this.assignmentDetails.dueDate), this.assignmentDetails.turnedInDate);
         },
-        checkStatus: function (): boolean{
-            return this.showForm && (this.status.status === AssignmentStatus.Assigned || this.status.status === AssignmentStatus.NotTurnedIn);
+        checkStatus: function (): boolean {
+            return this.status.status === AssignmentStatus.Assigned || this.status.status === AssignmentStatus.NotTurnedIn;
+        },
+        editable: function(): boolean{
+            return this.showForm && this.checkStatus;
         }
     },
     methods: {
         toggleLoader: function (): void {
             this.loading = !this.loading;
+        },
+        unsubmit: async function(): Promise<void>{
+            this.toggleLoader();
+            const response = await AssignmentService.setStatusAssignment(this.assignmentDetails.id, false);
+            this.handleUpdateAssignmentDetails(response);
+            this.toggleLoader();
+        },
+        handleUpdateAssignmentDetails: function(response: AssignmentInterface|null): void{
+            this.$emit("updated:assignment", response);
+        },
+        refreshDocuments: function(): void{
+            this.$emit("refresh:documents");
         }
     }
 })

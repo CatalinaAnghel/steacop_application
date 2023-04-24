@@ -1,5 +1,5 @@
-export interface CreateAssignmentPayloadInterface {
-    projectId: number;
+export interface AssignmentPayloadInterface {
+    projectId: number|null;
     title: string;
     description: string;
     dueDate: string;
@@ -13,7 +13,14 @@ export interface AssignmentInterface {
     dueDate: string;
     turnedInDate: string | null;
     grade: number | null;
-    documents: [];
+    documents: DocumentInterface[]|[];
+}
+
+export interface DocumentInterface{
+    contentUrl: string;
+    filePath: string;
+    id: number;
+    createdAt: string;
 }
 
 export interface AssignmentStatusInterface {
@@ -25,7 +32,7 @@ export interface AssignmentStatusInterface {
 export function getStatus(dueDate: Date, turnedInDate: string | null): AssignmentStatusInterface {
     const currentDate = new Date();
     if (dueDate.getTime() < currentDate.getTime() &&
-        turnedInDate === null) {
+        typeof turnedInDate === 'undefined') {
         return { 
             message: AssignmentStatusMessage.NotTurnedIn,
             color: 'error',
@@ -64,6 +71,6 @@ export enum AssignmentStatus{
 export enum AssignmentStatusMessage{
     TurnedIn = 'Turned in',
     TurnedInLate = 'Turned in late',
-    NotTurnedIn = 'Not turned in',
+    NotTurnedIn = 'Missing',
     Assigned = 'Assigned'
 }

@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { PayloadInterface } from "@/store/common/types";
+import { DocumentInterface } from "../assignment";
 
 export interface CalendarInterface {
     prev: () => void;
@@ -45,7 +46,8 @@ export interface EventInterface extends BaseEventInterface{
 }
 
 export interface AssignmentEventInterface extends BaseEventInterface{
-    documents: []|null;
+    documents: DocumentInterface[]|null;
+    turnInDate: string|null;
 }
 
 export interface CalendarFormatInterface {

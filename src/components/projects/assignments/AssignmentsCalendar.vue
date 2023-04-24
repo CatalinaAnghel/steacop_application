@@ -2,42 +2,39 @@
     <div>
         <base-overlay :overlay="loading"></base-overlay>
         <create-assignment-dialog :open="createDialog" @close:dialog="closeCreateDialog"
-            @submitted:form="requestStatus => handleMeetingAction(requestStatus)"
+            @submitted:form="requestStatus => handleAction(requestStatus)"
             form-title="Create an assignment"></create-assignment-dialog>
-        <base-calendar :names="names" :colors="colors" :events="events"
-            @update:calendar="payload => updateCalendarEvents(payload)"
+        <edit-assignment-dialog :open="editDialog" @close:dialog="closeEditDialog"
+            @submitted:form="requestStatus => handleAction(requestStatus)" 
+            form-title="Update the assignment" :assignment="selectedAssignment"></edit-assignment-dialog>
+        <base-calendar :events="events" @update:calendar="payload => updateCalendarEvents(payload)"
             @selected:event="selected => updateSelectedEvent(selected)" :selected-open="selectedOpen"
             @open:event="selectedEvent => registerEventOpen(selectedEvent)" @create:event="openCreateDialog">
             <template v-slot:eventCard="{ selectedEvent }">
-                <v-card color="grey lighten-4" min-width="350px" flat>
+                <v-card color="grey lighten-4" min-width="400px" flat>
                     <v-toolbar :color="selectedEvent.color" dark>
                         <v-toolbar-title>{{ selectedEvent.name }}</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted)" icon @click="editMeeting">
+                        <v-icon medium class="mr-2" @click="viewAssignment(selectedAssignment.id)">
+                            mdi-book-open-outline
+                        </v-icon>
+                        <v-btn v-if="showEventOptions(selectedEvent)" icon @click="openEditDialog">
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>
-                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted)" icon
-                            @click="deleteAssignment(selectedEvent)">
+                        <v-btn v-if="showEventOptions(selectedEvent)" icon @click="deleteAssignment(selectedEvent)">
                             <v-icon>mdi-delete</v-icon>
                         </v-btn>
                     </v-toolbar>
                     <v-card-text>
                         <div class="pb-5">
                             <span class="mdi mdi-clock-outline pr-2"></span>
-                            <span><b>Scheduled at: </b>{{ (new Date(selectedEvent.start)).toLocaleTimeString() }} - {{ (new
-                                Date(selectedEvent.end)).toLocaleTimeString() }}</span>
+                            <span><b>Due at: </b>{{ (new Date(selectedEvent.end)).toLocaleTimeString() }}</span>
                         </div>
                         <div class="pb-5">
-                            <span class="mdi mdi-link pr-2"></span>
-                            <span><b>Link: </b><a target="_blank" :href="selectedEvent.link">{{ selectedEvent.link
-                            }}</a></span>
+                            <span class="mdi mdi-book-outline pr-2"></span>
+                            <span><b>Status: </b><span :class="getAssignmentStatus(selectedEvent).color + '--text'">{{
+                                getAssignmentStatus(selectedEvent).message }}</span></span>
                         </div>
-                        <div class="pb-5">
-                            <span class="mdi mdi-link pr-2"></span>
-                            <span><b>Status: </b>{{ selectedEvent.isCompleted ? "Finished" : "Scheduled" }}</span>
-                        </div>
-                        <v-divider></v-divider>
-                        <span class="pt-5">{{ selectedEvent.details }}</span>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn text color="secondary" @click="closePreview">
@@ -55,23 +52,17 @@
 import BaseCalendar from '@/components/base/BaseCalendar.vue';
 import BaseOverlay from '@/components/base/BaseOverlay.vue';
 import CreateAssignmentDialog from '@/components/dialogs/assignments/CreateAssignmentDialog.vue';
+import EditAssignmentDialog from '@/components/dialogs/assignments/EditAssignmentDialog.vue';
 import { AssignmentEventInterface, CalendarRangeInterface } from '@/modules/calendar';
 import { ResponseDto } from '@/modules/common';
 import { defineComponent } from 'vue';
 import AssignmentService from '@/services/assignment-service';
+import { AssignmentStatusInterface, getStatus } from '@/modules/assignment';
 
 export default defineComponent({
     data: function () {
         return {
             events: [] as AssignmentEventInterface[],
-            names: [
-                "Guidance meeting",
-                "Milestone meeting"
-            ],
-            colors: [
-                "primary",
-                "secondary"
-            ],
             selectedOpen: false,
             selectedAssignment: null as AssignmentEventInterface | null,
             editDialog: false,
@@ -86,11 +77,15 @@ export default defineComponent({
     components: {
         BaseOverlay,
         BaseCalendar,
-        CreateAssignmentDialog
+        CreateAssignmentDialog,
+        EditAssignmentDialog
     },
     methods: {
         toggleLoading: function () {
             this.loading = !this.loading;
+        },
+        showEventOptions(assignment: AssignmentEventInterface): boolean {
+            return assignment.turnInDate === null || typeof assignment.turnInDate === 'undefined';
         },
         updateCalendarEvents: async function (payload: CalendarRangeInterface) {
             this.toggleLoading();
@@ -100,18 +95,19 @@ export default defineComponent({
             if (null !== assignments) {
                 this.events = assignments.map(element => {
                     const dueDate = new Date(element.dueDate);
-                    let endingAt = (new Date(element.dueDate))
-                        .setHours(dueDate.getHours() + 1);
+                    let startingAt = (new Date(element.dueDate))
+                        .setHours(dueDate.getHours() - 1);
                     return {
-                        name: this.names[0],
-                        start: dueDate,
-                        end: new Date(endingAt),
-                        color: this.colors[0],
-                        timed: true,
+                        name: element.title,
+                        start: new Date(startingAt),
+                        end: dueDate,
+                        color: 'primary',
+                        timed: false,
                         details: element.description,
                         title: element.title,
                         id: element.id,
-                        documents: element.documents
+                        documents: element.documents,
+                        turnInDate: element.turnedInDate
                     } as AssignmentEventInterface
                 });
             }
@@ -123,10 +119,7 @@ export default defineComponent({
                 this.selectedAssignment = null;
             }
         },
-        showEventOptions: function (isCompleted: boolean): boolean {
-            return !isCompleted;
-        },
-        editMeeting: function (): void {
+        openEditDialog: function (): void {
             this.editDialog = true;
         },
         closeEditDialog: function (): void {
@@ -144,10 +137,10 @@ export default defineComponent({
         closeCreateDialog: function (): void {
             this.createDialog = false;
         },
-        registerEventOpen: async function (selectedEvent: AssignmentEventInterface): Promise<void> {
-            this.selectedAssignment = selectedEvent;
+        registerEventOpen: function (selectedEvent: AssignmentEventInterface): void {
+            this.selectedAssignment = selectedEvent as AssignmentEventInterface;
         },
-        handleMeetingAction: function (response: ResponseDto): void {
+        handleAction: function (response: ResponseDto): void {
             if (response.success) {
                 this.updateCalendarEvents(this.calendarRange);
             }
@@ -156,8 +149,29 @@ export default defineComponent({
             this.selectedOpen = false;
             this.selectedAssignment = null;
         },
-        deleteAssignment(selectedEvent: AssignmentEventInterface): void{
-            
+        deleteAssignment: async function (selectedEvent: AssignmentEventInterface): Promise<void> {
+            this.toggleLoading();
+            let response = {
+                error: "",
+                success: true
+            } as ResponseDto;
+            response = await AssignmentService.deleteAssignment(selectedEvent.id);
+            if (response.success) {
+                this.events = this.events.filter(event => { return event.id !== selectedEvent.id });
+            }
+            this.selectedOpen = false;
+            this.toggleLoading();
+        },
+        getAssignmentStatus(selectedEvent: AssignmentEventInterface): AssignmentStatusInterface {
+            return getStatus(new Date(selectedEvent.end), selectedEvent.turnInDate);
+        },
+        viewAssignment(assignmentId: number): void {
+            const id = assignmentId.toString();
+            this.$router.push({
+                name: "assignment", params: {
+                    id
+                }
+            });
         }
     }
 });

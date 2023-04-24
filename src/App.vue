@@ -9,7 +9,7 @@
         </v-col>
       </v-row>
     </v-main>
-    <v-footer></v-footer>
+    <the-footer></the-footer>
   </v-app>
 </template>
 
@@ -17,6 +17,7 @@
 import { defineComponent } from 'vue';
 import TheNavbar from './components/navbar/TheNavbar.vue';
 import TheNavigationDrawer from './components/navbar/TheNavigationDrawer.vue';
+import TheFooter from './components/TheFooter.vue';
 
 export default defineComponent({
   name: 'App',
@@ -29,7 +30,13 @@ export default defineComponent({
   },
   components: {
     TheNavbar,
-    TheNavigationDrawer
+    TheNavigationDrawer,
+    TheFooter
+  },
+  computed: {
+    homePage: function(): boolean{
+      return this.$route.name === 'home';
+    }
   },
   methods: {
     updateDrawerValue: function(value: boolean) {

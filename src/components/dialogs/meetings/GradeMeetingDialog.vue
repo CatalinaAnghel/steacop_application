@@ -22,7 +22,7 @@
                                         <validation-provider
                                             rules="between:1,10" v-slot="{ errors }">
                                             <v-text-field v-model="grade" label="Grade" hide-details="auto"
-                                                :error-messages="errors" class="mt-3" type="number" prepend-icon="mdi-link">
+                                                :error-messages="errors" class="mt-3" type="number" prepend-icon="mdi-clipboard-check">
                                             </v-text-field>
                                         </validation-provider>
                                         <v-btn :disabled="processing" block dark type="submit" large class="my-3"

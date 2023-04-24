@@ -18,17 +18,19 @@
                         <v-row>
                             <v-col col="12" sm="12" md="12">
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
-                                    <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(createAssignment)">
+                                    <v-form v-model="valid" ref="formDialog"
+                                        @submit.prevent="handleSubmit(createAssignment)">
                                         <validation-provider rules="required|min:16" v-slot="{ errors }">
                                             <v-text-field class="mt-2" v-model="assignmentDetails.title" label="Title"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
                                             </v-text-field>
                                         </validation-provider>
                                         <validation-provider rules="required|min:16" v-slot="{ errors }">
-                                            <v-text-field class="mt-2" v-model="assignmentDetails.description"
-                                                label="Description" hide-details="auto" :error-messages="errors"
-                                                prepend-icon="mdi-text-short">
-                                            </v-text-field>
+                                            <v-textarea counter class="mt-2" clearable clear-icon="mdi-close-circle" label="Description"
+                                                v-model="assignmentDetails.description" hide-details="auto" rows="2"
+                                                :error-messages="errors"
+                                                prepend-icon="mdi-text-short"
+                                            ></v-textarea>
                                         </validation-provider>
                                         <validation-provider rules="required" v-slot="{ errors }">
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
@@ -78,7 +80,7 @@ import mixins from 'vue-typed-mixins';
 import FormMixin from '@/components/mixins/FormMixin.vue';
 import Vue from 'vue';
 import { toISOLocale } from "@/services/helper-service";
-import { CreateAssignmentPayloadInterface } from "@/modules/assignment";
+import { AssignmentPayloadInterface } from "@/modules/assignment";
 import AssignmentService from "@/services/assignment-service";
 import { ResponseDto } from "@/modules/common";
 
@@ -143,7 +145,7 @@ export default mixins(FormMixin).extend({
                 'error': '',
                 code: null as number | null
             };
-            response = await AssignmentService.createAssignment(payload as CreateAssignmentPayloadInterface);
+            response = await AssignmentService.createAssignment(payload as AssignmentPayloadInterface);
             this.handleResponse(response);
             this.toggleProcessingState();
             this.close();
