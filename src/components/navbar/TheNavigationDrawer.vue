@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="value" absolute temporary app>
+  <v-navigation-drawer v-model="value" temporary app>
     <template v-slot:prepend>
       <v-list-item two-line v-if="loggedIn">
         <v-list-item-avatar>

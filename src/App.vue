@@ -34,14 +34,20 @@ export default defineComponent({
     TheFooter
   },
   computed: {
-    homePage: function(): boolean{
+    homePage: function (): boolean {
       return this.$route.name === 'home';
     }
   },
   methods: {
-    updateDrawerValue: function(value: boolean) {
+    updateDrawerValue: function (value: boolean) {
       this.drawer = value;
     }
   }
 });
 </script>
+
+<style>
+html {
+  overflow: auto !important;
+}
+</style>
