@@ -19,18 +19,18 @@
                             <v-col col="12" sm="12" md="12">
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                     <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(updateMeeting)">
-                                        <validation-provider rules="required|min:16" v-slot="{ errors }">
+                                        <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
                                             <v-text-field v-model="meetingDetails.description" label="Description"
                                                 hide-details="auto" :error-messages="errors" class="mt-3"
                                                 prepend-icon="mdi-text-short">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider rules="required|min:10" v-slot="{ errors }">
+                                        <validation-provider rules="required|min:10" v-slot="{ errors }" name="Link">
                                             <v-text-field v-model="meetingDetails.link" label="Link" hide-details="auto"
                                                 :error-messages="errors" class="mt-3" prepend-icon="mdi-link">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider rules="required" v-slot="{ errors }">
+                                        <validation-provider rules="required" v-slot="{ errors }" name="Scheduled date">
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
                                                 transition="scale-transition" offset-y min-width="auto">
                                                 <template v-slot:activator="{ on, attrs }">

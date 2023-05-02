@@ -20,19 +20,19 @@
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                     <v-form v-model="valid" ref="formDialog"
                                         @submit.prevent="handleSubmit(createAssignment)">
-                                        <validation-provider rules="required|min:16" v-slot="{ errors }">
+                                        <validation-provider rules="required|min:16" v-slot="{ errors }" name="Title">
                                             <v-text-field class="mt-2" v-model="assignmentDetails.title" label="Title"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider rules="required|min:16" v-slot="{ errors }">
+                                        <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
                                             <v-textarea counter class="mt-2" clearable clear-icon="mdi-close-circle" label="Description"
                                                 v-model="assignmentDetails.description" hide-details="auto" rows="2"
                                                 :error-messages="errors"
                                                 prepend-icon="mdi-text-short"
                                             ></v-textarea>
                                         </validation-provider>
-                                        <validation-provider rules="required" v-slot="{ errors }">
+                                        <validation-provider rules="required" v-slot="{ errors }" name="Due date">
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
                                                 transition="scale-transition" offset-y min-width="auto">
                                                 <template v-slot:activator="{ on, attrs }">
@@ -45,7 +45,7 @@
                                                     @input="datePicker = false"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
-                                        <validation-provider rules="required" v-slot="{ errors }">
+                                        <validation-provider rules="required" v-slot="{ errors }" name="Time">
                                             <v-menu ref="menu" v-model="timePicker" :close-on-content-click="false"
                                                 :nudge-right="40" :return-value.sync="assignmentDetails.dueTime"
                                                 transition="scale-transition" offset-y max-width="290px" min-width="290px">

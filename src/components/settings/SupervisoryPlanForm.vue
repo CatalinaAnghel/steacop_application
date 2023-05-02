@@ -1,43 +1,48 @@
 <template>
-    <v-card elevation="3" :loading="loading">
-        <v-row justify="center" class="pt-3">
-            <v-col cols="10">
-                <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
-                    @update:showAlert="updateShowAlert"></base-alert>
-            </v-col>
-        </v-row>
-        <v-row justify="center" class="pt-3">
-            <v-col cols="auto">
-                <h2 class="primary--text text--darken-3">Set up a supervisory plan</h2>
-            </v-col>
-        </v-row>
-        <v-row justify="center">
-            <v-col cols="8">
-                <validation-observer ref="observer" v-slot="{ invalid, handleSubmit }">
-                    <v-form v-model="valid" @submit.prevent="handleSubmit(updateSupervisoryPlan)">
-                        <validation-provider rules="required" v-slot="{ errors }">
-                            <v-select label="Supervisory plan" :items="plans" item-text="name" item-value="id" return-object
-                                single-line :error-messages="errors" v-model="plan" required :disabled="disableDropdown"
-                                color="primary"></v-select>
-                        </validation-provider>
-                        <validation-provider v-if="showInputs" rules="required|between:1,10" name="Number of assignments"
-                            v-slot="{ errors }">
-                            <v-text-field type="number" label="Number of assignments" hide-details="auto"
-                                v-model="plan.numberOfAssignments" :error-messages="errors" class="mt-3"></v-text-field>
-                        </validation-provider>
-                        <validation-provider v-if="showInputs" rules="required|between:1,10" name="Number of meetings"
-                            v-slot="{ errors }">
-                            <v-text-field label="Number of guidance meetings" type="number" hide-details="auto"
-                                v-model="plan.numberOfGuidanceMeetings" :error-messages="errors"
-                                class="mt-3"></v-text-field>
-                        </validation-provider>
-                        <v-btn block color="secondary" type="submit" :disabled="invalid || disableButton"
-                            large class="my-3 w-100" @click="toggleLoader">Update plan</v-btn>
-                    </v-form>
-                </validation-observer>
-            </v-col>
-        </v-row>
-    </v-card>
+    <v-row justify="center" class="py-16">
+        <v-col cols="10" sm="10" md="12" lg="6" xl="6">
+            <v-card elevation="3" :loading="loading">
+                <v-row justify="center" class="pt-3">
+                    <v-col cols="10">
+                        <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
+                            @update:showAlert="updateShowAlert"></base-alert>
+                    </v-col>
+                </v-row>
+                <v-row justify="center" class="pt-3">
+                    <v-col cols="auto">
+                        <h2 class="primary--text text--darken-3">Set up a supervisory plan</h2>
+                    </v-col>
+                </v-row>
+                <v-row justify="center">
+                    <v-col cols="8">
+                        <validation-observer ref="observer" v-slot="{ invalid, handleSubmit }">
+                            <v-form v-model="valid" @submit.prevent="handleSubmit(updateSupervisoryPlan)">
+                                <validation-provider rules="required" v-slot="{ errors }">
+                                    <v-select label="Supervisory plan" :items="plans" item-text="name" item-value="id"
+                                        return-object single-line :error-messages="errors" v-model="plan" required
+                                        :disabled="disableDropdown" color="primary"></v-select>
+                                </validation-provider>
+                                <validation-provider v-if="showInputs" rules="required|between:1,10"
+                                    name="Number of assignments" v-slot="{ errors }">
+                                    <v-text-field type="number" label="Number of assignments" hide-details="auto"
+                                        v-model="plan.numberOfAssignments" :error-messages="errors"
+                                        class="mt-3"></v-text-field>
+                                </validation-provider>
+                                <validation-provider v-if="showInputs" rules="required|between:1,10"
+                                    name="Number of meetings" v-slot="{ errors }">
+                                    <v-text-field label="Number of guidance meetings" type="number" hide-details="auto"
+                                        v-model="plan.numberOfGuidanceMeetings" :error-messages="errors"
+                                        class="mt-3"></v-text-field>
+                                </validation-provider>
+                                <v-btn block color="secondary" type="submit" :disabled="invalid || disableButton" large
+                                    class="my-3 w-100" @click="toggleLoader">Update plan</v-btn>
+                            </v-form>
+                        </validation-observer>
+                    </v-col>
+                </v-row>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 
 <script lang="ts">

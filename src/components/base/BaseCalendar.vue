@@ -49,7 +49,7 @@
         <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :event-color="getEventColor"
           :type="type" @click:event="showEvent" @click:more="viewDay" @click:date="viewDay"
           @change="updateRange"></v-calendar>
-        <v-menu v-model="selectedEventOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
+        <v-menu v-if="selectedEventOpen" v-model="selectedEventOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
           <slot name="eventCard" :selectedEvent="selectedEvent"></slot>
         </v-menu>
       </v-sheet>
@@ -70,14 +70,6 @@ export default defineComponent({
       type: Array as () => BaseEventInterface[],
       required: true,
     },
-    // names: {
-    //   type: Array as () => string[],
-    //   required: false
-    // },
-    // colors: {
-    //   type: Array as () => string[],
-    //   required: false
-    // },
     selectedOpen: {
       type: Boolean,
       required: false,

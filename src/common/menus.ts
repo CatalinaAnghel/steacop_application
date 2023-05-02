@@ -16,28 +16,6 @@ export const MENU_OPTIONS_ADMIN = [
             }
         ]
     },
-    {
-        title: "System settings",
-        icon: "mdi-cogs",
-        multiple: true,
-        menuOptions: [
-            {
-                title: "Details",
-                icon: "mdi-notebook",
-                to: "details"
-            },
-            {
-                title: "Supervisory plans",
-                icon: "mdi-notebook",
-                to: "supervisoryPlan"
-            },
-            {
-                title: "Compatibility weights",
-                icon: "mdi-notebook",
-                to: "weights"
-            }
-        ]
-    }
 ];
 
 export const PROJECT_DETAILS_TABS = [
@@ -57,4 +35,19 @@ export const PROJECT_DETAILS_TABS = [
         to: { name: 'projectFunctionalities' },
         name: 'Functionalities'
     },
+];
+
+export const SETTINGS_TABS = [
+    {
+        to: { name: 'generalSettings' },
+        name: 'General settings'
+    },
+    {
+        to: { name: 'weights' },
+        name: 'Scores'
+    },
+    {
+        to: { name: 'supervisoryPlan' },
+        name: 'Supervisory plan'
+    }
 ];

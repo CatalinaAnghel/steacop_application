@@ -1,54 +1,56 @@
 <template>
-    <v-card elevation="3" :loading="loading">
-        <v-row justify="center" class="pt-3">
-            <v-col cols="10">
-                <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
-                    @update:showAlert="updateShowAlert"></base-alert>
-            </v-col>
-        </v-row>
-        <v-row justify="center" class="pt-3">
-            <v-col cols="auto">
-                <h2>System weights</h2>
-            </v-col>
-        </v-row>
-        <v-row justify="center">
-            <v-col cols="8">
-                <validation-observer ref="observer" v-slot="{ invalid, handleSubmit }">
-                    <v-form v-model="valid" @submit.prevent="handleSubmit(saveWeights)">
-                        <v-subheader>Rating score</v-subheader>
-                        <validation-provider rules="required|between:0,100" name="Weight for the supervisor's rating"
-                            v-slot="{ errors }">
-                            <v-text-field type="number" label="Percentage for the supervisor's rating" hide-details="auto"
-                                v-model="supervisorRatingScore" :error-messages="errors" class="mt-3"></v-text-field>
-                        </validation-provider>
-                        <v-divider></v-divider>
-                        <v-subheader>Support score</v-subheader>
-                        <validation-provider rules="required|between:0,100" name="Support score weight" v-slot="{ errors }">
-                            <v-text-field label="Support score weight" type="number" hide-details="auto"
-                                v-model="collaborationScore.supportWeight" :error-messages="errors"
-                                class="mt-3"></v-text-field>
-                        </validation-provider>
-                        <v-divider></v-divider>
-                        <v-subheader>Structure score</v-subheader>
-                        <validation-provider rules="required|between:0,100" name="Late assignment score penalty"
-                            v-slot="{ errors }">
-                            <v-text-field label="Late assignment score penalty" type="number" hide-details="auto"
-                                v-model="assignmentPenalty" :error-messages="errors" class="mt-3"></v-text-field>
-                        </validation-provider>
-                        <validation-provider rules="required|between:0,100" name="Structure score weight"
-                            v-slot="{ errors }">
-                            <v-text-field label="Structure score weight" type="number" hide-details="auto"
-                                v-model="collaborationScore.structureWeight" :error-messages="errors"
-                                class="mt-3"></v-text-field>
-                        </validation-provider>
-                        <v-btn block color="secondary" type="submit"
-                            :disabled="invalid || invalidPercentages" large class="my-3 w-100" @click="toggleLoader">Update
-                            plan</v-btn>
-                    </v-form>
-                </validation-observer>
-            </v-col>
-        </v-row>
-    </v-card>
+    <v-row justify="center" class="py-16">
+        <v-col cols="10" sm="10" md="12" lg="6" xl="6">
+            <v-card elevation="3" :loading="loading">
+                <v-row justify="center" class="pt-3">
+                    <v-col cols="10">
+                        <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
+                            @update:showAlert="updateShowAlert"></base-alert>
+                    </v-col>
+                </v-row>
+                <v-row justify="center" class="pt-3">
+                    <v-col cols="auto">
+                        <h2 class="primary--text text--darken-3">System weights</h2>
+                    </v-col>
+                </v-row>
+                <v-row justify="center">
+                    <v-col cols="8">
+                        <validation-observer ref="observer" v-slot="{ invalid, handleSubmit }">
+                            <v-form v-model="valid" @submit.prevent="handleSubmit(saveWeights)">
+                                <v-subheader>Collaboration score weights</v-subheader>
+                                <validation-provider rules="required|between:0,100|valid_weight:@structureWeight"
+                                    vid="supportWeight" name="Support score weight" v-slot="{ errors }">
+                                    <v-text-field label="Support score weight" type="number" hide-details="auto"
+                                        v-model="collaborationScore.supportWeight" :error-messages="errors"
+                                        class="mt-3"></v-text-field>
+                                </validation-provider>
+                                <validation-provider vid="structureWeight"
+                                    rules="required|between:0,100|valid_weight:@supportWeight" name="Structure score weight"
+                                    v-slot="{ errors }">
+                                    <v-text-field label="Structure score weight" type="number" hide-details="auto"
+                                        v-model="collaborationScore.structureWeight" :error-messages="errors"
+                                        class="mt-3"></v-text-field>
+                                </validation-provider>
+                                <v-text-field disabled type="number" label="Rating score weight" hide-details="auto"
+                                    v-model="ratingScore" class="mt-3"></v-text-field>
+                                <v-subheader>Other weights</v-subheader>
+                                <validation-provider rules="required|between:0,100" name="Supervisor rating weight"
+                                    v-slot="{ errors }">
+                                    <v-text-field label="Supervisor rating weight" type="number" hide-details="auto"
+                                        v-model="supervisorRatingWeight" :error-messages="errors"
+                                        class="mt-3"></v-text-field>
+                                </validation-provider>
+                                <v-btn block color="secondary" type="submit" :disabled="invalid" large class="my-3 w-100"
+                                    @click="toggleLoader">Update
+                                    weights</v-btn>
+
+                            </v-form>
+                        </validation-observer>
+                    </v-col>
+                </v-row>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 <script lang="ts">
 import mixins from "vue-typed-mixins";
@@ -64,13 +66,12 @@ export default mixins(FormMixin).extend({
                 supportWeight: 0,
                 structureWeight: 0
             },
-            assignmentPenalty: 0,
-            supervisorRatingScore: 0
+            supervisorRatingWeight: 0
         }
     },
     computed: {
-        invalidPercentages: function (): boolean {
-            return Number(this.collaborationScore.supportWeight) + Number(this.collaborationScore.structureWeight) !== 100;
+        ratingScore: function (): number {
+            return Math.max(0, 100 - this.collaborationScore.structureWeight - this.collaborationScore.supportWeight);
         }
     },
     methods: {
@@ -78,8 +79,7 @@ export default mixins(FormMixin).extend({
             let params = {
                 supportWeight: Number(this.collaborationScore.supportWeight),
                 structureWeight: Number(this.collaborationScore.structureWeight),
-                structurePenalty: Number(this.assignmentPenalty),
-                ratingWeight: Number(this.supervisorRatingScore)
+                supervisorRatingWeight: Number(this.supervisorRatingWeight)
             };
             const requestStatus = await this.$store.dispatch(weightNamespace + '/update', params);
             this.handleResponse(requestStatus);
@@ -91,8 +91,8 @@ export default mixins(FormMixin).extend({
             let weights = storeService.weights.getWeights();
             weights.forEach((element: WeightInterface) => {
                 switch (element.name) {
-                    case 'RatingWeight':
-                        this.supervisorRatingScore = Number(element.weight);
+                    case 'SupervisorRatingWeight':
+                        this.supervisorRatingWeight = Number(element.weight);
                         break;
                     case 'SupportWeight':
                         this.collaborationScore.supportWeight = Number(element.weight);
@@ -101,7 +101,7 @@ export default mixins(FormMixin).extend({
                         this.collaborationScore.structureWeight = Number(element.weight);
                         break;
                     default:
-                        this.assignmentPenalty = Number(element.weight);
+
                 }
             });
             this.toggleLoader();

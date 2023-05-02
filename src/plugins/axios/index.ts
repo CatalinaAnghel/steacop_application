@@ -37,7 +37,6 @@ axiosInstance.interceptors.response.use(
         return res;
     },
     async (err) => {
-        console.log(err);
         const originalConfig = err.config;
 
         if (originalConfig.url !== AUTHENTICATION_TOKEN_URL && originalConfig.url !== REFRESH_TOKEN_URL && err.response) {
@@ -87,8 +86,6 @@ axiosInstance.interceptors.response.use(
 function validateRefreshToken(): void {
     const refreshTokenExpiration = AuthService.getRefreshTokenExpiration() ?? (new Date()).getTime();
     if ((new Date()).getTime() >= refreshTokenExpiration) {
-        console.error("Refresh token has expired, the access token cannot be regenerated without login: " +
-            AuthService.getRefreshTokenExpiration());
         logout();
     }
 }

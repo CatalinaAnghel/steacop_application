@@ -2,7 +2,8 @@
     <div>
         <base-overlay :overlay="loading"></base-overlay>
         <create-meeting-dialog :open="createDialog" @close:dialog="closeCreateDialog"
-            @submitted:form="requestStatus => handleMeetingAction(requestStatus)" form-title="Schedule a meeting"></create-meeting-dialog>
+            @submitted:form="requestStatus => handleMeetingAction(requestStatus)"
+            form-title="Schedule a meeting"></create-meeting-dialog>
         <edit-meeting-dialog :meeting="selectedMeeting" :open="editDialog"
             :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
             @close:dialog="closeEditDialog" form-title="Update the details of the meeting"
@@ -11,8 +12,7 @@
             :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
             @close:dialog="closeGradeMeetingDialog" form-title="Grade the meeting"
             @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></grade-meeting-dialog>
-        <base-calendar :events="events"
-            @update:calendar="payload => updateCalendarEvents(payload)"
+        <base-calendar :events="events" @update:calendar="payload => updateCalendarEvents(payload)"
             @selected:event="selected => updateSelectedEvent(selected)" :selected-open="selectedOpen"
             @open:event="selectedEvent => registerEventOpen(selectedEvent)" @create:event="openCreateDialog">
             <template v-slot:eventCard="{ selectedEvent }">
@@ -33,7 +33,8 @@
                     </v-toolbar>
                     <v-card-text>
                         <base-rating :rating="rating.value" v-if="showRating(selectedEvent)"
-                            @updated:rating="ratingValue => editRating(ratingValue)" :readonly="readonlyRating"></base-rating>
+                            @updated:rating="ratingValue => editRating(ratingValue)"
+                            :readonly="readonlyRating"></base-rating>
                         <div class="pb-5">
                             <span class="mdi mdi-clock-outline pr-2"></span>
                             <span><b>Scheduled at: </b>{{ (new Date(selectedEvent.start)).toLocaleTimeString() }} - {{ (new
@@ -246,19 +247,21 @@ export default defineComponent({
         },
         registerEventOpen: async function (selectedEvent: EventInterface): Promise<void> {
             this.selectedMeeting = selectedEvent;
-            const response = await RatingService.getRating(this.selectedMeeting.id);
-            this.readonlyRating = response === false;
-            if (response !== false && response !== null) {
-                this.rating = {
-                    meetingId: selectedEvent.id,
-                    value: response.value,
-                    id: response.id
-                }
-            } else if (response === null) {
-                this.rating = {
-                    meetingId: selectedEvent.id,
-                    value: 0,
-                    id: 0
+            if (selectedEvent.isCompleted && selectedEvent.type === EventTypes.EVENT_TYPE_GUIDANCE_MEETING) {
+                const response = await RatingService.getRating(this.selectedMeeting.id);
+                this.readonlyRating = response === false;
+                if (response !== false && response !== null) {
+                    this.rating = {
+                        meetingId: selectedEvent.id,
+                        value: response.value,
+                        id: response.id
+                    }
+                } else if (response === null) {
+                    this.rating = {
+                        meetingId: selectedEvent.id,
+                        value: 0,
+                        id: 0
+                    }
                 }
             }
         },
@@ -289,9 +292,9 @@ export default defineComponent({
         editRating: async function (rating: number): Promise<void> {
             this.rating.value = rating;
 
-            if(this.rating.id > 0){
+            if (this.rating.id > 0) {
                 await RatingService.updateRating(this.rating.id, rating);
-            }else{
+            } else {
                 await RatingService.createRating(this.rating);
             }
         },

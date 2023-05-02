@@ -20,7 +20,7 @@
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                     <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(updateMeeting)">
                                         <validation-provider
-                                            rules="between:1,10" v-slot="{ errors }">
+                                            rules="between:1,10" v-slot="{ errors }" name="Grade">
                                             <v-text-field v-model="grade" label="Grade" hide-details="auto"
                                                 :error-messages="errors" class="mt-3" type="number" prepend-icon="mdi-clipboard-check">
                                             </v-text-field>

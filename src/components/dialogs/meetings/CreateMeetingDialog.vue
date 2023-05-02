@@ -22,17 +22,17 @@
                                         <v-select hide-details label="Type" :items="meetingTypes" item-text="name"
                                             item-value="id" return-object single-line v-model="meetingDetails.type" required
                                             :rules="requiredRule" color="primary" prepend-icon="mdi-cogs"></v-select>
-                                        <validation-provider rules="required|min:16" v-slot="{ errors }">
+                                        <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
                                             <v-text-field class="mt-2" v-model="meetingDetails.details" label="Description"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider rules="required|min:10" v-slot="{ errors }">
+                                        <validation-provider rules="required|min:10" v-slot="{ errors }" name="Link">
                                             <v-text-field class="mt-2" v-model="meetingDetails.link" label="Link"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-link">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider rules="required" v-slot="{ errors }">
+                                        <validation-provider rules="required" v-slot="{ errors }" name="Scheduling date">
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
                                                 transition="scale-transition" offset-y min-width="auto">
                                                 <template v-slot:activator="{ on, attrs }">
@@ -44,7 +44,7 @@
                                                     @input="datePicker = false"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
-                                        <validation-provider rules="required" v-slot="{ errors }">
+                                        <validation-provider rules="required" v-slot="{ errors }" name="Scheduling time">
                                             <v-menu ref="menu" v-model="timePicker" :close-on-content-click="false"
                                                 :nudge-right="40" :return-value.sync="meetingDetails.time"
                                                 transition="scale-transition" offset-y max-width="290px" min-width="290px">

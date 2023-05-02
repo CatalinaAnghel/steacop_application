@@ -3,12 +3,12 @@
         <assignment-details v-if="assignmentDetails !== null" :assignmentDetails="assignmentDetails" />
         <assignment-upload-card v-if="assignmentDetails !== null" :showForm="showUploadForm"
             :assignmentDetails="assignmentDetails" @updated:assignment="handleUpdatedAssignmentDetails"
-            @refresh:documents="documents => refreshDocuments(documents)"/>
+            @refresh:documents="refreshDocuments"/>
     </v-row>
 </template>
 
 <script lang="ts">
-import { AssignmentInterface, DocumentInterface } from "@/modules/assignment";
+import { AssignmentInterface } from "@/modules/assignment";
 import AssignmentService from "@/services/assignment-service";
 import AssignmentDetails from "@/components/projects/assignments/AssignmentDetails.vue";
 import AssignmentUploadCard from "@/components/projects/assignments/AssignmentUploadCard.vue";
@@ -36,7 +36,7 @@ export default defineComponent({
         handleUpdatedAssignmentDetails: function (response: AssignmentInterface|null): void {
             this.assignmentDetails = response;
         },
-        refreshDocuments: async function(documents: DocumentInterface[]): Promise<void>{
+        refreshDocuments: async function(): Promise<void>{
             const assignment = await AssignmentService.getAssignment(Number(this.$route.params.id));
             if(null !== assignment && null !== this.assignmentDetails){
                 this.assignmentDetails.documents = assignment.documents;

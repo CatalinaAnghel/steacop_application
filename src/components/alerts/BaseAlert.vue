@@ -9,11 +9,29 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
     props: {
-        text: String,
-        type: String,
-        title: String,
-        color: String,
-        showAlert: Boolean
+        text: {
+            type: String,
+            required: true
+        },
+        type: {
+            type: String,
+            required: false,
+            default: "success"
+        },
+        title: {
+            type: String,
+            required: false,
+            default: ""
+        },
+        color: {
+            type: String,
+            required: true
+        },
+        showAlert: {
+            type: Boolean,
+            required: false,
+            default: false
+        }
     },
     emits: ['update:showAlert'],
     computed: {

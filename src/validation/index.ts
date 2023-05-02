@@ -1,6 +1,12 @@
 import { extend } from 'vee-validate';
 import { required, email, min, max_value, min_value, between } from 'vee-validate/dist/rules';
 
+interface ValidationRuleInterface {
+    params: string[];
+    validate: (value: string | number | (string | number)[]) => boolean;
+    message: string;
+}
+
 extend('required', {
     ...required,
     message: 'This field is required'
@@ -27,3 +33,13 @@ extend('max_value', {
 extend('between', {
     ...between,
 });
+
+extend('valid_weight', {
+    params: ['target'],
+    // eslint-disable-next-line
+    validate: function (value: string | number | (string | number)[], { target }: any) : boolean{
+        const total = Number(value) + Number(target);
+        return total <= 100 && total > 0;
+    },
+    message: "Invalid weight"
+} as ValidationRuleInterface);

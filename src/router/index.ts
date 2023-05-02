@@ -38,7 +38,6 @@ const routes: Array<RouteConfig> = [
     path: '/cms/settings',
     name: 'settings',
     component: () => import('../pages/admin/SystemConfigurationView.vue'),
-    alias: '/details',
     meta: {
       requiresAuth: true,
       roles: [
@@ -47,9 +46,9 @@ const routes: Array<RouteConfig> = [
     },
     children: [
       {
-        path: 'details',
-        name: 'details',
-        component: () => import('../components/settings/SettingsDetails.vue'),
+        path: '/',
+        name: 'generalSettings',
+        component: () => import('../components/settings/GeneralSettingsForm.vue'),
       },
       {
         path: 'weights',
@@ -61,7 +60,6 @@ const routes: Array<RouteConfig> = [
         name: 'supervisoryPlan',
         component: () => import('../components/settings/SupervisoryPlanForm.vue'),
       },
-
     ]
   },
   {
