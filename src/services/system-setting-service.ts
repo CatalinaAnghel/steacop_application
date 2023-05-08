@@ -5,13 +5,17 @@ import ErrorHandler from "./error-handler-service";
 import { SystemSettingInterface, SystemSettingPayloadInterface } from "@/modules/setting";
 
 export default class SystemSettingService {
-    public static async getSettings(): Promise<SystemSettingInterface[] | null> {
+    public static async getSettings(name: string|null = null): Promise<SystemSettingInterface[] | null> {
         let requestStatus = {
             error: '',
             success: true,
             code: null as number|null
         }
-        const response = await axios.get(`/system-settings`).catch(error => {
+        let url = `/system-settings?pagination=false`;
+        if(null !== name){
+            url = url + `&name=${name}`;
+        }
+        const response = await axios.get(url).catch(error => {
             requestStatus = ErrorHandler.handleError(error);
         });
 

@@ -3,7 +3,7 @@
         <base-overlay :overlay="loading"></base-overlay>
         <create-meeting-dialog :open="createDialog" @close:dialog="closeCreateDialog"
             @submitted:form="requestStatus => handleMeetingAction(requestStatus)"
-            form-title="Schedule a meeting"></create-meeting-dialog>
+            form-title="Schedule a meeting" :existingMilestoneMeetings="existingMilestoneMeetingsNumber"></create-meeting-dialog>
         <edit-meeting-dialog :meeting="selectedMeeting" :open="editDialog"
             :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
             @close:dialog="closeEditDialog" form-title="Update the details of the meeting"
@@ -104,7 +104,8 @@ export default defineComponent({
                 meetingId: 0,
                 id: 0
             },
-            readonlyRating: true
+            readonlyRating: true,
+            existingMilestoneMeetingsNumber: 0
         };
     },
     components: {
@@ -149,6 +150,7 @@ export default defineComponent({
             }
             const milestoneMeetings = await MeetingService.getMilestoneMeetings([Number(this.$route.params.id)], payload);
             if (null !== milestoneMeetings) {
+                this.existingMilestoneMeetingsNumber = milestoneMeetings.length;
                 const tempEvents = milestoneMeetings.map(element => {
                     const scheduledAt = new Date(element.scheduledAt);
                     const hours = Math.floor(element.duration);

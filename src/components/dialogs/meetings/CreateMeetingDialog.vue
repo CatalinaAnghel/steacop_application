@@ -21,7 +21,7 @@
                                     <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(createMeeting)">
                                         <v-select hide-details label="Type" :items="meetingTypes" item-text="name"
                                             item-value="id" return-object single-line v-model="meetingDetails.type" required
-                                            :rules="requiredRule" color="primary" prepend-icon="mdi-cogs"></v-select>
+                                            :rules="requiredRule" color="primary" prepend-icon="mdi-cogs" @change="validate"></v-select>
                                         <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
                                             <v-text-field class="mt-2" v-model="meetingDetails.details" label="Description"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
@@ -62,7 +62,7 @@
                                             v-model="meetingDetails.duration" color="primary" label="Duration"
                                             hint="Provide the duration (number of hours)" min="0.5" step="0.5" max="4"
                                             thumb-label></v-slider>
-                                        <v-btn :disabled="processing" block dark type="submit" large class="my-3"
+                                        <v-btn :disabled="processing || disabled" block :dark="!processing && !disabled" type="submit" large class="my-3"
                                             color="secondary">Save</v-btn>
                                     </v-form>
                                 </validation-observer>
@@ -85,6 +85,7 @@ import MeetingService from "@/services/meeting-service";
 import { EventTypesDescriptions, EVENT_TYPE_GUIDANCE_MEETING, EVENT_TYPE_MILESTONE_MEETING } from "@/modules/calendar";
 import { CreateMeetingPayloadInterface, MeetingTypeInterface } from "@/modules/meeting";
 import { toISOLocale } from "@/services/helper-service";
+import SystemSettingService from "@/services/system-setting-service";
 
 export default mixins(FormMixin).extend({
     props: {
@@ -96,6 +97,11 @@ export default mixins(FormMixin).extend({
             type: Boolean,
             required: false,
             default: false
+        },
+        existingMilestoneMeetings: {
+            type: Number,
+            required: false,
+            default: 0
         }
     },
     components: {
@@ -133,7 +139,9 @@ export default mixins(FormMixin).extend({
             ] as MeetingTypeInterface[],
             requiredRule: [
                 (value: {id: string; name: string}) => value.id !== "" || 'The meeting type is required'
-            ]
+            ],
+            milestoneMeetingsLimit: 0,
+            disabled: false
         }
     },
     watch: {
@@ -191,6 +199,16 @@ export default mixins(FormMixin).extend({
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };
+        },
+        validate() : void {
+            this.disabled = this.existingMilestoneMeetings >= this.milestoneMeetingsLimit && 
+            this.meetingDetails.type.id === EVENT_TYPE_MILESTONE_MEETING;
+        }
+    },
+    created: async function(): Promise<void>{
+        const settings = await SystemSettingService.getSettings('MilestoneMeetingsLimit');
+        if(settings.length){
+            this.milestoneMeetingsLimit = settings[0].value;
         }
     }
 });

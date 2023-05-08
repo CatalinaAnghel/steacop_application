@@ -37,6 +37,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/cms/settings',
     name: 'settings',
+    redirect: { name: 'generalSettings' },
     component: () => import('../pages/admin/SystemConfigurationView.vue'),
     meta: {
       requiresAuth: true,
@@ -46,7 +47,7 @@ const routes: Array<RouteConfig> = [
     },
     children: [
       {
-        path: '/',
+        path: '',
         name: 'generalSettings',
         component: () => import('../components/settings/GeneralSettingsForm.vue'),
       },
