@@ -17,11 +17,13 @@
                     <v-container>
                         <v-row>
                             <v-col col="12" sm="12" md="12">
+                                <p class="red--text accent-2--text text-center" v-if="disabled">Too many milestone meetings have been scheduled</p>
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                     <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(createMeeting)">
                                         <v-select hide-details label="Type" :items="meetingTypes" item-text="name"
                                             item-value="id" return-object single-line v-model="meetingDetails.type" required
-                                            :rules="requiredRule" color="primary" prepend-icon="mdi-cogs" @change="validate"></v-select>
+                                            :rules="requiredRule" color="primary" prepend-icon="mdi-cogs"
+                                            @change="validate"></v-select>
                                         <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
                                             <v-text-field class="mt-2" v-model="meetingDetails.details" label="Description"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
@@ -40,8 +42,9 @@
                                                         label="Scheduling date" prepend-icon="mdi-calendar" readonly
                                                         v-bind="attrs" v-on="on" :error-messages="errors"></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="meetingDetails.date"
-                                                    @input="datePicker = false"></v-date-picker>
+                                                <v-date-picker :min="startingDate" v-model="meetingDetails.date"
+                                                    @input="datePicker = false" :show-current="startingDate"
+                                                    color="primary"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
                                         <validation-provider rules="required" v-slot="{ errors }" name="Scheduling time">
@@ -62,8 +65,8 @@
                                             v-model="meetingDetails.duration" color="primary" label="Duration"
                                             hint="Provide the duration (number of hours)" min="0.5" step="0.5" max="4"
                                             thumb-label></v-slider>
-                                        <v-btn :disabled="processing || disabled" block :dark="!processing && !disabled" type="submit" large class="my-3"
-                                            color="secondary">Save</v-btn>
+                                        <v-btn :disabled="processing || disabled" block :dark="!processing && !disabled"
+                                            type="submit" large class="my-3" color="secondary">Save</v-btn>
                                     </v-form>
                                 </validation-observer>
 
@@ -138,7 +141,7 @@ export default mixins(FormMixin).extend({
                 }
             ] as MeetingTypeInterface[],
             requiredRule: [
-                (value: {id: string; name: string}) => value.id !== "" || 'The meeting type is required'
+                (value: { id: string; name: string }) => value.id !== "" || 'The meeting type is required'
             ],
             milestoneMeetingsLimit: 0,
             disabled: false
@@ -152,6 +155,13 @@ export default mixins(FormMixin).extend({
             } else {
                 this.$emit('open:dialog');
             }
+        }
+    },
+    computed: {
+        startingDate: function (): string {
+            let startDate = new Date();
+            startDate.setDate(startDate.getDate() + 1);
+            return startDate.toISOString().slice(0, 10);
         }
     },
     methods: {
@@ -200,14 +210,14 @@ export default mixins(FormMixin).extend({
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };
         },
-        validate() : void {
-            this.disabled = this.existingMilestoneMeetings >= this.milestoneMeetingsLimit && 
-            this.meetingDetails.type.id === EVENT_TYPE_MILESTONE_MEETING;
+        validate(): void {
+            this.disabled = this.existingMilestoneMeetings >= this.milestoneMeetingsLimit &&
+                this.meetingDetails.type.id === EVENT_TYPE_MILESTONE_MEETING;
         }
     },
-    created: async function(): Promise<void>{
+    created: async function (): Promise<void> {
         const settings = await SystemSettingService.getSettings('MilestoneMeetingsLimit');
-        if(settings.length){
+        if (settings.length) {
             this.milestoneMeetingsLimit = settings[0].value;
         }
     }

@@ -21,7 +21,7 @@
           </v-list-item-icon>
           <v-list-item-title>Dashboard</v-list-item-title>
         </v-list-item>
-        <v-list-item :to="{ name: 'settings' }" v-if="isAdmin || isStudent || isSupervisor">
+        <v-list-item :to="{ name: 'settings' }" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-cogs</v-icon>
           </v-list-item-icon>

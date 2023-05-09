@@ -50,16 +50,34 @@ const routes: Array<RouteConfig> = [
         path: '',
         name: 'generalSettings',
         component: () => import('../components/settings/GeneralSettingsForm.vue'),
+        meta: {
+          requiresAuth: true,
+          roles: [
+            Roles.ROLE_ADMIN
+          ]
+        }
       },
       {
         path: 'weights',
         name: 'weights',
         component: () => import('../components/settings/CollaborationWeightsForm.vue'),
+        meta: {
+          requiresAuth: true,
+          roles: [
+            Roles.ROLE_ADMIN
+          ]
+        }
       },
       {
         path: 'supervisory-plan',
         name: 'supervisoryPlan',
         component: () => import('../components/settings/SupervisoryPlanForm.vue'),
+        meta: {
+          requiresAuth: true,
+          roles: [
+            Roles.ROLE_ADMIN
+          ]
+        }
       },
     ]
   },
