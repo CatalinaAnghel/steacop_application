@@ -16,11 +16,6 @@
               mdi-chevron-right
             </v-icon>
           </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="createEvent">
-            <v-icon medium color="secondary">
-              mdi-calendar-plus-outline
-            </v-icon>
-          </v-btn>
           <v-toolbar-title v-if="$refs.calendar">
             {{ getCalendarInstance().title }}
           </v-toolbar-title>
@@ -32,6 +27,12 @@
                 <v-icon right>
                   mdi-menu-down
                 </v-icon>
+              </v-btn>
+              <v-btn outlined color="secondary" class="mx-2" @click="createEvent">
+                <v-icon medium color="secondary">
+                  mdi-calendar-plus-outline
+                </v-icon>
+                <span>{{ addMessage }}</span>
               </v-btn>
             </template>
             <v-list>
@@ -49,7 +50,8 @@
         <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :event-color="getEventColor"
           :type="type" @click:event="showEvent" @click:more="viewDay" @click:date="viewDay"
           @change="updateRange"></v-calendar>
-        <v-menu v-if="selectedEventOpen" v-model="selectedEventOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
+        <v-menu v-if="selectedEventOpen" v-model="selectedEventOpen" :close-on-content-click="false"
+          :activator="selectedElement" offset-x>
           <slot name="eventCard" :selectedEvent="selectedEvent"></slot>
         </v-menu>
       </v-sheet>
@@ -74,6 +76,11 @@ export default defineComponent({
       type: Boolean,
       required: false,
       default: false
+    },
+    addMessage: {
+      type: String,
+      required: false,
+      default: "Create"
     }
   },
   data: () => ({

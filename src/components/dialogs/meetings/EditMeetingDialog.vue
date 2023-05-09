@@ -39,7 +39,8 @@
                                                         :error-messages="errors"></v-text-field>
                                                 </template>
                                                 <v-date-picker v-model="meetingDetails.date"
-                                                    @input="datePicker = false"></v-date-picker>
+                                                    @input="datePicker = false" :min="(new Date()).toISOString().slice(0, 10)"
+                                                    color="primary"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
                                         <validation-provider rules="required" v-slot="{ errors }">
@@ -52,7 +53,7 @@
                                                         :error-messages="errors"></v-text-field>
                                                 </template>
                                                 <v-time-picker format="24hr" v-if="timePicker" v-model="meetingDetails.time"
-                                                    full-width
+                                                    full-width color="primary"
                                                     @click:minute="getMenuInstance().save(meetingDetails.time)"></v-time-picker>
                                             </v-menu>
                                         </validation-provider>
@@ -135,7 +136,7 @@ export default mixins(FormMixin).extend({
                 this.meetingDetails.description = this.meeting.details;
                 this.meetingDetails.duration = this.meeting.duration;
                 this.meetingDetails.link = this.meeting.link;
-                this.meetingDetails.date = this.meeting.start.toLocaleDateString();
+                this.meetingDetails.date = this.meeting.start.toISOString().slice(0, 10);
                 this.meetingDetails.time = this.meeting.start.toTimeString().substring(0, 5);
                 this.$emit('open:dialog');
             }

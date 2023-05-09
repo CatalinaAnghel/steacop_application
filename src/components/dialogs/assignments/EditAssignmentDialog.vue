@@ -42,7 +42,7 @@
                                                         :error-messages="errors"></v-text-field>
                                                 </template>
                                                 <v-date-picker v-model="assignmentDetails.dueDate"
-                                                    @input="datePicker = false"></v-date-picker>
+                                                    @input="datePicker = false" color="primary" :min="(new Date()).toISOString().slice(0, 10)"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
                                         <validation-provider rules="required" v-slot="{ errors }" name="Time">
@@ -56,7 +56,7 @@
                                                         :error-messages="errors"></v-text-field>
                                                 </template>
                                                 <v-time-picker format="24hr" v-if="timePicker"
-                                                    v-model="assignmentDetails.dueTime" full-width
+                                                    v-model="assignmentDetails.dueTime" full-width color="primary"
                                                     @click:minute="getMenuInstance().save(assignmentDetails.dueTime)"></v-time-picker>
                                             </v-menu>
                                         </validation-provider>
@@ -131,7 +131,7 @@ export default mixins(FormMixin).extend({
             } else if (null !== this.assignment){
                 this.assignmentDetails.id = this.assignment.id;
                 this.assignmentDetails.description = this.assignment.details;
-                this.assignmentDetails.dueDate = this.assignment.end.toLocaleDateString();
+                this.assignmentDetails.dueDate = this.assignment.end.toISOString().slice(0, 10);
                 this.assignmentDetails.title = this.assignment.name;
                 this.assignmentDetails.dueTime = this.assignment.end.toTimeString().substring(0, 5);
                 this.$emit('open:dialog');

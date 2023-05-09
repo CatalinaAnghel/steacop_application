@@ -16,11 +16,11 @@
             @selected:event="selected => updateSelectedEvent(selected)" :selected-open="selectedOpen"
             @open:event="selectedEvent => registerEventOpen(selectedEvent)" @create:event="openCreateDialog">
             <template v-slot:eventCard="{ selectedEvent }">
-                <v-card color="grey lighten-4" min-width="350px" flat>
+                <v-card color="grey lighten-4" min-width="auto" flat>
                     <v-toolbar :color="selectedEvent.color" dark>
                         <v-toolbar-title>{{ selectedEvent.name }}</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted)" icon @click="completeMeeting">
+                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted) && checkPastMeeting(selectedEvent)" icon @click="completeMeeting">
                             <v-icon>mdi-check</v-icon>
                         </v-btn>
                         <v-btn v-if="showEventOptions(selectedEvent.isCompleted)" icon @click="editMeeting">
@@ -48,6 +48,10 @@
                         <div class="pb-5">
                             <span class="mdi mdi-link pr-2"></span>
                             <span><b>Status: </b>{{ selectedEvent.isCompleted ? "Finished" : "Scheduled" }}</span>
+                        </div>
+                        <div class="pb-5" v-if="typeof selectedEvent.grade !== 'undefined'">
+                            <span class="mdi mdi-link pr-2"></span>
+                            <span><b>Grade: </b>{{ selectedEvent.grade }}</span>
                         </div>
                         <v-divider></v-divider>
                         <span class="pt-5">{{ selectedEvent.details }}</span>
@@ -312,6 +316,9 @@ export default defineComponent({
             };
             this.selectedMeeting = null;
             this.readonlyRating = true;
+        },
+        checkPastMeeting(selectedEvent: any): boolean{
+            return selectedEvent.start < new Date();
         }
     }
 });

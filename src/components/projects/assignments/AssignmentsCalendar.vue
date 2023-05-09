@@ -11,11 +11,11 @@
             @selected:event="selected => updateSelectedEvent(selected)" :selected-open="selectedOpen"
             @open:event="selectedEvent => registerEventOpen(selectedEvent)" @create:event="openCreateDialog">
             <template v-slot:eventCard="{ selectedEvent }">
-                <v-card color="grey lighten-4" min-width="400px" flat>
+                <v-card color="grey lighten-4" min-width="auto" flat>
                     <v-toolbar :color="selectedEvent.color" dark>
                         <v-toolbar-title>{{ selectedEvent.name }}</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-icon medium class="mr-2" @click="viewAssignment(selectedAssignment.id)">
+                        <v-icon medium class="mx-2" @click="viewAssignment(selectedAssignment.id)">
                             mdi-book-open-outline
                         </v-icon>
                         <v-btn v-if="showEventOptions(selectedEvent)" icon @click="openEditDialog">

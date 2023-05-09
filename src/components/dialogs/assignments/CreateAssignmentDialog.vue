@@ -26,11 +26,10 @@
                                             </v-text-field>
                                         </validation-provider>
                                         <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
-                                            <v-textarea counter class="mt-2" clearable clear-icon="mdi-close-circle" label="Description"
-                                                v-model="assignmentDetails.description" hide-details="auto" rows="2"
-                                                :error-messages="errors"
-                                                prepend-icon="mdi-text-short"
-                                            ></v-textarea>
+                                            <v-textarea counter class="mt-2" clearable clear-icon="mdi-close-circle"
+                                                label="Description" v-model="assignmentDetails.description"
+                                                hide-details="auto" rows="2" :error-messages="errors"
+                                                prepend-icon="mdi-text-short"></v-textarea>
                                         </validation-provider>
                                         <validation-provider rules="required" v-slot="{ errors }" name="Due date">
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
@@ -41,8 +40,9 @@
                                                         prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"
                                                         :error-messages="errors"></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="assignmentDetails.dueDate"
-                                                    @input="datePicker = false"></v-date-picker>
+                                                <v-date-picker v-model="assignmentDetails.dueDate" :min="startingDate"
+                                                    @input="datePicker = false"
+                                                    color="primary"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
                                         <validation-provider rules="required" v-slot="{ errors }" name="Time">
@@ -56,7 +56,7 @@
                                                         :error-messages="errors"></v-text-field>
                                                 </template>
                                                 <v-time-picker format="24hr" v-if="timePicker"
-                                                    v-model="assignmentDetails.dueTime" full-width
+                                                    v-model="assignmentDetails.dueTime" full-width color="primary"
                                                     @click:minute="getMenuInstance().save(assignmentDetails.dueTime)"></v-time-picker>
                                             </v-menu>
                                         </validation-provider>
@@ -114,6 +114,13 @@ export default mixins(FormMixin).extend({
             },
             datePicker: false,
             timePicker: false
+        }
+    },
+    computed: {
+        startingDate: function (): string {
+            let startDate = new Date();
+            startDate.setDate(startDate.getDate() + 1);
+            return startDate.toISOString().slice(0, 10);
         }
     },
     watch: {

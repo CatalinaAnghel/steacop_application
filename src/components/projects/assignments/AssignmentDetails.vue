@@ -12,10 +12,7 @@
                             <p class="pt-5 subtitle-2">{{ dueDate }}</p>
                         </v-col>
                         <v-col cols="auto">
-                            <v-text-field v-if="showGradingForm" type="number" min="1" max="10" step="0.5" v-model="grade" 
-                            suffix="/10" @keypress.enter="gradeAssignment" @blur="gradeAssignment"
-                            :rules="validRule"
-                            ></v-text-field>
+                            <assignment-grading-form v-if="showGradingForm" :current-grade="assignmentDetails.grade"></assignment-grading-form>
                             <span v-if="showGrade" class="subtitle-1">{{ assignmentDetails.grade }}/10</span>
                         </v-col>
                     </v-row>
@@ -34,6 +31,7 @@
 <script lang="ts">
 import { Roles } from "@/common/roles";
 import { AssignmentInterface } from "@/modules/assignment";
+import AssignmentGradingForm from "./AssignmentGradingForm.vue";
 import AssignmentService from "@/services/assignment-service";
 import AuthService from "@/services/auth-service";
 import { defineComponent } from "vue";
@@ -44,6 +42,9 @@ export default defineComponent({
             type: Object as () => AssignmentInterface,
             required: true
         },
+    },
+    components: {
+        AssignmentGradingForm
     },
     computed: {
         dueDate: function (): string {

@@ -29,7 +29,7 @@
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider rules="required|min:10" v-slot="{ errors }" name="Link">
+                                        <validation-provider :rules="{ required: true, regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }" v-slot="{ errors }" name="Link">
                                             <v-text-field class="mt-2" v-model="meetingDetails.link" label="Link"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-link">
                                             </v-text-field>
@@ -43,7 +43,7 @@
                                                         v-bind="attrs" v-on="on" :error-messages="errors"></v-text-field>
                                                 </template>
                                                 <v-date-picker :min="startingDate" v-model="meetingDetails.date"
-                                                    @input="datePicker = false" :show-current="startingDate"
+                                                    @input="datePicker = false"
                                                     color="primary"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
