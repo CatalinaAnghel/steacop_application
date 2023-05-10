@@ -15,7 +15,7 @@
     <v-divider v-if="loggedIn"></v-divider>
     <v-list nav dense>
       <v-list-item-group v-model="group" active-class="secondary lighten-5">
-        <v-list-item exact :to="{ name: 'home' }" v-if="isAdmin || isStudent || isSupervisor">
+        <v-list-item exact :to="{ name: 'dashboard' }" v-if="isAdmin || isStudent || isSupervisor">
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
           </v-list-item-icon>
@@ -65,31 +65,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import mixins from "vue-typed-mixins";
 import AuthService from '@/services/auth-service';
-import { Roles } from '@/common/roles';
 import BaseMenuDropdown from "./BaseMenuDropdown.vue";
 import { eventBus } from "@/main";
 import { EVENT_BUS_AUTH } from '@/common/constants';
 import { MENU_OPTIONS_ADMIN } from '@/common/menus';
+import RoleMixin from "../mixins/RoleMixin.vue";
 
-export default defineComponent({
+export default mixins(RoleMixin).extend({
   props: {
     drawer: Boolean
   },
   components: {
     BaseMenuDropdown
   },
-  emits: ["update:drawerValue"],
   data() {
     return {
       group: null,
-      isAdmin: false,
-      isStudent: false,
-      isSupervisor: false,
       admin: MENU_OPTIONS_ADMIN,
-      fullName: "",
-      avatarURL: "https://ui-avatars.com/api/?name="
     };
   },
   computed: {
@@ -113,32 +107,7 @@ export default defineComponent({
       this.avatarURL = "https://ui-avatars.com/api/?name=";
       this.$router.push({ name: 'login' });
     },
-    setProperties: function () {
-      const role = AuthService.getRole();
-      if (role !== null) {
-        const parsedToken = AuthService.parseToken(AuthService.getAccessToken());
-        if(parsedToken !== null && typeof parsedToken.username !== 'undefined'){
-          this.fullName = parsedToken.fullName;
-          const processedFullName = this.fullName.includes(" ")? this.fullName.replace(" ", "+"): this.fullName;
-          this.avatarURL = this.avatarURL + processedFullName;
-        }
-        switch (role) {
-          case Roles.ROLE_ADMIN:
-            this.isAdmin = true;
-            break;
-          case Roles.ROLE_STUDENT:
-            this.isStudent = true;
-            break;
-          default:
-            this.isSupervisor = true;
-        }
-      } else {
-        this.isAdmin = false;
-        this.isStudent = false;
-        this.isSupervisor = false;
-      }
-      
-    }
+  
   },
   created: function () {
     this.setProperties();

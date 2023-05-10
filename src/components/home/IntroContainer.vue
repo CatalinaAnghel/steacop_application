@@ -4,7 +4,7 @@
       <h1 class="primary--text">Steacop</h1>
       <h3><span class="primary--text">S</span>tudent-<span class="primary--text">Tea</span>cher <span
           class="primary--text">Co</span>llaboration <span class="primary--text">P</span>latform</h3>
-      <v-btn class="mx-lg-auto mt-2" color="secondary" elevation="2" @click="$router.push({ name: 'login' })">Log
+      <v-btn v-if="!loggedIn" class="mx-lg-auto mt-2" color="secondary" elevation="2" @click="$router.push({ name: 'login' })">Log
         in</v-btn>
     </v-col>
     <v-col cols="12" sm="12" md="12" lg="8" xl="8">
@@ -14,10 +14,15 @@
 </template>
 
 <script lang="ts">
+import AuthService from "@/services/auth-service";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  
+  computed: {
+    loggedIn: function(): boolean{
+      return AuthService.isLoggedIn();
+    }
+  }
 });
 </script>
 

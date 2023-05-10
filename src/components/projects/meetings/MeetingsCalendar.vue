@@ -47,7 +47,7 @@
                         </div>
                         <div class="pb-5">
                             <span class="mdi mdi-link pr-2"></span>
-                            <span><b>Status: </b>{{ selectedEvent.isCompleted ? "Finished" : "Scheduled" }}</span>
+                            <span><b>Status: </b>{{ selectedEvent.isCompleted ? "Completed" : "Scheduled" }}</span>
                         </div>
                         <div class="pb-5" v-if="typeof selectedEvent.grade !== 'undefined'">
                             <span class="mdi mdi-link pr-2"></span>

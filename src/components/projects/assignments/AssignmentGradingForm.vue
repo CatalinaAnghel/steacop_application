@@ -32,7 +32,6 @@ export default mixins(FormMixin).extend({
     },
     data: function () {
         return {
-            selectedFiles: [],
             valid: false,
             processing: false,
             grade: 0

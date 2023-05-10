@@ -180,6 +180,17 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import('../pages/common/DashboardView.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: [
+        Roles.ROLE_ADMIN
+      ]
+    },
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('../pages/routing/NotFoundView.vue')
