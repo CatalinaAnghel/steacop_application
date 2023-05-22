@@ -5,11 +5,7 @@
         <statistics-meetings-card :project="projectInfo"></statistics-meetings-card>
     </div>
     <div class="text-center" v-else>
-    <v-progress-circular
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-
+        <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
 </template>
 

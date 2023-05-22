@@ -19,7 +19,7 @@
                             <assignment-upload-form v-if="editable" :assignment-details="assignmentDetails"
                                 @toggled:loader="toggleLoader" @updated:assignment="response => handleUpdateAssignmentDetails(response)"
                                 @refresh:documents="refreshDocuments"/>
-                            <v-btn v-if="!checkStatus && showForm" color="neutral" block @click="unsubmit" large class="my-3">Unsubmit</v-btn>
+                            <v-btn v-if="!checkStatus && showForm && !graded" color="neutral" block @click="unsubmit" large class="my-3">Unsubmit</v-btn>
                             <assignment-upload-list v-if="assignmentDetails.documents.length"
                                 :assignmentDetails="assignmentDetails" :deletable="editable"
                                 @refresh:documents="refreshDocuments"></assignment-upload-list>
@@ -73,13 +73,16 @@ export default defineComponent({
     },
     computed: {
         status: function (): AssignmentStatusInterface {
-            return getStatus(new Date(this.assignmentDetails.dueDate), this.assignmentDetails.turnedInDate);
+            return getStatus(this.assignmentDetails.grade, new Date(this.assignmentDetails.dueDate), this.assignmentDetails.turnedInDate);
         },
         checkStatus: function (): boolean {
             return this.status.status === AssignmentStatus.Assigned || this.status.status === AssignmentStatus.NotTurnedIn;
         },
         editable: function(): boolean{
             return this.showForm && this.checkStatus;
+        },
+        graded: function(): boolean{
+            return this.status.status === AssignmentStatus.Graded;
         }
     },
     methods: {

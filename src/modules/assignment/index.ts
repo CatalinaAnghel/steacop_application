@@ -29,7 +29,14 @@ export interface AssignmentStatusInterface {
     status: string;
 }
 
-export function getStatus(dueDate: Date, turnedInDate: string | null): AssignmentStatusInterface {
+export function getStatus(grade: number, dueDate: Date, turnedInDate: string | null): AssignmentStatusInterface {
+    if(grade > 0){
+        return { 
+            message: AssignmentStatusMessage.Graded,
+            color: 'success',
+            status: AssignmentStatus.Graded
+         };
+    }
     const currentDate = new Date();
     if (dueDate.getTime() < currentDate.getTime() &&
         typeof turnedInDate === 'undefined') {
@@ -65,12 +72,14 @@ export enum AssignmentStatus{
     TurnedIn = 'turned_in',
     TurnedInLate = 'turned_in_late',
     NotTurnedIn = 'not_turned_in',
-    Assigned = 'assigned'
+    Assigned = 'assigned',
+    Graded = 'graded'
 }
 
 export enum AssignmentStatusMessage{
     TurnedIn = 'Turned in',
     TurnedInLate = 'Turned in late',
     NotTurnedIn = 'Missing',
-    Assigned = 'Assigned'
+    Assigned = 'Assigned',
+    Graded = 'Graded'
 }

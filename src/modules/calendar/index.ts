@@ -48,6 +48,7 @@ export interface EventInterface extends BaseEventInterface{
 export interface AssignmentEventInterface extends BaseEventInterface{
     documents: DocumentInterface[]|null;
     turnInDate: string|null;
+    grade: number|null;
 }
 
 export interface CalendarFormatInterface {

@@ -107,7 +107,8 @@ export default defineComponent({
                         title: element.title,
                         id: element.id,
                         documents: element.documents,
-                        turnInDate: element.turnedInDate
+                        turnInDate: element.turnedInDate,
+                        grade: element.grade
                     } as AssignmentEventInterface
                 });
             }
@@ -163,7 +164,7 @@ export default defineComponent({
             this.toggleLoading();
         },
         getAssignmentStatus(selectedEvent: AssignmentEventInterface): AssignmentStatusInterface {
-            return getStatus(new Date(selectedEvent.end), selectedEvent.turnInDate);
+            return getStatus(this.selectedAssignment.grade, new Date(selectedEvent.end), selectedEvent.turnInDate);
         },
         viewAssignment(assignmentId: number): void {
             const id = assignmentId.toString();

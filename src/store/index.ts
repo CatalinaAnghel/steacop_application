@@ -6,10 +6,12 @@ import { PlanState } from './plans/types';
 import planModule, { planNamespace } from '@/store/plans/index'
 import userModule, { userNamespace } from '@/store/user/index'
 import weightModule, { weightNamespace } from '@/store/weights/index'
+import functionalityModule, { functionalityNamespace } from '@/store/functionalities/index'
 import { WeightState } from './weights/types';
 import StoreService from './store-service';
 import supervisorModule, { supervisorNamespace } from './supervisors';
 import { SupervisorState } from './supervisors/types';
+import { FunctionalityState } from './functionalities/types';
 
 Vue.use(Vuex);
 
@@ -19,12 +21,14 @@ modules[supervisorNamespace] = supervisorModule;
 modules[planNamespace] = planModule;
 modules[userNamespace] = userModule;
 modules[weightNamespace] = weightModule;
+modules[functionalityNamespace] = functionalityModule;
 
 export interface State {
   students: Array<StudentState>,
   supervisors: Array<SupervisorState>,
   plans: Array<PlanState>,
-  weights: Array<WeightState>
+  weights: Array<WeightState>,
+  functionalities: Array<FunctionalityState>
 }
 
 const store: StoreOptions<State> = {

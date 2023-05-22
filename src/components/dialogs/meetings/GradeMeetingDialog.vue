@@ -3,7 +3,7 @@
         <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
             @update:showAlert="updateShowAlert"></base-alert>
 
-        <v-dialog v-if="meetingId > 0" v-model="dialog" max-width="500px">
+        <v-dialog v-if="meetingId > 0" v-model="dialog" max-width="500px" @click:outside="close">
             <v-card :loading="processing ? 'secondary' : false">
                 <v-card-title>
                     <span class="text-h5 primary--text text--darken-3">{{ formTitle }}</span>

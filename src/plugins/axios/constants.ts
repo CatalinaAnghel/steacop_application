@@ -5,5 +5,6 @@ export const AUTH_URL_PATTERN = `(${AUTHENTICATION_TOKEN_URL}|${REFRESH_TOKEN_UR
 export const MULTIPART_FORM_DATA_ROUTES = [
     '/student-import-files',
     '/supervisor-import-files',
-    '/documents'
+    '/documents',
+    '/functionality-attachments'
 ]

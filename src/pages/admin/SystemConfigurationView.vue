@@ -1,11 +1,6 @@
 <template>
     <div>
         <base-tabs :tabs="tabs"></base-tabs>
-        <!-- <v-row justify="center" class="py-16">
-            <v-col cols="10" sm="10" md="12" lg="6" xl="6">
-                <router-view></router-view>
-            </v-col>
-        </v-row> -->
     </div>
 </template>
 

@@ -31,7 +31,7 @@ export default defineComponent({
     },
     computed: {
         status: function (): AssignmentStatusInterface {
-            return getStatus(new Date(this.assignmentDetails.dueDate), this.assignmentDetails.turnedInDate);
+            return getStatus(this.assignmentDetails.grade, new Date(this.assignmentDetails.dueDate), this.assignmentDetails.turnedInDate);
         },
         disabled: function (): boolean {
             return this.selectedFiles.length === 0;

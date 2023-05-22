@@ -167,6 +167,19 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
+    path: '/functionality/:id',
+    name: 'functionality',
+    props: true,
+    component: () => import('../pages/common/AssignmentDetailsView.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: [
+        Roles.ROLE_TEACHER,
+        Roles.ROLE_STUDENT
+      ]
+    },
+  },
+  {
     path: '/assignment/:id',
     name: 'assignment',
     props: true,
