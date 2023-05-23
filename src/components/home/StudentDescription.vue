@@ -8,9 +8,7 @@
                 Students
             </h2>
         </v-col>
-        <v-col cols="12" sm="12" md="12" lg="6" xl="6">
-            <img :src="require('@/assets/home/new_ideas.svg')" width="100%" />
-        </v-col>
+
         <v-col cols="12" sm="12" md="12" lg="6" xl="6">
             <h4>
                 All-in-one platform that helps you with:
@@ -21,6 +19,9 @@
                 <li>Managing the functionalities</li>
                 <li>See the overall statistics</li>
             </ul>
+        </v-col>
+        <v-col cols="12" sm="12" md="12" lg="6" xl="6">
+            <img :src="require('@/assets/home/new_ideas.svg')" class="mx-auto homepage-image" />
         </v-col>
     </v-row>
 </template>

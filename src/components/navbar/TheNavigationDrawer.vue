@@ -14,31 +14,16 @@
     </template>
     <v-divider v-if="loggedIn"></v-divider>
     <v-list nav dense>
-      <v-list-item-group v-model="group" active-class="secondary lighten-5">
-        <v-list-item exact :to="{ name: 'dashboard' }" v-if="isAdmin || isStudent || isSupervisor">
+      <v-list-item-group v-model="group">
+        <v-list-item exact :to="{ name: 'dashboard' }" v-if="loggedIn">
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Dashboard</v-list-item-title>
         </v-list-item>
-        <v-list-item :to="{ name: 'settings' }" v-if="isAdmin">
-          <v-list-item-icon>
-            <v-icon>mdi-cogs</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Settings</v-list-item-title>
-        </v-list-item>
-        <div v-if="isAdmin">
-          <base-menu-dropdown v-for="menu in admin" :key="menu.title" :menuOptions="menu.menuOptions" :icon="menu.icon"
-            :title="menu.title"></base-menu-dropdown>
-        </div>
-        <template v-if="isSupervisor">
-          <v-list-item :to="{ name: 'supervisees' }">
-            <v-list-item-icon>
-              <v-icon>mdi-account-school</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Supervisees</v-list-item-title>
-          </v-list-item>
-        </template>
+        <the-admin-navigation-options v-if="isAdmin"/>
+        <the-teacher-navigation-options v-else-if="isSupervisor"/>
+        <the-student-navigation-options v-else-if="isStudent"/>
         <v-divider v-if="loggedIn"></v-divider>
         <v-list-item v-if="loggedIn" @click="logout">
           <v-list-item-icon>
@@ -58,7 +43,7 @@
           </v-list-item-icon>
           <v-list-item-title>About us</v-list-item-title>
         </v-list-item>
-        
+
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
@@ -72,13 +57,19 @@ import { eventBus } from "@/main";
 import { EVENT_BUS_AUTH } from '@/common/constants';
 import { MENU_OPTIONS_ADMIN } from '@/common/menus';
 import RoleMixin from "../mixins/RoleMixin.vue";
+import TheAdminNavigationOptions from "./TheAdminNavigationOptions.vue";
+import TheTeacherNavigationOptions from "./TheTeacherNavigationOptions.vue";
+import TheStudentNavigationOptions from "./TheStudentNavigationOptions.vue";
 
 export default mixins(RoleMixin).extend({
   props: {
     drawer: Boolean
   },
   components: {
-    BaseMenuDropdown
+    BaseMenuDropdown,
+    TheAdminNavigationOptions,
+    TheTeacherNavigationOptions,
+    TheStudentNavigationOptions
   },
   data() {
     return {
@@ -107,7 +98,7 @@ export default mixins(RoleMixin).extend({
       this.avatarURL = "https://ui-avatars.com/api/?name=";
       this.$router.push({ name: 'login' });
     },
-  
+
   },
   created: function () {
     this.setProperties();

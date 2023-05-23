@@ -1,22 +1,18 @@
-import actions from '@/store/plans/actions'
+import actions from '@/store/user/actions'
 import mutations from '@/store/user/mutations'
 import getters from '@/store/user/getters'
 import { UserData } from '@/modules/user';
+import { UserState } from './types';
 
 export const userNamespace = "user";
 
-function initialize(): UserData {
+export function initialize(): UserState {
     return {
-        roles: [],
-        username: "",
-        exp: 0,
-        id: 0,
-        code: "",
-        fullName: ""
+        user: null as UserData | null
     }
 }
 
-const state: UserData = initialize();
+const state: UserState = initialize();
 
 export default {
     namespaced: true,

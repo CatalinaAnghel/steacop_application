@@ -150,7 +150,7 @@ export default {
 
         return requestStatus;
     },
-    async uploadAttachment({ state }: CommitStateInterface<FunctionalityState>, formData: FormData): Promise<ResponseDto> {
+    async uploadAttachment(_: CommitStateInterface<FunctionalityState>, formData: FormData): Promise<ResponseDto> {
         const requestStatus = {
             success: true,
             error: '',

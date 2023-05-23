@@ -2,7 +2,7 @@
 require('@/validation/index');
 
 import { ValidationObserver, ValidationProvider } from "vee-validate";
-import BaseAlert from "../alerts/BaseAlert.vue";
+import BaseAlert from "@/components/base/BaseAlert.vue";
 
 import Vue from 'vue'
 import { ResponseDto } from "@/modules/common";

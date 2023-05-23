@@ -1,13 +1,16 @@
 <template>
     <div>
         <base-overlay :overlay="loading"></base-overlay>
-        <create-assignment-dialog :open="createDialog" @close:dialog="closeCreateDialog"
-            @submitted:form="requestStatus => handleAction(requestStatus)"
-            form-title="Create an assignment"></create-assignment-dialog>
-        <edit-assignment-dialog :open="editDialog" @close:dialog="closeEditDialog"
-            @submitted:form="requestStatus => handleAction(requestStatus)" 
-            form-title="Update the assignment" :assignment="selectedAssignment"></edit-assignment-dialog>
-        <base-calendar :events="events" @update:calendar="payload => updateCalendarEvents(payload)"
+        <div v-if="isSupervisor">
+            <create-assignment-dialog :open="createDialog" @close:dialog="closeCreateDialog"
+                @submitted:form="requestStatus => handleAction(requestStatus)"
+                form-title="Create an assignment"></create-assignment-dialog>
+            <edit-assignment-dialog :open="editDialog" @close:dialog="closeEditDialog"
+                @submitted:form="requestStatus => handleAction(requestStatus)" form-title="Update the assignment"
+                :assignment="selectedAssignment"></edit-assignment-dialog>
+        </div>
+        <base-calendar :events="events" :activate-create-option="isSupervisor"
+            @update:calendar="payload => updateCalendarEvents(payload)"
             @selected:event="selected => updateSelectedEvent(selected)" :selected-open="selectedOpen"
             @open:event="selectedEvent => registerEventOpen(selectedEvent)" @create:event="openCreateDialog">
             <template v-slot:eventCard="{ selectedEvent }">
@@ -55,11 +58,12 @@ import CreateAssignmentDialog from '@/components/dialogs/assignments/CreateAssig
 import EditAssignmentDialog from '@/components/dialogs/assignments/EditAssignmentDialog.vue';
 import { AssignmentEventInterface, CalendarRangeInterface } from '@/modules/calendar';
 import { ResponseDto } from '@/modules/common';
-import { defineComponent } from 'vue';
+import mixins from "vue-typed-mixins";
+import RoleMixin from "@/components/mixins/RoleMixin.vue";
 import AssignmentService from '@/services/assignment-service';
 import { AssignmentStatusInterface, getStatus } from '@/modules/assignment';
 
-export default defineComponent({
+export default mixins(RoleMixin).extend({
     data: function () {
         return {
             events: [] as AssignmentEventInterface[],
@@ -85,7 +89,7 @@ export default defineComponent({
             this.loading = !this.loading;
         },
         showEventOptions(assignment: AssignmentEventInterface): boolean {
-            return assignment.turnInDate === null || typeof assignment.turnInDate === 'undefined';
+            return this.isSupervisor && (assignment.turnInDate === null || typeof assignment.turnInDate === 'undefined');
         },
         updateCalendarEvents: async function (payload: CalendarRangeInterface) {
             this.toggleLoading();
@@ -174,6 +178,9 @@ export default defineComponent({
                 }
             });
         }
+    },
+    created: function (): void {
+        this.setProperties();
     }
 });
 </script>

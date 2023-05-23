@@ -9,6 +9,9 @@
             </h2>
         </v-col>
         <v-col cols="12" sm="12" md="12" lg="6" xl="6">
+            <img :src="require('@/assets/home/education.svg')" class="homepage-image" />
+        </v-col>
+        <v-col cols="12" sm="12" md="12" lg="6" xl="6">
             <h4>
                 You can manage the thesis projects by:
             </h4>
@@ -18,9 +21,6 @@
                 <li>Managing the functionalities</li>
                 <li>See the collaboration score and other statistics</li>
             </ul>
-        </v-col>
-        <v-col cols="12" sm="12" md="12" lg="6" xl="6">
-            <img :src="require('@/assets/home/education.svg')" width="100%" />
         </v-col>
     </v-row>
 </template>

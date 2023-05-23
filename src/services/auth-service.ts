@@ -54,13 +54,17 @@ export default class AuthService {
                     storeService.plans.reset();
                     storeService.weights.reset();
                     break;
-                case Roles.ROLE_STUDENT:
+                case Roles.ROLE_TEACHER:
                     storeService.plans.reset();
                     storeService.students.reset();
+                    storeService.functionalities.reset();
                     break;
                 default:
+                    storeService.plans.reset();
                     storeService.students.reset();
+                    storeService.functionalities.reset();
             }
+            storeService.user.reset();
             Vue.$cookies.remove(ACCESS_TOKEN);
             Vue.$cookies.remove(REFRESH_TOKEN);
             Vue.$cookies.remove(REFRESH_TOKEN_EXPIRATION);

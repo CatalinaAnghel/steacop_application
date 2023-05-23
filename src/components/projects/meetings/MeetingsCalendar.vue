@@ -1,18 +1,20 @@
 <template>
     <div>
         <base-overlay :overlay="loading"></base-overlay>
-        <create-meeting-dialog :open="createDialog" @close:dialog="closeCreateDialog"
-            @submitted:form="requestStatus => handleMeetingAction(requestStatus)"
-            form-title="Schedule a meeting" :existingMilestoneMeetings="existingMilestoneMeetingsNumber"></create-meeting-dialog>
-        <edit-meeting-dialog :meeting="selectedMeeting" :open="editDialog"
-            :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
-            @close:dialog="closeEditDialog" form-title="Update the details of the meeting"
-            @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></edit-meeting-dialog>
-        <grade-meeting-dialog :meeting="selectedMeeting" :open="gradeMeetingDialog"
-            :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
-            @close:dialog="closeGradeMeetingDialog" form-title="Grade the meeting"
-            @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></grade-meeting-dialog>
-        <base-calendar :events="events" @update:calendar="payload => updateCalendarEvents(payload)"
+        <div v-if="isSupervisor">
+            <create-meeting-dialog :open="createDialog" @close:dialog="closeCreateDialog"
+                @submitted:form="requestStatus => handleMeetingAction(requestStatus)" form-title="Schedule a meeting"
+                :existingMilestoneMeetings="existingMilestoneMeetingsNumber"></create-meeting-dialog>
+            <edit-meeting-dialog :meeting="selectedMeeting" :open="editDialog"
+                :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
+                @close:dialog="closeEditDialog" form-title="Update the details of the meeting"
+                @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></edit-meeting-dialog>
+            <grade-meeting-dialog :meeting="selectedMeeting" :open="gradeMeetingDialog"
+                :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
+                @close:dialog="closeGradeMeetingDialog" form-title="Grade the meeting"
+                @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></grade-meeting-dialog>
+        </div>
+        <base-calendar :events="events" :activate-create-option="isSupervisor" @update:calendar="payload => updateCalendarEvents(payload)"
             @selected:event="selected => updateSelectedEvent(selected)" :selected-open="selectedOpen"
             @open:event="selectedEvent => registerEventOpen(selectedEvent)" @create:event="openCreateDialog">
             <template v-slot:eventCard="{ selectedEvent }">
@@ -20,7 +22,8 @@
                     <v-toolbar :color="selectedEvent.color" dark>
                         <v-toolbar-title>{{ selectedEvent.name }}</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted) && checkPastMeeting(selectedEvent)" icon @click="completeMeeting">
+                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted) && checkPastMeeting(selectedEvent)" icon
+                            @click="completeMeeting">
                             <v-icon>mdi-check</v-icon>
                         </v-btn>
                         <v-btn v-if="showEventOptions(selectedEvent.isCompleted)" icon @click="editMeeting">
@@ -79,10 +82,11 @@ import { CalendarRangeInterface, EventInterface, EventTypes } from '@/modules/ca
 import { ResponseDto } from '@/modules/common';
 import { MeetingInterface, MilestoneMeetingInterface } from '@/modules/meeting';
 import MeetingService from '@/services/meeting-service';
-import { defineComponent } from 'vue';
 import RatingService from '@/services/rating-service';
+import mixins from "vue-typed-mixins";
+import RoleMixin from "@/components/mixins/RoleMixin.vue";
 
-export default defineComponent({
+export default mixins(RoleMixin).extend({
     data: function () {
         return {
             events: [] as EventInterface[],
@@ -192,7 +196,7 @@ export default defineComponent({
             }
         },
         showEventOptions: function (isCompleted: boolean): boolean {
-            return !isCompleted;
+            return !isCompleted && this.isSupervisor;
         },
         cancelMeeting: async function (meeting: EventInterface): Promise<void> {
             this.toggleLoading();
@@ -317,9 +321,12 @@ export default defineComponent({
             this.selectedMeeting = null;
             this.readonlyRating = true;
         },
-        checkPastMeeting(selectedEvent: any): boolean{
+        checkPastMeeting(selectedEvent: any): boolean {
             return selectedEvent.start < new Date();
         }
+    },
+    created: function (): void {
+        this.setProperties();
     }
 });
 </script>

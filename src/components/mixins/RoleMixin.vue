@@ -1,10 +1,11 @@
 <script lang="ts">
 import { Roles } from '@/common/roles';
 import AuthService from '@/services/auth-service';
+import { storeService } from '@/store';
 import Vue from 'vue';
 
 export default Vue.extend({
-    data() {
+  data() {
     return {
       isAdmin: false,
       isStudent: false,
@@ -17,10 +18,16 @@ export default Vue.extend({
     setProperties: function () {
       const role = AuthService.getRole();
       if (role !== null) {
-        const parsedToken = AuthService.parseToken(AuthService.getAccessToken());
-        if(parsedToken !== null && typeof parsedToken.username !== 'undefined'){
+        let parsedToken = storeService.user.getUser();
+
+        if (null === parsedToken) {
+          parsedToken = AuthService.parseToken(AuthService.getAccessToken());
+        }
+        
+        if (parsedToken !== null && typeof parsedToken.username !== 'undefined') {
+          storeService.user.load(parsedToken);
           this.fullName = parsedToken.fullName;
-          const processedFullName = this.fullName.includes(" ")? this.fullName.replace(" ", "+"): this.fullName;
+          const processedFullName = this.fullName.includes(" ") ? this.fullName.replace(" ", "+") : this.fullName;
           this.avatarURL = this.avatarURL + processedFullName;
         }
         switch (role) {
@@ -38,7 +45,7 @@ export default Vue.extend({
         this.isStudent = false;
         this.isSupervisor = false;
       }
-      
+
     }
   },
 });

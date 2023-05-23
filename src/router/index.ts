@@ -137,6 +137,7 @@ const routes: Array<RouteConfig> = [
     },
     beforeEnter: async (to, from, next) => {
       const project = await ProjectService.getProjectInfo(Number(to.params.id));
+
       if (project === null) {
         next('NotFound');
       } else {

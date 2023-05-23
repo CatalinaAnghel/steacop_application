@@ -51,3 +51,4 @@ export const SETTINGS_TABS = [
         name: 'Supervisory plan'
     }
 ];
+

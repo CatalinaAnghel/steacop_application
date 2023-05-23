@@ -28,7 +28,7 @@
                   mdi-menu-down
                 </v-icon>
               </v-btn>
-              <v-btn outlined color="secondary" class="mx-2" @click="createEvent">
+              <v-btn v-if="activateCreateOption" outlined color="secondary" class="mx-2" @click="createEvent">
                 <v-icon medium color="secondary">
                   mdi-calendar-plus-outline
                 </v-icon>
@@ -81,6 +81,11 @@ export default defineComponent({
       type: String,
       required: false,
       default: "Create"
+    },
+    activateCreateOption:{
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data: () => ({

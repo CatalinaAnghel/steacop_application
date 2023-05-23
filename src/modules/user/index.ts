@@ -4,5 +4,6 @@ export interface UserData {
     exp: number,
     id: number,
     code: string,
-    fullName: string
+    fullName: string,
+    projectId: number|null
 };

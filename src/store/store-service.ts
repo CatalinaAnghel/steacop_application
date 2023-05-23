@@ -1,3 +1,4 @@
+import UserStoreService from '@/store/user/service';
 import PlanStoreService from '@/store/plans/service';
 import WeightStoreService from '@/store/weights/service';
 import StudentStoreService from '@/store/students/service';
@@ -10,6 +11,7 @@ import { State } from '.';
 export default class StoreService {
     private static instance: StoreService|null = null;
     private store: Store<State>;
+    private userStoreService: UserStoreService;
     private plansStoreService: PlanStoreService;
     private weightsStoreService: WeightStoreService;
     private studentsStoreService: StudentStoreService;
@@ -18,6 +20,7 @@ export default class StoreService {
 
     private constructor(store: Store<State>){
         this.store = store;
+        this.userStoreService = new UserStoreService(this.store);
         this.plansStoreService = new PlanStoreService(this.store);
         this.weightsStoreService = new WeightStoreService(this.store);
         this.studentsStoreService = new StudentStoreService(this.store);
@@ -30,6 +33,10 @@ export default class StoreService {
             StoreService.instance = new StoreService(store);
         }
         return StoreService.instance;
+    }
+
+    public get user(): UserStoreService {
+        return this.userStoreService;
     }
 
     public get plans(): PlanStoreService {
