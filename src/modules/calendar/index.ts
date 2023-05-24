@@ -43,6 +43,8 @@ export interface EventInterface extends BaseEventInterface{
     type: string;
     link: string|null;
     grade: number|null;
+    studentFullName: string|null;
+    supervisorFullName: string|null;
 }
 
 export interface AssignmentEventInterface extends BaseEventInterface{

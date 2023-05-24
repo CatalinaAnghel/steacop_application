@@ -5,5 +5,5 @@ export interface UserData {
     id: number,
     code: string,
     fullName: string,
-    projectId: number|null
+    projectIds: number[]
 };

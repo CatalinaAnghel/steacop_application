@@ -9,7 +9,7 @@
                     Create
                 </v-btn>
             </v-col>
-            <v-col cols="auto">
+            <v-col cols="auto" v-if="isStudent">
                 <v-btn :disabled="disableSaving" color="secondary" :dark="!disableSaving" class="mb-2" @click="order">
                     Save
                 </v-btn>
@@ -25,10 +25,10 @@
 
                     <v-card-text>
                         <v-divider></v-divider>
-                        <draggable class="list-group" :list="itemsGroup.functionalities" group="projectFunctionalities"
+                        <draggable v-if="itemsGroup.functionalities.length" :disabled="isSupervisor" class="list-group" :list="itemsGroup.functionalities" group="projectFunctionalities"
                             @change="markAsDirty">
 
-                            <div class="list-group-item draggable-card" v-for="(element) in itemsGroup.functionalities"
+                            <div :class="{'list-group-item': true, 'draggable-card': isStudent}" v-for="(element) in itemsGroup.functionalities"
                                 :key="element.id">
                                 <v-card class="border-primary px-2 my-2">
                                     <v-card-title>
@@ -45,6 +45,7 @@
                                 </v-card>
                             </div>
                         </draggable>
+                        <p v-else class="mt-2 subtitle--text">No functionalities found</p>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -60,12 +61,13 @@
 <script lang="ts">
 import { storeService } from '@/store';
 import { FunctionalityGroupInterface, FunctionalityPayloadInterface, StatusInterface, TypeInterface } from '@/store/functionalities/types';
-import { defineComponent } from 'vue';
+import mixins from "vue-typed-mixins";
+import RoleMixin from "@/components/mixins/RoleMixin.vue";
 import draggable from 'vuedraggable';
 import CreateFunctionalityDialog from '@/components/dialogs/kanban/CreateFunctionalityDialog.vue';
 import { ResponseDto } from '@/modules/common';
 
-export default defineComponent({
+export default mixins(RoleMixin).extend({
     components: {
         draggable,
         CreateFunctionalityDialog,
@@ -90,6 +92,7 @@ export default defineComponent({
         }
     },
     created: async function (): Promise<void> {
+        this.setProperties();
         storeService.functionalities.loadTypes();
         await storeService.functionalities.loadStatuses().then(() => {
             this.loadFunctionalities();

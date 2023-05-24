@@ -1,8 +1,8 @@
 import AuthService from '@/services/auth-service';
-import ProjectService from '@/services/project-service';
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import { Roles } from '../common/roles';
+import { storeService } from '@/store';
 
 Vue.use(VueRouter)
 
@@ -135,13 +135,25 @@ const routes: Array<RouteConfig> = [
         Roles.ROLE_STUDENT
       ]
     },
-    beforeEnter: async (to, from, next) => {
-      const project = await ProjectService.getProjectInfo(Number(to.params.id));
-
-      if (project === null) {
-        next('NotFound');
+    beforeEnter: async (to, _, next) => {
+      if (!AuthService.isLoggedIn()) {
+        // the user is not logged in
+        next('login');
       } else {
-        next();
+        let userData = storeService.user.getUser();
+
+        if (null === userData) {
+          const token = AuthService.getAccessToken();
+          storeService.user.load(AuthService.parseToken(token));
+          userData = storeService.user.getUser();
+        }
+
+        if (userData.projectIds.length > 0 &&
+          userData.projectIds.includes(Number(to.params.id))) {
+          next();
+        } else {
+          next('NotFound');
+        }
       }
     },
     children: [
@@ -194,13 +206,25 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
+    path: '/cms/dashboard',
+    name: 'adminDashboard',
+    component: () => import('../pages/admin/DashboardView.vue'),
+    meta: {
+      requiresAuth: true,
+      roles: [
+        Roles.ROLE_ADMIN
+      ]
+    },
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('../pages/common/DashboardView.vue'),
     meta: {
       requiresAuth: true,
       roles: [
-        Roles.ROLE_ADMIN
+        Roles.ROLE_STUDENT,
+        Roles.ROLE_TEACHER
       ]
     },
   },

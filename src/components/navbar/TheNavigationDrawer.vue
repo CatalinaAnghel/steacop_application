@@ -15,15 +15,15 @@
     <v-divider v-if="loggedIn"></v-divider>
     <v-list nav dense>
       <v-list-item-group v-model="group">
-        <v-list-item exact :to="{ name: 'dashboard' }" v-if="loggedIn">
+        <v-list-item exact :to="{name: dashboardRoute}" v-if="loggedIn">
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Dashboard</v-list-item-title>
         </v-list-item>
-        <the-admin-navigation-options v-if="isAdmin"/>
-        <the-teacher-navigation-options v-else-if="isSupervisor"/>
-        <the-student-navigation-options v-else-if="isStudent"/>
+        <the-admin-navigation-options v-if="isAdmin" />
+        <the-teacher-navigation-options v-else-if="isSupervisor" />
+        <the-student-navigation-options v-else-if="isStudent" />
         <v-divider v-if="loggedIn"></v-divider>
         <v-list-item v-if="loggedIn" @click="logout">
           <v-list-item-icon>
@@ -88,6 +88,9 @@ export default mixins(RoleMixin).extend({
     },
     loggedIn(): boolean {
       return this.isAdmin || this.isStudent || this.isSupervisor;
+    },
+    dashboardRoute(): string {
+      return this.isAdmin? 'adminDashboard': 'dashboard';
     }
   },
   methods: {

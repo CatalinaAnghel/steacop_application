@@ -7,6 +7,8 @@ export interface MeetingInterface{
     scheduledAt: string;
     isCanceled: boolean;
     canceledAt: Date|null;
+    studentFullName: string;
+    supervisorFullName: string;
 }
 
 export interface MilestoneMeetingInterface extends MeetingInterface{

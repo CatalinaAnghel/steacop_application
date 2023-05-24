@@ -19,7 +19,7 @@ export default defineComponent({
     },
     created: function (): void {
         const userData = storeService.user.getUser();
-        this.projectId = userData.projectId;
+        this.projectId = userData.projectIds[0];
     }
 });
 </script>
