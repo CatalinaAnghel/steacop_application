@@ -14,7 +14,8 @@
                 @close:dialog="closeGradeMeetingDialog" form-title="Grade the meeting"
                 @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></grade-meeting-dialog>
         </div>
-        <base-calendar :events="events" :activate-create-option="isSupervisor" @update:calendar="payload => updateCalendarEvents(payload)"
+        <base-calendar :events="events" :activate-create-option="isSupervisor"
+            @update:calendar="payload => updateCalendarEvents(payload)"
             @selected:event="selected => updateSelectedEvent(selected)" :selected-open="selectedOpen"
             @open:event="selectedEvent => registerEventOpen(selectedEvent)" @create:event="openCreateDialog">
             <template v-slot:eventCard="{ selectedEvent }">
@@ -22,14 +23,21 @@
                     <v-toolbar :color="selectedEvent.color" dark>
                         <v-toolbar-title>{{ selectedEvent.name }}</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted) && checkPastMeeting(selectedEvent)" icon
-                            @click="completeMeeting">
+                        <v-btn
+                            v-if="showEventOptions(selectedEvent.isCompleted, selectedEvent.isMissed) && checkPastMeeting(selectedEvent)"
+                            icon @click="completeMeeting">
                             <v-icon>mdi-check</v-icon>
                         </v-btn>
-                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted)" icon @click="editMeeting">
+                        <v-btn
+                            v-if="showEventOptions(selectedEvent.isCompleted, selectedEvent.isMissed) && checkPastMeeting(selectedEvent)"
+                            icon @click="markMissedMeeting">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted, selectedEvent.isMissed)" icon
+                            @click="editMeeting">
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>
-                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted)" icon
+                        <v-btn v-if="showEventOptions(selectedEvent.isCompleted, selectedEvent.isMissed)" icon
                             @click="cancelMeeting(selectedEvent)">
                             <v-icon>mdi-delete</v-icon>
                         </v-btn>
@@ -50,7 +58,7 @@
                         </div>
                         <div class="pb-5">
                             <span class="mdi mdi-link pr-2"></span>
-                            <span><b>Status: </b>{{ selectedEvent.isCompleted ? "Completed" : "Scheduled" }}</span>
+                            <span><b>Status: </b>{{ getMeetingStatus(selectedEvent) }}</span>
                         </div>
                         <div class="pb-5" v-if="typeof selectedEvent.grade !== 'undefined'">
                             <span class="mdi mdi-link pr-2"></span>
@@ -152,7 +160,8 @@ export default mixins(RoleMixin).extend({
                         isCompleted: element.isCompleted,
                         link: element.link,
                         id: element.id,
-                        type: EventTypes.EVENT_TYPE_GUIDANCE_MEETING
+                        type: EventTypes.EVENT_TYPE_GUIDANCE_MEETING,
+                        isMissed: element.isMissed
                     } as EventInterface
                 });
             }
@@ -177,7 +186,8 @@ export default mixins(RoleMixin).extend({
                         isCompleted: element.isCompleted,
                         link: element.link,
                         id: element.id,
-                        type: EventTypes.EVENT_TYPE_MILESTONE_MEETING
+                        type: EventTypes.EVENT_TYPE_MILESTONE_MEETING,
+                        isMissed: element.isMissed
                     } as EventInterface
                 });
                 this.events = [...this.events, ...tempEvents];
@@ -195,8 +205,8 @@ export default mixins(RoleMixin).extend({
                 };
             }
         },
-        showEventOptions: function (isCompleted: boolean): boolean {
-            return !isCompleted && this.isSupervisor;
+        showEventOptions: function (isCompleted: boolean, isMissed: boolean): boolean {
+            return !isCompleted && !isMissed && this.isSupervisor;
         },
         cancelMeeting: async function (meeting: EventInterface): Promise<void> {
             this.toggleLoading();
@@ -299,6 +309,22 @@ export default mixins(RoleMixin).extend({
                 }
             }
         },
+        markMissedMeeting: async function (): Promise<void> {
+            if (this.selectedMeeting !== null) {
+                this.toggleLoading();
+                let response = {
+                    'success': true,
+                    'error': '',
+                    code: null as number | null
+                };
+                if (this.selectedMeeting !== null) {
+                    response = await MeetingService.markMissingMeeting(this.selectedMeeting.id, this.selectedMeeting.type);
+                    this.toggleLoading();
+                    this.closeMeetingPreview();
+                    this.handleMeetingAction(response);
+                }
+            }
+        },
         editRating: async function (rating: number): Promise<void> {
             this.rating.value = rating;
 
@@ -323,6 +349,14 @@ export default mixins(RoleMixin).extend({
         },
         checkPastMeeting(selectedEvent: any): boolean {
             return selectedEvent.start < new Date();
+        },
+        getMeetingStatus(selectedEvent: EventInterface): string {
+            if (selectedEvent.isCompleted) {
+                return 'Completed';
+            } else if (selectedEvent.isMissed) {
+                return 'Missed';
+            }
+            return 'Proposed';
         }
     },
     created: function (): void {

@@ -6,6 +6,7 @@ export interface MeetingInterface{
     link: string|null;
     scheduledAt: string;
     isCanceled: boolean;
+    isMissed: boolean;
     canceledAt: Date|null;
     studentFullName: string;
     supervisorFullName: string;

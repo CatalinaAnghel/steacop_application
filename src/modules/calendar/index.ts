@@ -45,6 +45,7 @@ export interface EventInterface extends BaseEventInterface{
     grade: number|null;
     studentFullName: string|null;
     supervisorFullName: string|null;
+    isMissed: boolean;
 }
 
 export interface AssignmentEventInterface extends BaseEventInterface{

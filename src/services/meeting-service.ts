@@ -189,4 +189,25 @@ export default class MeetingService {
 
         return requestStatus;
     }
+
+    public static async markMissingMeeting(meetingId: number, type: string): Promise<ResponseDto>{
+        let requestStatus = {
+            success: true,
+            error: '',
+            code: null as number|null
+        };
+
+        let endpoint = '/guidance-meetings';
+        if(type === EventTypes.EVENT_TYPE_MILESTONE_MEETING){
+            endpoint = '/milestone-meetings';
+        }
+        await axios.patch(`${endpoint}/${meetingId}`, {
+            isMissed: true
+        })
+            .catch(error => {
+                requestStatus = ErrorHandler.handleError(error);
+            });
+
+        return requestStatus;
+    }
 }
