@@ -25,11 +25,11 @@
 
                     <v-card-text>
                         <v-divider></v-divider>
-                        <draggable v-if="itemsGroup.functionalities.length" :disabled="isSupervisor" class="list-group" :list="itemsGroup.functionalities" group="projectFunctionalities"
-                            @change="markAsDirty">
+                        <draggable v-if="itemsGroup.functionalities.length" :disabled="isSupervisor" class="list-group"
+                            :list="itemsGroup.functionalities" group="projectFunctionalities" @change="markAsDirty">
 
-                            <div :class="{'list-group-item': true, 'draggable-card': isStudent}" v-for="(element) in itemsGroup.functionalities"
-                                :key="element.id">
+                            <div :class="{ 'list-group-item': true, 'draggable-card': isStudent }"
+                                v-for="(element) in itemsGroup.functionalities" :key="element.id">
                                 <v-card class="border-primary px-2 my-2">
                                     <v-card-title>
                                         {{ element.title }}
@@ -50,11 +50,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row justify-center v-else>
-            <v-col cols="12" class="text-center">
-                <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
-            </v-col>
-        </v-row>
+        <base-overlay v-else :overlay="loading"></base-overlay>
     </div>
 </template>
 
@@ -66,11 +62,13 @@ import RoleMixin from "@/components/mixins/RoleMixin.vue";
 import draggable from 'vuedraggable';
 import CreateFunctionalityDialog from '@/components/dialogs/kanban/CreateFunctionalityDialog.vue';
 import { ResponseDto } from '@/modules/common';
+import BaseOverlay from '@/components/base/BaseOverlay.vue';
 
 export default mixins(RoleMixin).extend({
     components: {
         draggable,
         CreateFunctionalityDialog,
+        BaseOverlay
     },
     data: function () {
         return {
@@ -101,16 +99,16 @@ export default mixins(RoleMixin).extend({
         this.loading = false;
     },
     methods: {
-        loadFunctionalities: async function(): Promise<void>{
+        loadFunctionalities: async function (): Promise<void> {
             await storeService.functionalities.loadStatuses().then(() => {
-            const statuses = storeService.functionalities.getStatuses();
-            statuses.forEach((element) => {
-                storeService.functionalities.load({
-                    projectId: Number(this.$route.params.id),
-                    status: element
-                } as FunctionalityPayloadInterface);
+                const statuses = storeService.functionalities.getStatuses();
+                statuses.forEach((element) => {
+                    storeService.functionalities.load({
+                        projectId: Number(this.$route.params.id),
+                        status: element
+                    } as FunctionalityPayloadInterface);
+                });
             });
-        });
         },
         markAsDirty: function (): void {
             this.isDirty = true;
@@ -122,7 +120,6 @@ export default mixins(RoleMixin).extend({
             this.createDialog = false;
         },
         handleAction: function (response: ResponseDto): void {
-            console.log(response);
             if (response.success) {
                 this.functionalities = storeService.functionalities.getFunctionalities();
                 this.isDirty = false;

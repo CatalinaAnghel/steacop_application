@@ -1,11 +1,9 @@
 <template>
-    <div v-if="loaded">
+    <base-overlay v-if="!loaded" :overlay="!loaded"></base-overlay>
+    <div v-else>
         <statistics-general-information :description="description" :title="title"
             :repositoryUrl="repositoryUrl"></statistics-general-information>
         <statistics-meetings-card :project="projectInfo"></statistics-meetings-card>
-    </div>
-    <div class="text-center" v-else>
-        <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
 </template>
 
@@ -15,11 +13,13 @@ import ProjectService from "@/services/project-service";
 import { defineComponent } from "vue";
 import StatisticsGeneralInformation from './StatisticsGeneralInformation.vue';
 import StatisticsMeetingsCard from './StatisticsMeetingsCard.vue';
+import BaseOverlay from '@/components/base/BaseOverlay.vue';
 
 export default defineComponent({
     components: {
         StatisticsGeneralInformation,
-        StatisticsMeetingsCard
+        StatisticsMeetingsCard,
+        BaseOverlay
     },
     data: function () {
         return {
@@ -44,7 +44,6 @@ export default defineComponent({
     created: async function () {
         const project = await ProjectService.getProjectInfo(Number(this.$route.params.id));
         if (project !== null) {
-            this.loaded = true;
             this.projectInfo = project;
             this.description = typeof (project as ProjectDetailsInterface).description !== "undefined" ?
                 (project as ProjectDetailsInterface).description : '';
@@ -52,6 +51,7 @@ export default defineComponent({
                 (project as ProjectDetailsInterface).title : '';
             this.repositoryUrl = typeof (project as ProjectDetailsInterface).repositoryUrl !== "undefined" ?
                 (project as ProjectDetailsInterface).repositoryUrl : '';
+            this.loaded = true;
         }
     }
 });
