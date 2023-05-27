@@ -175,7 +175,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'functionalities',
         name: 'projectFunctionalities',
-        component: () => import('../components/projects/kanban-board/KanbanBoardCard.vue'),
+        component: () => import('../components/projects/kanban-board/KanbanBoard.vue'),
       },
     ]
   },

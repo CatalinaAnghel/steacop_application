@@ -29,21 +29,23 @@
                             group="projectFunctionalities" @change="markAsDirty">
                             <p v-if="itemsGroup.functionalities.length === 0" class="mt-2 subtitle--text">No functionalities
                                 found</p>
-                            <div v-else :class="{ 'list-group-item': true, 'draggable-card': isStudent }"
-                                v-for="(element) in itemsGroup.functionalities" :key="element.id">
-                                <v-card class="border-primary px-2 my-2">
-                                    <v-card-title>
-                                        {{ element.title }}
-                                    </v-card-title>
+                            <transition-group v-else>
+                                <div :class="{ 'list-group-item': true, 'draggable-card': isStudent }"
+                                    v-for="(element) in itemsGroup.functionalities" :key="element.id">
+                                    <v-card class="border-primary px-2 my-2">
+                                        <v-card-title>
+                                            {{ element.title }}
+                                        </v-card-title>
 
-                                    <v-card-subtitle>{{ element.status.name }}</v-card-subtitle>
+                                        <v-card-subtitle>{{ element.status.name }}</v-card-subtitle>
 
-                                    <v-card-actions>
-                                        <v-btn text @click="viewFunctionality(element.id)" class="secondary--text">
-                                            View details</v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </div>
+                                        <v-card-actions>
+                                            <v-btn text @click="viewFunctionality(element.id)" class="secondary--text">
+                                                View details</v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </div>
+                            </transition-group>
 
                         </draggable>
 
