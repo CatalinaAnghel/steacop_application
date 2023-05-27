@@ -1,5 +1,5 @@
 <template>
-  <v-row class="mt-16" align="center">
+  <v-row class="my-lg-16 py-lg-16" justify="center">
     <v-col cols="12" sm="12" md="12" lg="6" xl="6">
       <h1 class="primary--text">Steacop</h1>
       <h3><span class="primary--text">S</span>tudent-<span class="primary--text">Tea</span>cher <span

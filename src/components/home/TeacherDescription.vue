@@ -1,5 +1,5 @@
 <template>
-    <v-row class="mt-16" align="center">
+    <v-row class="my-lg-16 py-lg-16" justify="center">
         <v-col cols="12">
             <h2 class="primary--text">
                 <v-icon large color="primary">
@@ -8,7 +8,7 @@
                 Teachers
             </h2>
         </v-col>
-        <v-col cols="12" sm="12" md="12" lg="6" xl="6">
+        <v-col cols="auto" lg="6" xl="6">
             <img :src="require('@/assets/home/education.svg')" class="homepage-image" />
         </v-col>
         <v-col cols="12" sm="12" md="12" lg="6" xl="6">

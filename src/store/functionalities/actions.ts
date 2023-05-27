@@ -17,7 +17,8 @@ export default {
             const params = {
                 "pagination": false,
                 "project.id": payload.projectId,
-                "functionalityStatus.id": payload.status.id
+                "functionalityStatus.id": payload.status.id,
+                'order[orderNumber]': 'asc'
             };
 
             const response = await axios.get('/functionalities', {

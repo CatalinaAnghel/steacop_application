@@ -3,7 +3,7 @@ import { FunctionalityGroupInterface, FunctionalityInterface, FunctionalityState
 
 export default {
     _storeFunctionalities(state: FunctionalityState, functionalities: FunctionalityGroupInterface): void {
-        state.functionalityGroups.push(functionalities);
+        state.functionalityGroups.splice(functionalities.status.orderNumber - 1, 0, functionalities);
     },
     _storeStatuses(state: FunctionalityState, statuses: StatusInterface[]): void {
         state.statuses = statuses;
