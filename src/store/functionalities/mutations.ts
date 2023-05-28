@@ -1,5 +1,5 @@
 import { initialize } from ".";
-import { FunctionalityGroupInterface, FunctionalityInterface, FunctionalityState, StatusInterface, TypeInterface } from "./types";
+import { FunctionalityGroupInterface, FunctionalityInterface, FunctionalityState, HistoryGroupInterface, StatusInterface, TypeInterface } from "./types";
 
 export default {
     _storeFunctionalities(state: FunctionalityState, functionalities: FunctionalityGroupInterface): void {
@@ -22,14 +22,28 @@ export default {
     _storeTypes(state: FunctionalityState, types: TypeInterface[]): void {
         state.types = types;
     },
-    _reset(state: FunctionalityState): void{
+    _reset(state: FunctionalityState): void {
         Object.assign(state, initialize());
     },
     _addNewFunctionality(state: FunctionalityState, newFunctionality: FunctionalityInterface): void {
         state.functionalityGroups.forEach((functionalityGroup, index) => {
-            if (functionalityGroup.status.id === newFunctionality.status.id){
+            if (functionalityGroup.status.id === newFunctionality.status.id) {
                 state.functionalityGroups[index].functionalities.push(newFunctionality);
             }
+        });
+    },
+    _storeHistory(state: FunctionalityState, history: HistoryGroupInterface): void {
+        state.history.splice(history.status.orderNumber - 1, 0, history);
+        state.history.sort((group1, group2) => {
+            if (group1.status.orderNumber > group2.status.orderNumber) {
+                return 1;
+            }
+
+            if (group1.status.orderNumber < group2.status.orderNumber) {
+                return -1;
+            }
+
+            return 0;
         });
     }
 }

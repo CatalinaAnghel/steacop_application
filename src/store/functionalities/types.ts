@@ -35,7 +35,8 @@ export interface TypeInterface extends FunctionalityCharacteristicInterface {
 export interface FunctionalityState {
     functionalityGroups: Array<FunctionalityGroupInterface>,
     statuses: Array<StatusInterface>,
-    types: Array<TypeInterface>
+    types: Array<TypeInterface>,
+    history: Array<HistoryGroupInterface>
 }
 
 
@@ -60,4 +61,21 @@ export interface OrderingPayloadInterface extends PayloadInterface {
 export interface OrderedCollectionInterface {
     statusId: number;
     functionalities: Array<number>;
+}
+
+export interface HistoryInterface {
+    statusId: number;
+    createdAt: Date;
+    numberOfFunctionalities: number;
+}
+
+export interface HistoryGroupInterface {
+    status: StatusInterface;
+    logs: Array<HistoryInterface>;
+}
+
+export interface HistoryPayloadInterface {
+    projectId: number;
+    reload: boolean;
+    status: StatusInterface|null;
 }

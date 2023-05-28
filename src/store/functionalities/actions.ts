@@ -1,7 +1,7 @@
 import axios from '@/plugins/axios';
 import ErrorHandler from '@/services/error-handler-service';
 import { AxiosResponse } from 'axios';
-import { CreateFunctionalityPayloadInterface, FunctionalityGroupInterface, FunctionalityInterface, FunctionalityPayloadInterface, FunctionalityState, OrderedCollectionInterface, OrderingPayloadInterface, StatusInterface, TypeInterface } from './types';
+import { CreateFunctionalityPayloadInterface, FunctionalityGroupInterface, FunctionalityInterface, FunctionalityPayloadInterface, FunctionalityState, HistoryInterface, HistoryPayloadInterface, OrderedCollectionInterface, OrderingPayloadInterface, StatusInterface, TypeInterface } from './types';
 import { Commit } from 'vuex';
 import { CommitStateInterface } from '../common/types';
 import { ResponseDto } from '@/modules/common';
@@ -98,7 +98,7 @@ export default {
             }
         }
     },
-    async create({ commit }: { commit: Commit }, payload: CreateFunctionalityPayloadInterface): Promise<FunctionalityInterface|null> {
+    async create({ commit }: { commit: Commit }, payload: CreateFunctionalityPayloadInterface): Promise<FunctionalityInterface | null> {
         let requestStatus = {
             success: true,
             error: '',
@@ -110,7 +110,7 @@ export default {
                 requestStatus = ErrorHandler.handleError(error);
             });
 
-        let addedFunctionality: FunctionalityInterface|null = null;
+        let addedFunctionality: FunctionalityInterface | null = null;
         if (requestStatus.success) {
             addedFunctionality = (response as AxiosResponse).data;
             commit('_addNewFunctionality', addedFunctionality);
@@ -159,15 +159,50 @@ export default {
             code: null as number | null
         };
 
-        const response = await axios.post('/functionality-attachments', formData)
+        await axios.post('/functionality-attachments', formData)
             .catch(error => {
                 const requestStatusTemp = ErrorHandler.handleError(error);
                 requestStatus.success = requestStatusTemp.success;
                 requestStatus.error = requestStatusTemp.error;
             });
 
-        if (requestStatus.success) {
-            console.log(response);
+        return requestStatus;
+    },
+    async loadHistory({ state, commit }: CommitStateInterface<FunctionalityState>, payload: HistoryPayloadInterface): Promise<ResponseDto> {
+        const requestStatus = {
+            success: true,
+            error: '',
+            data: '',
+            code: null as number | null
+        };
+        if (state.history.length === 0 || payload.reload) {
+            let params = {
+                "pagination": false,
+                "project.id": payload.projectId,
+            };
+
+            if(null !== payload.status){
+                const tempParams = {
+                    "status.id": payload.status.id
+                };
+                params = {...params, ...tempParams};
+            }
+
+            const response = await axios.get('/project-functionalities-histories', { params })
+                .catch(error => {
+                    const requestStatusTemp = ErrorHandler.handleError(error);
+                    requestStatus.success = requestStatusTemp.success;
+                    requestStatus.error = requestStatusTemp.error;
+                });
+
+            if (requestStatus.success) {
+                // the request has been successfully performed
+                const history: HistoryInterface[] = (response as AxiosResponse).data;
+                commit('_storeHistory', {
+                    status: payload.status,
+                    logs: history
+                });
+            }
         }
 
         return requestStatus;

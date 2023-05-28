@@ -2,7 +2,7 @@ import { Store } from 'vuex';
 import { ResponseDto } from '@/modules/common';
 import { AbstractStoreService, LoadableInterface, PayloadInterface } from '../common/types';
 import { functionalityNamespace } from '.';
-import { CreateFunctionalityPayloadInterface, FunctionalityGroupInterface, FunctionalityInterface, FunctionalityPayloadInterface, StatusInterface, TypeInterface } from './types';
+import { CreateFunctionalityPayloadInterface, FunctionalityGroupInterface, FunctionalityInterface, FunctionalityPayloadInterface, HistoryGroupInterface, HistoryPayloadInterface, StatusInterface, TypeInterface } from './types';
 import { State } from '..';
 
 export default class extends AbstractStoreService implements LoadableInterface {
@@ -26,6 +26,10 @@ export default class extends AbstractStoreService implements LoadableInterface {
 
     public load(payload: FunctionalityPayloadInterface | null = null): Promise<void> {
         return this.store.dispatch(this.appendNamespace('loadFunctionalities'), payload);
+    }
+
+    public loadHistory(payload: HistoryPayloadInterface): Promise<void>{
+        return this.store.dispatch(this.appendNamespace('loadHistory'), payload);
     }
 
     public getFunctionalities(): FunctionalityGroupInterface[] {
@@ -55,6 +59,10 @@ export default class extends AbstractStoreService implements LoadableInterface {
 
     public getTypes(): TypeInterface[] {
         return this.store.getters[this.appendNamespace('types')];
+    }
+
+    public getHistory(): HistoryGroupInterface[] {
+        return this.store.getters[this.appendNamespace('history')];
     }
 
     public async createFunctionality(payload: CreateFunctionalityPayloadInterface): Promise<FunctionalityInterface|null> {

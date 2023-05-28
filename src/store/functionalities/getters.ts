@@ -1,4 +1,4 @@
-import { FunctionalityGroupInterface, FunctionalityState, StatusInterface, TypeInterface } from "./types";
+import { FunctionalityGroupInterface, FunctionalityState, HistoryGroupInterface, StatusInterface, TypeInterface } from "./types";
 
 export default {
     functionalities(state: FunctionalityState): FunctionalityGroupInterface[] {
@@ -20,5 +20,8 @@ export default {
     },
     types(state: FunctionalityState): TypeInterface[] {
         return state.types;
+    },
+    history(state: FunctionalityState): HistoryGroupInterface[] {
+        return state.history;
     }
 };

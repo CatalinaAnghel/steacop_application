@@ -4,6 +4,7 @@
         <statistics-general-information :description="description" :title="title"
             :repositoryUrl="repositoryUrl"></statistics-general-information>
         <statistics-meetings-card :project="projectInfo"></statistics-meetings-card>
+        <statistics-functionalities-card :project="projectInfo"></statistics-functionalities-card>
     </div>
 </template>
 
@@ -13,12 +14,14 @@ import ProjectService from "@/services/project-service";
 import { defineComponent } from "vue";
 import StatisticsGeneralInformation from './StatisticsGeneralInformation.vue';
 import StatisticsMeetingsCard from './StatisticsMeetingsCard.vue';
+import StatisticsFunctionalitiesCard from "./StatisticsFunctionalitiesCard.vue";
 import BaseOverlay from '@/components/base/BaseOverlay.vue';
 
 export default defineComponent({
     components: {
         StatisticsGeneralInformation,
         StatisticsMeetingsCard,
+        StatisticsFunctionalitiesCard,
         BaseOverlay
     },
     data: function () {
@@ -31,12 +34,20 @@ export default defineComponent({
                 title: '',
                 description: '',
                 id: 0,
-                numberOfAssignments: 0,
-                numberOfFinishedAssignments: 0,
-                numberOfGuidanceMeetings: 0,
-                numberOfCompletedGuidanceMeetings: 0,
-                numberOfMilestoneMeetings: 0,
-                numberOfCompletedMilestoneMeetings: 0,
+                milestoneMeetingInformation: {
+                    total: 0,
+                    completed: 0,
+                    missed: 0
+                },
+                guidanceMeetingInformation: {
+                    total: 0,
+                    completed: 0,
+                    missed: 0
+                },
+                assignmentInformation: {
+                    total: 0,
+                    completed: 0
+                },
                 repositoryUrl: ''
             }
         }

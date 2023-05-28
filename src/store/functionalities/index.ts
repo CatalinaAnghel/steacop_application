@@ -9,7 +9,8 @@ export function initialize(): FunctionalityState {
     return {
         functionalityGroups: [],
         types: [],
-        statuses: []
+        statuses: [],
+        history: []
     }
 }
 
