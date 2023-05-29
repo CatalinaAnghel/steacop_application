@@ -5,12 +5,19 @@
             form-title="Create a new item"></create-functionality-dialog>
         <v-row v-if="!loading">
             <v-col cols="auto">
-                <v-btn :disabled="types.length === 0" color="secondary" dark class="mb-2" @click="openCreateDialog">
+                <v-btn :disabled="types.length === 0" color="secondary" outlined class="mb-2" @click="openCreateDialog">
+                    <v-icon medium color="secondary">
+                        mdi-file-document-plus-outline
+                    </v-icon>
                     Create
                 </v-btn>
             </v-col>
             <v-col cols="auto" v-if="isStudent">
-                <v-btn :disabled="disableSaving" color="secondary" :dark="!disableSaving" class="mb-2" @click="order">
+                <v-btn :disabled="disableSaving" color="primary" outlined :dark="!disableSaving" class="mb-2"
+                    @click="order">
+                    <v-icon medium color="primary">
+                        mdi-content-save-outline
+                    </v-icon>
                     Save
                 </v-btn>
             </v-col>
@@ -59,7 +66,7 @@
 
 <script lang="ts">
 import { storeService } from '@/store';
-import { FunctionalityGroupInterface, FunctionalityPayloadInterface, StatusInterface, TypeInterface } from '@/store/functionalities/types';
+import { FunctionalityGroupInterface, FunctionalityPayloadInterface, HistoryPayloadInterface, StatusInterface, TypeInterface } from '@/store/functionalities/types';
 import mixins from "vue-typed-mixins";
 import RoleMixin from "@/components/mixins/RoleMixin.vue";
 import draggable from 'vuedraggable';
@@ -110,6 +117,12 @@ export default mixins(RoleMixin).extend({
                         projectId: Number(this.$route.params.id),
                         status: element
                     } as FunctionalityPayloadInterface);
+
+                    storeService.functionalities.loadHistory({
+                        projectId: Number(this.$route.params.id),
+                        status: element,
+                        reload: true
+                    } as HistoryPayloadInterface)
                 });
             });
         },

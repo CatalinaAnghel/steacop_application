@@ -29,15 +29,14 @@ export default class extends AbstractStoreService implements LoadableInterface, 
             {
                 text: "Last name",
                 value: "lastName"
-            },{
+            },
+            {
                 text: "Email",
                 value: "user.email"
-            },{
+            },
+            {
                 text: "Phone number",
                 value: "phoneNumber"
-            },{
-                text: "Project",
-                value: "project.title"
             },
             {
                 text: "Specialization",

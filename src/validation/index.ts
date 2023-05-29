@@ -1,5 +1,5 @@
 import { extend } from 'vee-validate';
-import { required, email, min, max_value, min_value, between, regex } from 'vee-validate/dist/rules';
+import { required, email, min, max_value, min_value, between, regex, mimes } from 'vee-validate/dist/rules';
 
 interface ValidationRuleInterface {
     params: string[];
@@ -36,6 +36,11 @@ extend('between', {
 
 extend('regex', {
     ...regex,
+});
+
+extend('mimes', {
+    ...mimes,
+    message: "{_field_} not valid"
 });
 
 extend('valid_weight', {

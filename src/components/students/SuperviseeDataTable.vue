@@ -2,18 +2,19 @@
     <div>
         <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
             @update:showAlert="updateShowAlert"></base-alert>
+        <grading-dialog :projectId="targetProjectId" :open="gradingDialog" formTitle="Provide the final grade" @close:dialog="closeDialog"/>
         <base-data-table title="Supervisees" :headers="headers" :items="students" :items-per-page="itemsPerPage"
             :loading="loading" expandable hasDialog :openDialog="openDialog" @close:dialog="observeCloseDialogEvent">
             <template v-slot:expandContent="item">
-                <p class="text-h6 mt-2 primary--text">Project description</p>
+                <p class="text-h6 mt-2 primary--text">{{ item.project.title }}</p>
                 <p class="text-justify">{{ item.expanded }}</p>
-                <!-- <v-divider></v-divider>
-                <p class="text-h6 mt-2">Supervisory plan</p>
-                <p class="text-justify text-subtitle-1 font-italic">Laissez faire</p> -->
             </template>
             <template v-slot:itemActions="item">
                 <v-icon color="secondary" small class="mr-2" v-if="checkProject(item)" @click="viewProject(item)">
                     mdi-information-outline
+                </v-icon>
+                <v-icon color="secondary" small class="mr-2" @click="openGradingDialog(item)">
+                    mdi-clipboard-check-outline
                 </v-icon>
                 <v-icon color="secondary" small class="mr-2" @click="openPlanProposalDialog(item)">
                     mdi-pencil
@@ -38,17 +39,20 @@ import mixins from "vue-typed-mixins";
 import FormMixin from '../mixins/FormMixin.vue';
 import AuthService from '@/services/auth-service';
 import PlanProposalDialog from '../dialogs/students/PlanProposalDialog.vue';
+import GradingDialog from '../dialogs/projects/GradingDialog.vue';
 
 export default mixins(FormMixin).extend({
     components: {
         BaseDataTable,
         PlanProposalDialog,
+        GradingDialog
     },
     data() {
         return {
             itemsPerPage: DATA_TABLE_DEFAULT_ITEMS_PER_PAGE,
             loading: false,
             dialog: false,
+            gradingDialog: false,
             targetProjectId: 0
         }
     },
@@ -94,14 +98,22 @@ export default mixins(FormMixin).extend({
                 this.targetProjectId = item.project.id;
             }
         },
+        openGradingDialog(item: StudentInterface): void {
+            this.gradingDialog = true;            
+            if (item.project !== null) {
+                this.targetProjectId = item.project.id;
+            }
+        },
         observeCloseDialogEvent(): void {
             this.dialog = false;
+            this.gradingDialog = false;
             this.targetProjectId = 0;
         },
         openDialog(): void {
             this.dialog = true;
         },
         closeDialog(): void {
+            this.gradingDialog = false;
             this.dialog = false;
         }
     }

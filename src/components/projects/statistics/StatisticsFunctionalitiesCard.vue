@@ -23,9 +23,8 @@
                     <v-divider />
                 </v-row>
                 <v-row v-if="functionalities.length">
-                    <v-col cols="12" v-for="serie in lineChartSeries" :key="serie.options.chart.id">
-                        <vue-apex-charts height="auto" :options="serie.options"
-                            :series="serie.series"></vue-apex-charts>
+                    <v-col cols="6" v-for="serie in lineChartSeries" :key="serie.options.chart.id">
+                        <vue-apex-charts height="250" :options="serie.options" :series="serie.series"></vue-apex-charts>
                     </v-col>
                 </v-row>
             </v-container>
@@ -51,10 +50,11 @@ export default defineComponent({
             loading: false,
             options: {
                 colors: [
-                    this.$vuetify.theme.currentTheme.primary,
-                    this.$vuetify.theme.currentTheme.secondary,
+                    this.$vuetify.theme.currentTheme.error,
                     this.$vuetify.theme.currentTheme.warning,
-                    this.$vuetify.theme.currentTheme.error
+                    this.$vuetify.theme.currentTheme.secondary,
+                    this.$vuetify.theme.currentTheme.primary,
+
                 ],
                 labels: [],
                 responsive: [{
@@ -95,17 +95,25 @@ export default defineComponent({
         lineChartSeries: function (): FunctionalityLineChartOptionsInterface[] {
             let chartOptions = [] as FunctionalityLineChartOptionsInterface[];
             if (this.history.length) {
-                this.history.forEach((history) => {
-                
+                this.history.forEach((history, index) => {
+
                     let statusChartOptions = {
                         options: {
                             chart: {
                                 id: history.status.name,
-                                // group: 'functionalities',
                                 type: 'area',
                                 curve: 'smooth',
-                                height: 350,
-                                colors: ['primary']
+                            },
+                            colors: [this.options.colors[index] as string],
+                            fill: {
+                                type: 'gradient',
+                                gradient: {
+                                    shadeIntensity: 1,
+                                    inverseColors: false,
+                                    opacityFrom: 0.5,
+                                    opacityTo: 0,
+                                    stops: [0, 90, 100]
+                                },
                             },
                             yaxis: {
                                 title: {

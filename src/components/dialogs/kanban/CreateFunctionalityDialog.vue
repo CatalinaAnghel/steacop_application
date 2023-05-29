@@ -54,8 +54,11 @@
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
                                             </v-text-field>
                                         </validation-provider>
-                                        <v-file-input multiple v-model="functionalityDetails.selectedFiles"
-                                            counter></v-file-input>
+                                        <validation-provider :rules="{ mimes: ['application/pdf', 'image/png', 'image/jpg'] }"
+                                            v-slot="{ errors }" name="Attachments">
+                                            <v-file-input multiple v-model="functionalityDetails.selectedFiles" counter
+                                                :error-messages="errors"></v-file-input>
+                                        </validation-provider>
                                         <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
                                             <v-textarea counter class="mt-2" clearable clear-icon="mdi-close-circle"
                                                 label="Description" v-model="functionalityDetails.description"
@@ -137,7 +140,7 @@ export default mixins(FormMixin).extend({
             return startDate.toISOString().slice(0, 10);
         },
         disabled: function (): boolean {
-            return this.processing || this.functionalityDetails.selectedFiles.length === 0 || (this.functionalityDetails.parentType !== null && this.functionalityDetails.parentFunctionality === null);
+            return this.processing || (this.functionalityDetails.parentType !== null && this.functionalityDetails.parentFunctionality === null);
         }
     },
     watch: {

@@ -18,17 +18,26 @@ export interface ProjectDetailsInterface extends ProjectInterface {
     guidanceMeetingInformation: MeetingInformationInterface;
     assignmentInformation: InformationInterface;
     repositoryUrl: string;
+    grade: number|null;
 }
 
 export interface FunctionalityLineChartOptionsInterface {
     options: {
         chart: {
             id: string;
-            // group: string|null;
             type: string;
             curve: string;
-            height: number;
-            colors: Array<string>;
+        },
+        colors: Array<string>|null;
+        fill: {
+            type: string;
+            gradient: {
+                shadeIntensity: number;
+                inverseColors: boolean;
+                opacityFrom: number;
+                opacityTo: number;
+                stops: number[]
+            }
         },
         yaxis: {
             title: {
@@ -46,3 +55,9 @@ export interface FunctionalityLineChartOptionsInterface {
         }[]
     }>
 };
+
+export interface UpdateProjectInterface{
+    title: string;
+    description: string;
+    repositoryUrl: string|null;
+}
