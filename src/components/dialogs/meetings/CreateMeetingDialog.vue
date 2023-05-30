@@ -69,7 +69,6 @@
                                             type="submit" large class="my-3" color="secondary">Save</v-btn>
                                     </v-form>
                                 </validation-observer>
-
                             </v-col>
                         </v-row>
                     </v-container>

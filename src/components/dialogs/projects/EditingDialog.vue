@@ -25,10 +25,10 @@
                                             </v-text-field>
                                         </validation-provider>
                                         <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
-                                            <v-text-field v-model="projectDetails.description" label="Description"
-                                                hide-details="auto" :error-messages="errors" class="mt-3"
-                                                prepend-icon="mdi-text-short">
-                                            </v-text-field>
+                                            <v-textarea counter class="mt-3" clearable clear-icon="mdi-close-circle"
+                                                label="Description" v-model="projectDetails.description" hide-details="auto"
+                                                rows="4" :error-messages="errors"
+                                                prepend-icon="mdi-text-short"></v-textarea>
                                         </validation-provider>
                                         <validation-provider rules="min:10" v-slot="{ errors }" name="Repository URL">
                                             <v-text-field v-model="projectDetails.repositoryUrl" label="Repository URL"
@@ -120,7 +120,7 @@ export default mixins(FormMixin).extend({
                 'error': '',
                 code: null as number | null
             };
-           
+
 
             response = await ProjectService.update(this.project.id, this.projectDetails);
 
