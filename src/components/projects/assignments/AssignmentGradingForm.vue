@@ -9,7 +9,7 @@
                     </validation-provider>
                 </v-col>
                 <v-col cols="4" class="mt-2 px-0">
-                    <v-btn :disabled="processing || !valid" icon type="submit" small class="my-3"
+                    <v-btn :disabled="loading || !valid" icon type="submit" small class="my-3"
                         @click="toggleLoader"><v-icon>mdi-check</v-icon></v-btn>
                 </v-col>
             </v-row>
@@ -33,7 +33,6 @@ export default mixins(FormMixin).extend({
     data: function () {
         return {
             valid: false,
-            processing: false,
             grade: 0
         }
     },
@@ -42,10 +41,9 @@ export default mixins(FormMixin).extend({
             this.$emit('toggled:loader');
         },
         gradeAssignment: async function (): Promise<void> {
-            this.processing = true;
-            await AssignmentService.gradeAssignment(Number(this.$route.params.id), this.grade);
-            this.processing = false;
             this.toggleLoader();
+            const response = await AssignmentService.gradeAssignment(Number(this.$route.params.id), this.grade);
+            this.handleResponse(response, "The assignment has been graded", true);
         }
     },
     created: function (): void {

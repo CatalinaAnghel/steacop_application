@@ -116,6 +116,8 @@ export default defineComponent({
                                 },
                             },
                             yaxis: {
+                                type: 'numeric',
+                                decimalsInFloat: 0,
                                 title: {
                                     text: history.status.name
                                 },
@@ -162,8 +164,7 @@ export default defineComponent({
                     } as FunctionalityPayloadInterface);
                     storeService.functionalities.loadHistory({
                         projectId: Number(this.$route.params.id),
-                        status: element,
-                        reload: false
+                        status: element
                     } as HistoryPayloadInterface);
                 });
 
@@ -172,9 +173,7 @@ export default defineComponent({
     },
     created: async function (): Promise<void> {
         storeService.functionalities.loadTypes();
-        await storeService.functionalities.loadStatuses().then(() => {
-            this.loadData();
-        });
+        await this.loadData();
         this.statuses = storeService.functionalities.getStatuses();
         this.functionalities = storeService.functionalities.getFunctionalities();
         this.history = storeService.functionalities.getHistory();

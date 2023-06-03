@@ -1,14 +1,18 @@
 import axios from '@/plugins/axios';
 import ErrorHandler from '@/services/error-handler-service';
 import { AxiosResponse } from 'axios';
-import { CreateFunctionalityPayloadInterface, FunctionalityGroupInterface, FunctionalityInterface, FunctionalityPayloadInterface, FunctionalityState, HistoryInterface, HistoryPayloadInterface, OrderedCollectionInterface, OrderingPayloadInterface, StatusInterface, TypeInterface } from './types';
+import { CreateFunctionalityPayloadInterface, FunctionalityGroupInterface, FunctionalityInterface, FunctionalityPayloadInterface, FunctionalityState, FunctionalityStatusHistory, HistoryInterface, HistoryPayloadInterface, OrderedCollectionInterface, OrderingPayloadInterface, StatusInterface, TypeInterface, UpdateFunctionalityPayloadInterface } from './types';
 import { Commit } from 'vuex';
 import { CommitStateInterface } from '../common/types';
 import { ResponseDto } from '@/modules/common';
 
 export default {
     async loadFunctionalities({ commit, state }: CommitStateInterface<FunctionalityState>, payload: FunctionalityPayloadInterface | null = null): Promise<void> {
-        if (state.functionalityGroups.length === 0) {
+        if (state.dirtyFunctionalities) {
+            commit('_resetFunctionalities');
+        }
+
+        if (state.functionalityGroups.length === 0 || state.dirtyFunctionalities) {
             let requestStatus = {
                 success: true,
                 error: '',
@@ -31,15 +35,21 @@ export default {
             if (requestStatus.success) {
                 // the request has been successfully performed
                 const functionalities: FunctionalityInterface[] = (response as AxiosResponse).data;
+                const kanbanFunctionalities = functionalities.filter(element => {
+                    return element.type.name !== 'Epic';
+                });
+                const epics = functionalities.filter(element => !kanbanFunctionalities.includes(element));
+                commit('_storeEpics', epics);
                 commit('_storeFunctionalities', {
                     status: payload.status,
-                    functionalities: functionalities,
+                    functionalities: kanbanFunctionalities,
                 } as FunctionalityGroupInterface);
             }
         }
     },
     async loadStatuses({ commit, state }: CommitStateInterface<FunctionalityState>): Promise<void> {
         if (state.statuses.length === 0) {
+            commit('_storeStatuses', [] as StatusInterface[]);
             let requestStatus = {
                 success: true,
                 error: '',
@@ -121,7 +131,7 @@ export default {
     reset({ commit }: { commit: Commit }): void {
         commit('_reset');
     },
-    async save({ state }: CommitStateInterface<FunctionalityState>, payload: FunctionalityGroupInterface[]): Promise<ResponseDto> {
+    async save({ commit }: { commit: Commit }, payload: FunctionalityGroupInterface[]): Promise<ResponseDto> {
         let requestStatus = {
             success: true,
             error: '',
@@ -143,7 +153,7 @@ export default {
 
         await axios.post('/functionalities-orderings', orderingCollections)
             .then(() => {
-                state.functionalityGroups = [];
+                commit('_markAsDirty');
             })
             .catch(error => {
                 requestStatus = ErrorHandler.handleError(error);
@@ -175,17 +185,21 @@ export default {
             data: '',
             code: null as number | null
         };
-        if (state.history.length === 0 || payload.reload) {
+        if (state.dirtyHistory) {
+            commit('_resetHistory');
+        }
+
+        if (state.history.length === 0 || state.dirtyHistory) {
             let params = {
                 "pagination": false,
                 "project.id": payload.projectId,
             };
 
-            if(null !== payload.status){
+            if (null !== payload.status) {
                 const tempParams = {
                     "status.id": payload.status.id
                 };
-                params = {...params, ...tempParams};
+                params = { ...params, ...tempParams };
             }
 
             const response = await axios.get('/project-functionalities-histories', { params })
@@ -203,6 +217,98 @@ export default {
                     logs: history
                 });
             }
+        }
+
+        return requestStatus;
+    },
+    async fetchFunctionality(_: CommitStateInterface<FunctionalityState>, functionalityId: number): Promise<FunctionalityInterface | null> {
+        const requestStatus = {
+            success: true,
+            error: '',
+            data: '',
+            code: null as number | null
+        };
+
+        const response = await axios.get(`/functionalities/${functionalityId}`)
+            .catch(error => {
+                const requestStatusTemp = ErrorHandler.handleError(error);
+                requestStatus.success = requestStatusTemp.success;
+                requestStatus.error = requestStatusTemp.error;
+            });
+        let functionality = null;
+        if (requestStatus.success) {
+            functionality = (response as AxiosResponse).data as FunctionalityInterface;
+        }
+
+        return functionality;
+    },
+    async fetchFunctionalityStatusHistory(_: CommitStateInterface<FunctionalityState>, functionalityId: number): Promise<FunctionalityStatusHistory[]> {
+        const requestStatus = {
+            success: true,
+            error: '',
+            data: '',
+            code: null as number | null
+        };
+
+        const params = {
+            "functionality.id": functionalityId
+        }
+        const response = await axios.get(`/functionality-status-histories`, {
+            params: params
+        })
+            .catch(error => {
+                const requestStatusTemp = ErrorHandler.handleError(error);
+                requestStatus.success = requestStatusTemp.success;
+                requestStatus.error = requestStatusTemp.error;
+            });
+        let history = [] as FunctionalityStatusHistory[];
+        if (requestStatus.success) {
+            history = (response as AxiosResponse).data as FunctionalityStatusHistory[];
+        }
+
+        return history;
+    },
+    async updateFunctionality({ commit }: { commit: Commit }, payload: UpdateFunctionalityPayloadInterface): Promise<ResponseDto> {
+        let requestStatus = {
+            success: true,
+            error: '',
+            code: null as number | null
+        };
+
+        let params = {
+            title: payload.title,
+            description: payload.description,
+            status: payload.status
+        };
+        if(null !== payload.dueDate){
+            params = {...params, ...{dueDate: payload.dueDate}};
+        }
+
+        await axios.patch(`/functionalities/${payload.id}`, params)
+            .catch(error => {
+                requestStatus = ErrorHandler.handleError(error);
+            });
+
+        if (requestStatus.success) {
+            commit('_markAsDirty');
+        }
+
+        return requestStatus;
+    },
+    async deleteFunctionality({commit}: { commit: Commit }, functionalityId: number): Promise<ResponseDto>{
+        let requestStatus = {
+            success: true,
+            error: '',
+            code: null as number | null
+        };
+
+        await axios.delete(`/functionalities/${functionalityId}`)
+            .catch(error => {
+                requestStatus = ErrorHandler.handleError(error);
+            });
+
+        if (requestStatus.success) {
+            commit('_markAsDirty');
         }
 
         return requestStatus;

@@ -13,11 +13,16 @@
                 <v-container>
                     <v-row>
                         <v-col col="12" sm="12" md="12">
-                            <v-form @submit.prevent="submit" v-model="valid">
-                                <v-file-input v-model="selectedFile" counter></v-file-input>
-                                <v-btn color="secondary" block dark type="submit" large class="my-3" @click="toggleLoader">Upload
-                                    file</v-btn>
-                            </v-form>
+                            <validation-observer ref="observer" v-slot="{ handleSubmit }">
+                                <v-form ref="formDialog" @submit.prevent="handleSubmit(submit)" v-model="valid">
+                                    <validation-provider :rules="{ mimes: ['text/csv'] }" v-slot="{ errors }" name="File">
+                                        <v-file-input v-model="selectedFile" :error-messages="errors"></v-file-input>
+                                    </validation-provider>
+                                    <v-btn color="secondary" block dark type="submit" large class="my-3"
+                                        @click="toggleLoader">Upload
+                                        file</v-btn>
+                                </v-form>
+                            </validation-observer>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -29,6 +34,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import FileUploadService from '@/services/file-upload-service';
+import { ValidationObserver, ValidationProvider } from "vee-validate";
 
 
 export default defineComponent({
@@ -50,6 +56,10 @@ export default defineComponent({
             valid: false,
             selectedFile: null,
         }
+    },
+    components: {
+        ValidationObserver,
+        ValidationProvider
     },
     watch: {
         open(val: boolean): void {

@@ -15,6 +15,12 @@ export default {
 
             return 0;
         });
+        state.dirtyFunctionalities = false;
+    },
+    _storeEpics(state: FunctionalityState, epics: FunctionalityInterface[]): void {
+        epics.forEach(element => {
+            state.epics.push(element);
+        })
     },
     _storeStatuses(state: FunctionalityState, statuses: StatusInterface[]): void {
         state.statuses = statuses;
@@ -26,11 +32,18 @@ export default {
         Object.assign(state, initialize());
     },
     _addNewFunctionality(state: FunctionalityState, newFunctionality: FunctionalityInterface): void {
-        state.functionalityGroups.forEach((functionalityGroup, index) => {
-            if (functionalityGroup.status.id === newFunctionality.status.id) {
-                state.functionalityGroups[index].functionalities.push(newFunctionality);
-            }
-        });
+        if (newFunctionality.type.name === 'Epic') {
+            state.epics.push(newFunctionality);
+        } else {
+            state.functionalityGroups.forEach((functionalityGroup, index) => {
+                if (functionalityGroup.status.id === newFunctionality.status.id) {
+                    state.functionalityGroups[index].functionalities.push(newFunctionality);
+                }
+            });
+        }
+
+        state.dirtyHistory = true;
+        state.dirtyFunctionalities = false;
     },
     _storeHistory(state: FunctionalityState, history: HistoryGroupInterface): void {
         state.history.splice(history.status.orderNumber - 1, 0, history);
@@ -45,5 +58,17 @@ export default {
 
             return 0;
         });
+        state.dirtyHistory = false;
+    },
+    _markAsDirty(state: FunctionalityState): void {
+        state.dirtyFunctionalities = true;
+        state.dirtyHistory = true;
+    },
+    _resetFunctionalities(state: FunctionalityState): void {
+        state.functionalityGroups = [];
+        state.epics = [];
+    },
+    _resetHistory(state: FunctionalityState): void {
+        state.history = [];
     }
 }

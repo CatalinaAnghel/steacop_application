@@ -3,7 +3,7 @@
         <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
             @update:showAlert="updateShowAlert"></base-alert>
 
-        <v-dialog v-if="projectId > 0" v-model="dialog" max-width="500px" @click:outside="close">
+        <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
             <v-card :loading="loading ? 'secondary' : false">
                 <v-card-title>
                     <span class="text-h5 primary--text text--darken-3">{{ formTitle }}</span>
@@ -18,15 +18,15 @@
                         <v-row>
                             <v-col col="12" sm="12" md="12">
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
-                                    <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(updateProject)">
-                                        <validation-provider rules="between:1,10" v-slot="{ errors }" name="Grade">
-                                            <v-text-field v-model="grade" label="Grade" hide-details="auto"
-                                                :error-messages="errors" class="mt-3" type="number"
-                                                prepend-icon="mdi-clipboard-check">
-                                            </v-text-field>
+                                    <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(attachFiles)">
+                                        <validation-provider
+                                            :rules="{ mimes: ['application/pdf', 'image/png', 'image/jpg'] }"
+                                            v-slot="{ errors }" name="Attachments">
+                                            <v-file-input multiple v-model="selectedFiles" counter
+                                                :error-messages="errors"></v-file-input>
                                         </validation-provider>
-                                        <v-btn :disabled="loading" block dark type="submit" large class="my-3"
-                                            color="secondary">Save</v-btn>
+                                        <v-btn :disabled="disabled" block :dark="!disabled" type="submit" large class="my-3"
+                                            color="secondary">Attach file(s)</v-btn>
                                     </v-form>
                                 </validation-observer>
                             </v-col>
@@ -43,36 +43,48 @@ import { ValidationObserver, ValidationProvider } from "vee-validate";
 import mixins from 'vue-typed-mixins';
 import FormMixin from '@/components/mixins/FormMixin.vue';
 import Vue from 'vue';
-import ProjectService from "@/services/project-service";
-import { ProjectDetailsInterface } from "@/modules/project";
+import { ResponseDto } from "@/modules/common";
+import { storeService } from "@/store";
+import { FunctionalityInterface } from "@/store/functionalities/types";
 
 export default mixins(FormMixin).extend({
     props: {
         formTitle: {
             type: String,
-            required: false
+            required: false,
+            default: 'Attach file(s)'
         },
         open: {
             type: Boolean,
             required: false,
             default: false
         },
-        projectId: {
-            type: Number,
+        functionalityDetails: {
+            type: Object as () => FunctionalityInterface,
             required: true
         }
     },
     components: {
         ValidationProvider,
-        ValidationObserver,
+        ValidationObserver
     },
     data() {
         return {
             dialog: false,
             valid: false,
             loading: false,
-            grade: null as number | null,
-            project: null as ProjectDetailsInterface | null
+            selectedFiles: [],
+            datePicker: false,
+        }
+    },
+    computed: {
+        startingDate: function (): string {
+            let startDate = new Date();
+            startDate.setDate(startDate.getDate() + 1);
+            return startDate.toISOString().slice(0, 10);
+        },
+        disabled: function (): boolean {
+            return this.loading;
         }
     },
     watch: {
@@ -81,11 +93,7 @@ export default mixins(FormMixin).extend({
             if (!val) {
                 this.close();
             } else {
-                this.toggleLoader();
-                this.project = await ProjectService.getProjectInfo(this.projectId);
-                this.grade = this.project.grade;
                 this.$emit('open:dialog');
-                this.toggleLoader();
             }
         }
     },
@@ -95,26 +103,35 @@ export default mixins(FormMixin).extend({
             this.$emit('close:dialog');
             this.reset();
         },
-        updateProject: async function () {
+        attachFiles: async function (): Promise<void> {
             this.toggleLoader();
             let response = {
-                'success': true,
-                'error': '',
-                'code': null as number | null
+                success: true,
+                error: '',
+                code: null as number | null
             };
+            let promises = [] as Array<Promise<ResponseDto>>;
+            this.selectedFiles.forEach(file => {
+                let formData = new FormData();
+                formData.append('file', file, (file as File).name);
+                formData.append('functionalityId', this.functionalityDetails.id.toString());
+                promises.push(storeService.functionalities.uploadAttachment(formData));
+            });
 
-            response = await ProjectService.grade(this.projectId, Number(this.grade));
+            Promise.all(promises).then(() => {
+                this.handleResponse(response, 'The attachments have been successfully uploaded', true);
+                this.close();
+                this.$emit('submitted:form', response as ResponseDto);
+            })
 
-            this.handleResponse(response, "The final grade has been registered", true);
-            this.close();
-            this.$emit('submitted:form', response);
         },
         reset(): void {
-            this.grade = null;
+            this.selectedFiles = [];
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };
-        }
+        },
     }
 });
+
 </script>

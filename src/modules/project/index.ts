@@ -18,7 +18,7 @@ export interface ProjectDetailsInterface extends ProjectInterface {
     guidanceMeetingInformation: MeetingInformationInterface;
     assignmentInformation: InformationInterface;
     repositoryUrl: string;
-    grade: number|null;
+    grade: number | null;
 }
 
 export interface FunctionalityLineChartOptionsInterface {
@@ -28,7 +28,7 @@ export interface FunctionalityLineChartOptionsInterface {
             type: string;
             curve: string;
         },
-        colors: Array<string>|null;
+        colors: Array<string> | null;
         fill: {
             type: string;
             gradient: {
@@ -40,6 +40,8 @@ export interface FunctionalityLineChartOptionsInterface {
             }
         },
         yaxis: {
+            type: string | null;
+            decimalsInFloat: number | null;
             title: {
                 text: string;
             }
@@ -51,13 +53,79 @@ export interface FunctionalityLineChartOptionsInterface {
     series: Array<{
         data: {
             x: Date;
-            y: number;
+            y: number | string;
         }[]
     }>
-};
+}
 
-export interface UpdateProjectInterface{
+export interface UpdateProjectInterface {
     title: string;
     description: string;
-    repositoryUrl: string|null;
+    repositoryUrl: string | null;
+}
+
+export interface IconInterface {
+    name: string;
+    color: string;
+}
+
+export function getIcon(type: string): IconInterface {
+    const icon = {
+        name: '',
+        color: 'secondary'
+    };
+
+    switch (type) {
+        case 'Epic':
+            icon.name = 'mdi-lightning-bolt';
+            icon.color = icon.color + ' darken-3'
+            break;
+        case 'Story':
+            icon.name = 'mdi-bookmark';
+            icon.color = icon.color + ' darken-2';
+            break;
+        case 'Task':
+            icon.name = 'mdi-check-bold';
+            icon.color = icon.color + ' darken-1';
+            break;
+        case 'Subtask':
+            icon.name = 'mdi-card-multiple';
+            break;
+        case 'Bug':
+            icon.name = 'mdi-bug';
+            icon.color = 'error';
+            break;
+        default:
+            icon.name = 'mdi-help';
+    }
+    return icon;
+}
+
+export function getStatusIcon(status: string): IconInterface {
+    const icon = {
+        name: '',
+        color: 'primary'
+    };
+
+    switch (status) {
+        case 'Open':
+            icon.name = 'mdi-lightbulb-on-10';
+            icon.color = 'warning darken-3';
+            break;
+        case 'In progress':
+            icon.name = 'mdi-lightbulb-on-40';
+            icon.color = 'warning darken-2';
+            break;
+        case 'Testing':
+            icon.name = 'mdi-lightbulb-on-80';
+            icon.color = 'warning darken-1';
+            break;
+        case 'Done':
+            icon.name = 'mdi-lightbulb-on';
+            icon.color = 'warning';
+            break;
+        default:
+            icon.name = 'mdi-help';
+    }
+    return icon;
 }

@@ -4,7 +4,7 @@
             @update:showAlert="updateShowAlert"></base-alert>
 
         <v-dialog v-if="meetingId > 0" v-model="dialog" max-width="500px" @click:outside="close">
-            <v-card :loading="processing ? 'secondary' : false">
+            <v-card :loading="loading ? 'secondary' : false">
                 <v-card-title>
                     <span class="text-h5 primary--text text--darken-3">{{ formTitle }}</span>
                     <v-spacer></v-spacer>
@@ -25,7 +25,7 @@
                                                 :error-messages="errors" class="mt-3" type="number" prepend-icon="mdi-clipboard-check">
                                             </v-text-field>
                                         </validation-provider>
-                                        <v-btn :disabled="processing" block dark type="submit" large class="my-3"
+                                        <v-btn :disabled="loading" block dark type="submit" large class="my-3"
                                             color="secondary">Save</v-btn>
                                     </v-form>
                                 </validation-observer>
@@ -76,7 +76,6 @@ export default mixins(FormMixin).extend({
             dialog: false,
             valid: false,
             loading: false,
-            processing: false,
             grade: null as number|null
         }
     },
@@ -98,7 +97,7 @@ export default mixins(FormMixin).extend({
             this.reset();
         },
         updateMeeting: async function () {
-            this.toggleProcessingState();
+            this.toggleLoader();
             let response = {
                 'success': true,
                 'error': '',
@@ -109,13 +108,9 @@ export default mixins(FormMixin).extend({
                 response = await MeetingService.gradeMilestoneMeeting(this.meetingId, Number(this.grade));
             }
 
-            this.handleResponse(response);
-            this.toggleProcessingState();
+            this.handleResponse(response, "The meeting has been graded", true);
             this.close();
             this.$emit('submitted:form', response);
-        },
-        toggleProcessingState(): void {
-            this.processing = !this.processing;
         },
         reset(): void {
             this.grade = null;

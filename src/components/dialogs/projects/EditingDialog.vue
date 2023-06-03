@@ -4,7 +4,7 @@
             @update:showAlert="updateShowAlert"></base-alert>
 
         <v-dialog v-if="projectDetails !== null" v-model="dialog" max-width="500px" @click:outside="close">
-            <v-card :loading="processing ? 'secondary' : false">
+            <v-card :loading="loading ? 'secondary' : false">
                 <v-card-title>
                     <span class="text-h5 primary--text text--darken-3">{{ formTitle }}</span>
                     <v-spacer></v-spacer>
@@ -36,7 +36,7 @@
                                                 prepend-icon="mdi-link">
                                             </v-text-field>
                                         </validation-provider>
-                                        <v-btn :disabled="processing" block dark type="submit" large class="my-3"
+                                        <v-btn :disabled="loading" block dark type="submit" large class="my-3"
                                             color="secondary">Save</v-btn>
                                     </v-form>
                                 </validation-observer>
@@ -83,7 +83,6 @@ export default mixins(FormMixin).extend({
             dialog: false,
             valid: false,
             loading: false,
-            processing: false,
             projectDetails: {
                 title: "",
                 description: "",
@@ -113,7 +112,7 @@ export default mixins(FormMixin).extend({
             this.reset();
         },
         updateProject: async function () {
-            this.toggleProcessingState();
+            this.toggleLoader();
 
             let response = {
                 'success': true,
@@ -125,13 +124,9 @@ export default mixins(FormMixin).extend({
             response = await ProjectService.update(this.project.id, this.projectDetails);
 
 
-            this.handleResponse(response);
-            this.toggleProcessingState();
+            this.handleResponse(response, "The project has been successfully updated", true);
             this.close();
             this.$emit('submitted:form', response);
-        },
-        toggleProcessingState(): void {
-            this.processing = !this.processing;
         },
         reset(): void {
             this.projectDetails = {

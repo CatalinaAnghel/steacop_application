@@ -6,12 +6,13 @@ export interface FunctionalityInterface {
     code: string;
     title: string;
     description: string;
-    dueDate: Date;
+    dueDate: string;
     status: StatusInterface;
     type: TypeInterface;
     parent: FunctionalityInterface | null;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
+    projectId: number;
 }
 
 export interface FunctionalityGroupInterface {
@@ -34,15 +35,19 @@ export interface TypeInterface extends FunctionalityCharacteristicInterface {
 
 export interface FunctionalityState {
     functionalityGroups: Array<FunctionalityGroupInterface>,
+    epics: Array<FunctionalityInterface>,
     statuses: Array<StatusInterface>,
     types: Array<TypeInterface>,
-    history: Array<HistoryGroupInterface>
+    history: Array<HistoryGroupInterface>,
+    dirtyFunctionalities: boolean,
+    dirtyHistory: boolean
 }
 
 
 export interface FunctionalityPayloadInterface extends PayloadInterface {
     projectId: number;
     status: StatusInterface;
+    includeEpics: boolean|null;
 }
 
 export interface CreateFunctionalityPayloadInterface extends PayloadInterface {
@@ -77,5 +82,20 @@ export interface HistoryGroupInterface {
 export interface HistoryPayloadInterface {
     projectId: number;
     reload: boolean;
-    status: StatusInterface|null;
+    status: StatusInterface | null;
+}
+
+export interface FunctionalityStatusHistory {
+    id: number;
+    oldStatus: StatusInterface;
+    newStatus: StatusInterface;
+    createdAt: string;
+}
+
+export interface UpdateFunctionalityPayloadInterface extends PayloadInterface {
+    id: number;
+    title: string | null;
+    description: string | null;
+    dueDate: string | null;
+    status: number|null;
 }

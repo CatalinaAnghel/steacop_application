@@ -8,7 +8,7 @@
                 <v-row>
                     <v-col col="12" sm="12" md="12">
                         <h3 class="pb-5">{{ title }}</h3>
-                        <v-divider color="primary"></v-divider>
+                        <v-divider></v-divider>
                         <p class="pt-5 text-justify">{{ description }}</p>
                         <a :href="repositoryUrl" v-if="repositoryUrl !== ''">See repository</a>
                     </v-col>

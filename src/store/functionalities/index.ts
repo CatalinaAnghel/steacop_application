@@ -8,9 +8,12 @@ export const functionalityNamespace = "functionality";
 export function initialize(): FunctionalityState {
     return {
         functionalityGroups: [],
+        epics: [],
         types: [],
         statuses: [],
-        history: []
+        history: [],
+        dirtyFunctionalities: false,
+        dirtyHistory: false
     }
 }
 

@@ -16,7 +16,7 @@
                             <span v-if="showGrade" class="subtitle-1">{{ assignmentDetails.grade }}/10</span>
                         </v-col>
                     </v-row>
-                    <v-divider color="primary"></v-divider>
+                    <v-divider></v-divider>
                     <v-row>
                         <v-col cols="12" sm="12" md="12">
                             <p class="pt-5 text-justify">{{ assignmentDetails.description }}</p>

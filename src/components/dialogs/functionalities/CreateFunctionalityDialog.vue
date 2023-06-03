@@ -4,7 +4,7 @@
             @update:showAlert="updateShowAlert"></base-alert>
 
         <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-            <v-card :loading="processing ? 'secondary' : false">
+            <v-card :loading="loading ? 'secondary' : false">
                 <v-card-title>
                     <span class="text-h5 primary--text text--darken-3">{{ formTitle }}</span>
                     <v-spacer></v-spacer>
@@ -115,7 +115,6 @@ export default mixins(FormMixin).extend({
             dialog: false,
             valid: false,
             loading: false,
-            processing: false,
             functionalityDetails: {
                 selectedFiles: [],
                 title: "",
@@ -140,7 +139,7 @@ export default mixins(FormMixin).extend({
             return startDate.toISOString().slice(0, 10);
         },
         disabled: function (): boolean {
-            return this.processing || (this.functionalityDetails.parentType !== null && this.functionalityDetails.parentFunctionality === null);
+            return this.loading || (this.functionalityDetails.parentType !== null && this.functionalityDetails.parentFunctionality === null);
         }
     },
     watch: {
@@ -160,7 +159,7 @@ export default mixins(FormMixin).extend({
             this.reset();
         },
         createFunctionality: async function (): Promise<void> {
-            this.toggleProcessingState();
+            this.toggleLoader();
             let payload = {
                 description: this.functionalityDetails.description,
                 title: this.functionalityDetails.title,
@@ -196,13 +195,9 @@ export default mixins(FormMixin).extend({
                 });
             }
 
-            this.handleResponse(response);
-            this.toggleProcessingState();
+            this.handleResponse(response, 'The functionality has been successfully created', true);
             this.close();
             this.$emit('submitted:form', response as ResponseDto);
-        },
-        toggleProcessingState(): void {
-            this.processing = !this.processing;
         },
         reset(): void {
             this.functionalityDetails = {
@@ -220,6 +215,9 @@ export default mixins(FormMixin).extend({
         },
         showPossibleParentIssueTypes: function (): void {
             this.possibleParentIssueTypes = [];
+            this.possibleParentIssues = [];
+            this.functionalityDetails.parentFunctionality = null;
+            this.functionalityDetails.parentType = null;
             if (this.functionalityDetails.type !== null) {
                 this.types.forEach((type) => {
                     if (type.possibleChildTypes.includes(this.functionalityDetails.type.id)) {
@@ -229,6 +227,8 @@ export default mixins(FormMixin).extend({
             }
         },
         showPossibleParents: function (): void {
+            this.possibleParentIssues = [];
+            this.functionalityDetails.parentFunctionality = null;
             this.possibleParentIssues = storeService.functionalities.getParentFunctionalities(this.functionalityDetails.parentType);
         }
     }

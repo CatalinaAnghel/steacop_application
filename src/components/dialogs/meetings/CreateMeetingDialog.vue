@@ -4,7 +4,7 @@
             @update:showAlert="updateShowAlert"></base-alert>
 
         <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-            <v-card :loading="processing ? 'secondary' : false">
+            <v-card :loading="loading ? 'secondary' : false">
                 <v-card-title>
                     <span class="text-h5 primary--text text--darken-3">{{ formTitle }}</span>
                     <v-spacer></v-spacer>
@@ -65,7 +65,7 @@
                                             v-model="meetingDetails.duration" color="primary" label="Duration"
                                             hint="Provide the duration (number of hours)" min="0.5" step="0.5" max="4"
                                             thumb-label></v-slider>
-                                        <v-btn :disabled="processing || disabled" block :dark="!processing && !disabled"
+                                        <v-btn :disabled="loading || disabled" block :dark="!loading && !disabled"
                                             type="submit" large class="my-3" color="secondary">Save</v-btn>
                                     </v-form>
                                 </validation-observer>
@@ -115,7 +115,6 @@ export default mixins(FormMixin).extend({
             dialog: false,
             valid: false,
             loading: false,
-            processing: false,
             meetingDetails: {
                 details: "",
                 link: "",
@@ -171,7 +170,7 @@ export default mixins(FormMixin).extend({
         },
         createMeeting: async function (): Promise<void> {
 
-            this.toggleProcessingState();
+            this.toggleLoader();
             let payload = {
                 description: this.meetingDetails.details,
                 duration: this.meetingDetails.duration,
@@ -185,13 +184,9 @@ export default mixins(FormMixin).extend({
                 code: null as number | null
             };
             response = await MeetingService.createMeeting(payload as CreateMeetingPayloadInterface, this.meetingDetails.type.id);
-            this.handleResponse(response);
-            this.toggleProcessingState();
+            this.handleResponse(response, "The meeting has been scheduled", true);
             this.close();
             this.$emit('submitted:form', response);
-        },
-        toggleProcessingState(): void {
-            this.processing = !this.processing;
         },
         reset(): void {
             this.meetingDetails = {

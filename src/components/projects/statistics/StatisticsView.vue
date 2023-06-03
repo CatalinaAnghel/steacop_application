@@ -1,7 +1,6 @@
 <template>
     <base-overlay v-if="!loaded" :overlay="!loaded"></base-overlay>
     <div v-else>
-
         <editing-dialog :project="projectInfo" :open="editDialog" form-title="Edit the project details"
             @close:dialog="closeDialog" @submitted:form="refreshProjectInfo" />
         <v-btn color="secondary" outlined class="mb-2" @click="openEditDialog">

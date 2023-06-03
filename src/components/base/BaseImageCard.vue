@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto w-100">
-    <v-img :src="require(`@/assets/${image}`)" height="300px"></v-img>
+    <v-img contain :src="require(`@/assets/${image}`)" height="250px"></v-img>
 
     <v-card-title>
       {{ title }}

@@ -175,7 +175,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'functionalities',
         name: 'projectFunctionalities',
-        component: () => import('../components/projects/kanban-board/KanbanBoard.vue'),
+        component: () => import('../pages/common/FunctionalitiesView.vue'),
       },
     ]
   },
@@ -183,7 +183,7 @@ const routes: Array<RouteConfig> = [
     path: '/functionality/:id',
     name: 'functionality',
     props: true,
-    component: () => import('../pages/common/AssignmentDetailsView.vue'),
+    component: () => import('../pages/common/FunctionalityDetailsView.vue'),
     meta: {
       requiresAuth: true,
       roles: [

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-tabs grow class="pb-5">
+        <v-tabs grow class="pb-5" :color="backgroundColor">
             <v-tab exact v-for="tab in tabs" :key="tab.name" :to="tab.to">{{ tab.name }}</v-tab>
         </v-tabs>
         <router-view></router-view>
@@ -16,6 +16,11 @@ export default defineComponent({
         tabs: {
             type: Array as () => TabInterface[],
             required: true
+        },
+        backgroundColor: {
+            type: String,
+            default: null,
+            required: false
         }
     }
 })

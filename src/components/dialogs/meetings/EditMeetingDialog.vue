@@ -4,7 +4,7 @@
             @update:showAlert="updateShowAlert"></base-alert>
 
         <v-dialog v-if="meetingDetails !== null" v-model="dialog" max-width="500px" @click:outside="close">
-            <v-card :loading="processing ? 'secondary' : false">
+            <v-card :loading="loading ? 'secondary' : false">
                 <v-card-title>
                     <span class="text-h5 primary--text text--darken-3">{{ formTitle }}</span>
                     <v-spacer></v-spacer>
@@ -62,7 +62,7 @@
                                             hint="Provide the duration (hours)" min="0.5" step="0.5" max="4"
                                             thumb-label></v-slider>
 
-                                        <v-btn :disabled="processing" block dark type="submit" large class="my-3"
+                                        <v-btn :disabled="loading" block dark type="submit" large class="my-3"
                                             color="secondary">Save</v-btn>
                                     </v-form>
                                 </validation-observer>
@@ -115,7 +115,6 @@ export default mixins(FormMixin).extend({
             dialog: false,
             valid: false,
             loading: false,
-            processing: false,
             meetingDetails: {
                 description: "",
                 link: "",
@@ -154,7 +153,7 @@ export default mixins(FormMixin).extend({
             this.reset();
         },
         updateMeeting: async function () {
-            this.toggleProcessingState();
+            this.toggleLoader();
             let payload = {
                 description: this.meetingDetails.description,
                 duration: this.meetingDetails.duration,
@@ -173,13 +172,9 @@ export default mixins(FormMixin).extend({
                 response = await MeetingService.updateGuidanceMeeting(this.meetingId, payload as MeetingInterface);
             }
 
-            this.handleResponse(response);
-            this.toggleProcessingState();
+            this.handleResponse(response, "The meeting has been successfully updated", true);
             this.close();
             this.$emit('submitted:form', response);
-        },
-        toggleProcessingState(): void {
-            this.processing = !this.processing;
         },
         reset(): void {
             this.meetingDetails = {
