@@ -168,7 +168,7 @@ export default mixins(FormMixin).extend({
                 error: '',
                 code: null as number | null
             };
-            response = await storeService.functionalities.updateFunctionality(payload as UpdateFunctionalityPayloadInterface);
+            response = await storeService.functionalities.update(payload as UpdateFunctionalityPayloadInterface);
 
             this.handleResponse(response, "The functionality has been successfully updated", true);
             this.close();

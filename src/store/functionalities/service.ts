@@ -1,6 +1,6 @@
 import { Store } from 'vuex';
 import { DataTableHeadersInterface, ResponseDto } from '@/modules/common';
-import { AbstractStoreService, LoadableInterface, PayloadInterface } from '../common/types';
+import { AbstractStoreService, LoadableInterface } from '../common/types';
 import { functionalityNamespace } from '.';
 import { CreateFunctionalityPayloadInterface, FunctionalityGroupInterface, FunctionalityInterface, FunctionalityPayloadInterface, FunctionalityStatusHistory, HistoryGroupInterface, HistoryPayloadInterface, StatusInterface, TypeInterface, UpdateFunctionalityPayloadInterface } from './types';
 import { State } from '..';
@@ -9,11 +9,13 @@ export default class extends AbstractStoreService implements LoadableInterface {
     constructor(store: Store<State>) {
         super(store);
     }
-    update(payload: PayloadInterface): Promise<ResponseDto> {
-        throw new Error('Method not implemented.' + payload);
-    }
+    
     protected appendNamespace(method: string): string {
         return `${functionalityNamespace}/${method}`;
+    }
+
+    public update(payload: UpdateFunctionalityPayloadInterface): Promise<ResponseDto> {
+        return this.store.dispatch(this.appendNamespace('updateFunctionality'), payload);
     }
 
     public loadStatuses(): Promise<void> {
@@ -95,10 +97,6 @@ export default class extends AbstractStoreService implements LoadableInterface {
 
     public async fetchFunctionalityStatusHistory(functionalityId: number): Promise<FunctionalityStatusHistory[]> {
         return this.store.dispatch(this.appendNamespace('fetchFunctionalityStatusHistory'), functionalityId);
-    }
-
-    public async updateFunctionality(payload: UpdateFunctionalityPayloadInterface): Promise<ResponseDto> {
-        return this.store.dispatch(this.appendNamespace('updateFunctionality'), payload);
     }
 
     public getHeaders(): DataTableHeadersInterface[] {
