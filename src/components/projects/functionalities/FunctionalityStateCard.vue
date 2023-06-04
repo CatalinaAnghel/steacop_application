@@ -83,7 +83,7 @@
                             </span>
                         </v-col>
                     </v-row>
-                    <v-row>
+                    <v-row v-if="typeof functionalityDetails.dueDate !== 'undefined'">
                         <v-col cols="6">
                             <v-avatar color="primary" rounded class="mx-2" size="25px">
                                 <v-icon small dark>

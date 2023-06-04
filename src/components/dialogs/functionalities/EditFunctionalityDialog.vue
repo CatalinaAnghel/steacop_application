@@ -20,18 +20,20 @@
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                     <v-form v-model="valid" ref="formDialog"
                                         @submit.prevent="handleSubmit(createFunctionality)">
-                                        
-                                        <validation-provider v-if="!closedFunctionality" rules="required|min:16" v-slot="{ errors }" name="Title">
+
+                                        <validation-provider v-if="!closedFunctionality" rules="required|min:16"
+                                            v-slot="{ errors }" name="Title">
                                             <v-text-field class="mt-2" v-model="functionality.title" label="Title"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
                                             </v-text-field>
                                         </validation-provider>
-                                        <v-select v-if="statuses.length" hide-details label="Current status" :items="statuses"
-                                            item-text="name" item-value="id" return-object single-line
+                                        <v-select v-if="statuses.length" hide-details label="Current status"
+                                            :items="statuses" item-text="name" item-value="id" return-object single-line
                                             v-model="functionality.status" required
                                             :rules="statuses.length ? requiredRule : null" color="primary"
                                             prepend-icon="mdi-cogs"></v-select>
-                                        <validation-provider v-if="!closedFunctionality" rules="required" v-slot="{ errors }" name="Due date">
+                                        <validation-provider v-if="!closedFunctionality" rules="required"
+                                            v-slot="{ errors }" name="Due date">
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
                                                 transition="scale-transition" offset-y min-width="auto">
                                                 <template v-slot:activator="{ on, attrs }">
@@ -43,7 +45,8 @@
                                                     @input="datePicker = false" color="primary"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
-                                        <validation-provider v-if="!closedFunctionality" rules="required|min:16" v-slot="{ errors }" name="Description">
+                                        <validation-provider v-if="!closedFunctionality" rules="required|min:16"
+                                            v-slot="{ errors }" name="Description">
                                             <v-textarea counter class="mt-2" clearable clear-icon="mdi-close-circle"
                                                 label="Description" v-model="functionality.description" hide-details="auto"
                                                 rows="2" :error-messages="errors"
@@ -106,13 +109,13 @@ export default mixins(FormMixin).extend({
                 title: "",
                 description: "",
                 dueDate: "",
-                status: null as StatusInterface|null
+                status: null as StatusInterface | null
             },
             datePicker: false,
             requiredRule: [
                 (value: { id: string; name: string }) => value !== null && value.id !== "" || 'The meeting type is required'
             ],
-             
+
         }
     },
     computed: {
@@ -124,7 +127,7 @@ export default mixins(FormMixin).extend({
         disabled: function (): boolean {
             return this.loading;
         },
-        closedFunctionality: function(): boolean{
+        closedFunctionality: function (): boolean {
             return this.functionalityDetails.status.name === "Done";
         }
     },
@@ -136,7 +139,9 @@ export default mixins(FormMixin).extend({
             } else {
                 this.functionality.title = this.functionalityDetails.title;
                 this.functionality.description = this.functionalityDetails.description;
-                this.functionality.dueDate = this.functionalityDetails.dueDate.slice(0, 10);
+                if (typeof this.functionalityDetails.dueDate !== 'undefined') {
+                    this.functionality.dueDate = this.functionalityDetails.dueDate.slice(0, 10);
+                }
                 this.functionality.status = this.functionalityDetails.status;
                 this.$emit('open:dialog');
             }
@@ -157,7 +162,7 @@ export default mixins(FormMixin).extend({
                 status: this.functionality.status.id
             };
 
-            if (this.functionality.dueDate !== null) {
+            if (this.functionality.dueDate !== null && this.functionality.dueDate !== '') {
                 const tempParams = {
                     dueDate: toISOLocale(new Date(this.functionality.dueDate)),
                 }

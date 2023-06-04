@@ -172,8 +172,7 @@ export default mixins(FormMixin).extend({
                 }
                 payload = { ...payload, ...tempParams };
             }
-
-            if (this.functionalityDetails.dueDate !== null) {
+            if (this.functionalityDetails.dueDate !== null && typeof this.functionalityDetails.dueDate !== 'undefined') {
                 const tempParams = {
                     dueDate: toISOLocale(new Date(this.functionalityDetails.dueDate)),
                 }
@@ -209,6 +208,8 @@ export default mixins(FormMixin).extend({
                 parentType: null,
                 parentFunctionality: null
             };
+            this.possibleParentIssues = [];
+            this.possibleParentIssueTypes = [];
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };
