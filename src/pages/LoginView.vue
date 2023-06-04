@@ -35,13 +35,15 @@
 <script lang="ts">
 
 require('@/validation/index')
-import { defineComponent } from "vue"
-import AuthService from "@/services/auth-service"
+import AuthService from "@/services/auth-service";
+import RoleMixin from "@/components/mixins/RoleMixin.vue";
+import mixins from "vue-typed-mixins";
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { eventBus } from "@/main";
 import { EVENT_BUS_AUTH } from "@/common/constants";
 
-export default defineComponent({
+
+export default mixins(RoleMixin).extend({
     data: () => {
         return {
             valid: false,
@@ -65,7 +67,13 @@ export default defineComponent({
             if (response.success) {
                 this.invalidCredentials = false;
                 eventBus.$emit(EVENT_BUS_AUTH);
-                this.$router.push({ name: "home" });
+
+                this.setProperties();
+                if (this.isAdmin) {
+                    this.$router.push({ name: "adminDashboard" });
+                } else {
+                    this.$router.push({ name: "dashboard" });
+                }
             } else {
                 this.invalidCredentials = true;
                 console.error(response.error);
@@ -77,6 +85,6 @@ export default defineComponent({
         hideErrorMessage(): void {
             this.invalidCredentials = false;
         }
-    }
+    },
 });
 </script>
