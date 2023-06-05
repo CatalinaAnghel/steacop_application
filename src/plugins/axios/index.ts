@@ -4,7 +4,7 @@ import AuthService from '@/services/auth-service';
 import router from '@/router';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://localhost:8000/api',
+    baseURL: 'http://localhost:8080/api',
     headers: {
         "Content-Type": "application/json"
     },
