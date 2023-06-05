@@ -93,6 +93,7 @@ import MeetingService from '@/services/meeting-service';
 import RatingService from '@/services/rating-service';
 import mixins from "vue-typed-mixins";
 import RoleMixin from "@/components/mixins/RoleMixin.vue";
+import { storeService } from '@/store';
 
 export default mixins(RoleMixin).extend({
     data: function () {
@@ -167,7 +168,6 @@ export default mixins(RoleMixin).extend({
             }
             const milestoneMeetings = await MeetingService.getMilestoneMeetings([Number(this.$route.params.id)], payload);
             if (null !== milestoneMeetings) {
-                this.existingMilestoneMeetingsNumber = milestoneMeetings.length;
                 const tempEvents = milestoneMeetings.map(element => {
                     const scheduledAt = new Date(element.scheduledAt);
                     const hours = Math.floor(element.duration);
@@ -239,6 +239,13 @@ export default mixins(RoleMixin).extend({
                     grade: meeting.grade
                 } as MilestoneMeetingInterface;
                 response = await MeetingService.updateMilestoneMeeting(meeting.id, meetingPayload);
+                if (response.success) {
+                    this.existingMilestoneMeetingsNumber--;
+                    storeService.user.updateMilestoneMeetingsCounter({
+                        projectId: Number(this.$route.params.id),
+                        counter: this.existingMilestoneMeetingsNumber
+                    });
+                }
             }
 
             if (response.success) {
@@ -288,6 +295,7 @@ export default mixins(RoleMixin).extend({
         handleMeetingAction: function (response: ResponseDto): void {
             if (response.success) {
                 this.updateCalendarEvents(this.calendarRange);
+                this.existingMilestoneMeetingsNumber++;
             }
         },
         completeMeeting: async function (): Promise<void> {
@@ -359,8 +367,17 @@ export default mixins(RoleMixin).extend({
             return 'Proposed';
         }
     },
-    created: function (): void {
+    created: async function (): Promise<void> {
         this.setProperties();
+        if (this.isSupervisor) {
+            await storeService.user.loadMilestoneMeetingsCounter(Number(this.$route.params.id));
+            const projectData = storeService.user.getUser().projects
+                .find(element => element.id === Number(this.$route.params.id));
+
+            if (typeof projectData !== 'undefined' && typeof projectData.milestoneMeetingsCounter !== 'undefined') {
+                this.existingMilestoneMeetingsNumber = projectData.milestoneMeetingsCounter;
+            } 
+        }
     }
 });
 </script>

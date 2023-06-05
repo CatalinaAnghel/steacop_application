@@ -3,6 +3,7 @@ import { AbstractStoreService, LoadableInterface } from '../common/types';
 import { userNamespace } from '.';
 import { UserData } from '@/modules/user';
 import { State } from '..';
+import { ProjectCounterPayloadInterface } from './types';
 
 export default class extends AbstractStoreService implements LoadableInterface {
     constructor(store: Store<State>) {
@@ -19,6 +20,14 @@ export default class extends AbstractStoreService implements LoadableInterface {
 
     public getUser(): UserData | null {
         return this.store.getters[this.appendNamespace('user')];
+    }
+
+    public loadMilestoneMeetingsCounter(projectId: number): Promise<void>{
+        return this.store.dispatch(this.appendNamespace('loadProjectMeetingCounter'), projectId);
+    }
+
+    public updateMilestoneMeetingsCounter(data: ProjectCounterPayloadInterface): Promise<void>{
+        return this.store.dispatch(this.appendNamespace('saveMeetingsCounter'), data);
     }
 
 }

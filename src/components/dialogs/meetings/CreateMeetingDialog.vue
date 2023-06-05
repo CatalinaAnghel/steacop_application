@@ -88,6 +88,7 @@ import { EventTypesDescriptions, EVENT_TYPE_GUIDANCE_MEETING, EVENT_TYPE_MILESTO
 import { CreateMeetingPayloadInterface, MeetingTypeInterface } from "@/modules/meeting";
 import { toISOLocale } from "@/services/helper-service";
 import SystemSettingService from "@/services/system-setting-service";
+import { storeService } from "@/store";
 
 export default mixins(FormMixin).extend({
     props: {
@@ -184,6 +185,13 @@ export default mixins(FormMixin).extend({
                 code: null as number | null
             };
             response = await MeetingService.createMeeting(payload as CreateMeetingPayloadInterface, this.meetingDetails.type.id);
+            if(this.meetingDetails.type.id === EVENT_TYPE_MILESTONE_MEETING){
+                storeService.user.updateMilestoneMeetingsCounter({
+                    projectId: Number(this.$route.params.id),
+                    counter: this.existingMilestoneMeetings + 1
+                });
+            }
+
             this.handleResponse(response, "The meeting has been scheduled", true);
             this.close();
             this.$emit('submitted:form', response);

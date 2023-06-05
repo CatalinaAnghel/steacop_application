@@ -5,5 +5,11 @@ export interface UserData {
     id: number,
     code: string,
     fullName: string,
-    projectIds: number[]
+    projects: ProjectData[],
+    milestoneMeetingsMax: number|null;
 };
+
+export interface ProjectData{
+    id: number;
+    milestoneMeetingsCounter: number;
+}

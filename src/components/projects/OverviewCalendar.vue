@@ -100,7 +100,11 @@ export default mixins(RoleMixin).extend({
             this.toggleLoading();
             this.calendarRange = payload;
             this.events = [];
-            const meetings = await MeetingService.getGuidanceMeetings(storeService.user.getUser().projectIds, payload);
+            let projectIds = [] as number[];
+            storeService.user.getUser().projects.forEach(project => {
+                projectIds.push(project.id);
+            })
+            const meetings = await MeetingService.getGuidanceMeetings(projectIds, payload);
             if (null !== meetings) {
                 this.events = meetings.map(element => {
                     const scheduledAt = new Date(element.scheduledAt);
@@ -125,7 +129,8 @@ export default mixins(RoleMixin).extend({
                     } as EventInterface
                 });
             }
-            const milestoneMeetings = await MeetingService.getMilestoneMeetings(storeService.user.getUser().projectIds, payload);
+            
+            const milestoneMeetings = await MeetingService.getMilestoneMeetings(projectIds, payload);
             if (null !== milestoneMeetings) {
                 this.existingMilestoneMeetingsNumber = milestoneMeetings.length;
                 const tempEvents = milestoneMeetings.map(element => {

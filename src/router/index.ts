@@ -148,8 +148,8 @@ const routes: Array<RouteConfig> = [
           userData = storeService.user.getUser();
         }
 
-        if (userData.projectIds.length > 0 &&
-          userData.projectIds.includes(Number(to.params.id))) {
+        if (userData.projects.length > 0 && 
+          typeof userData.projects.find(element=> element.id === Number(to.params.id)) !== 'undefined') {
           next();
         } else {
           next('NotFound');
