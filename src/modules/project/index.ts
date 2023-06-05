@@ -11,6 +11,7 @@ export interface InformationInterface {
 
 export interface MeetingInformationInterface extends InformationInterface {
     missed: number;
+    scheduled: number;
 }
 
 export interface ProjectDetailsInterface extends ProjectInterface {

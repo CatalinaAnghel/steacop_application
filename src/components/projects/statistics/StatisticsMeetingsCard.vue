@@ -66,7 +66,7 @@ export default defineComponent({
                 Number(assignmentsPercentage.toFixed(2))
             ];
         },
-        items: function (): Array<{name: string, children: Array<{name: string;}>}> {
+        items: function (): Array<{ name: string, children: Array<{ name: string; }> }> {
             return [
                 {
                     name: "Guidance meetings",
@@ -78,7 +78,7 @@ export default defineComponent({
                             name: "Missed meetings: " + this.project.guidanceMeetingInformation.missed,
                         },
                         {
-                            name: "Proposed meetings: " + (this.project.guidanceMeetingInformation.total - this.project.guidanceMeetingInformation.completed - this.project.guidanceMeetingInformation.missed),
+                            name: "Scheduled meetings: " + this.project.guidanceMeetingInformation.scheduled,
                         },
                         {
                             name: "Total number of meetings: " + this.project.guidanceMeetingInformation.total,
@@ -95,7 +95,7 @@ export default defineComponent({
                             name: "Missed meetings: " + this.project.milestoneMeetingInformation.missed,
                         },
                         {
-                            name: "Proposed meetings: " + (this.project.milestoneMeetingInformation.total - this.project.milestoneMeetingInformation.completed - this.project.milestoneMeetingInformation.missed),
+                            name: "Scheduled meetings: " + this.project.milestoneMeetingInformation.scheduled,
                         },
                         {
                             name: "Total number of meetings: " + this.project.milestoneMeetingInformation.total,
