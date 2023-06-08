@@ -13,17 +13,17 @@ export interface CalendarInterface {
 export interface CalendarRangeInterface{
     start: {
         date: string;
-        day: number;
-        month: number;
-        year: number;
-        weekday: number;
+        day: number|null;
+        month: number|null;
+        year: number|null;
+        weekday: number|null;
     };
     end: {
         date: string;
-        day: number;
-        month: number;
-        year: number;
-        weekday: number;
+        day: number|null;
+        month: number|null;
+        year: number|null;
+        weekday: number|null;
     }
 }
 

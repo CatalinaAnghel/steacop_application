@@ -1,4 +1,4 @@
-import { ProjectDetailsInterface, UpdateProjectInterface } from "@/modules/project";
+import { CollaborationInfoInterface, ProjectDetailsInterface, UpdateProjectInterface } from "@/modules/project";
 import axios from '@/plugins/axios';
 import { AxiosResponse } from "axios";
 import ErrorHandler from "./error-handler-service";
@@ -23,11 +23,11 @@ export default class ProjectService {
         return null;
     }
 
-    public static async grade(projectId: number, grade: number): Promise<ResponseDto>{
+    public static async grade(projectId: number, grade: number): Promise<ResponseDto> {
         let requestStatus = {
             success: true,
             error: '',
-            code: null as number|null
+            code: null as number | null
         };
 
         await axios.patch(`/projects/${projectId}`, {
@@ -40,11 +40,11 @@ export default class ProjectService {
         return requestStatus;
     }
 
-    public static async update(projectId: number, project: UpdateProjectInterface): Promise<ResponseDto>{
+    public static async update(projectId: number, project: UpdateProjectInterface): Promise<ResponseDto> {
         let requestStatus = {
             success: true,
             error: '',
-            code: null as number|null
+            code: null as number | null
         };
 
         await axios.patch(`/projects/${projectId}`, {
@@ -59,4 +59,21 @@ export default class ProjectService {
         return requestStatus;
     }
 
+    public static async getCollaborationInfo(projectId: number): Promise<CollaborationInfoInterface> | null {
+        let requestStatus = {
+            error: '',
+            success: true
+        }
+        const response = await axios.get(`/project-collaboration-scores/${projectId}`).catch(error => {
+            requestStatus = ErrorHandler.handleError(error);
+        });
+
+        if (requestStatus.success) {
+            // the request has been successfully performed
+            const project: CollaborationInfoInterface = (response as AxiosResponse).data;
+            return project as CollaborationInfoInterface;
+        }
+
+        return null;
+    }
 }

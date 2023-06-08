@@ -28,7 +28,7 @@
                                     mdi-book-alert-outline
                                 </v-icon>
                                 <span class="text-center subtitle-1">
-                                    The assignment was not turned in
+                                    No documents have been attached
                                 </span>
                             </div>
                         </v-col>

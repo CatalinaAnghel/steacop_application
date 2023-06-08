@@ -11,6 +11,7 @@
         </v-btn>
         <statistics-general-information :description="description" :title="title"
             :repositoryUrl="repositoryUrl"></statistics-general-information>
+        <statistics-collaboration-card :projectId="projectInfo.id" v-if="isSupervisor"></statistics-collaboration-card>
         <statistics-meetings-card :project="projectInfo"></statistics-meetings-card>
         <statistics-functionalities-card :project="projectInfo"></statistics-functionalities-card>
     </div>
@@ -19,18 +20,21 @@
 <script lang="ts">
 import { ProjectDetailsInterface } from "@/modules/project";
 import ProjectService from "@/services/project-service";
-import { defineComponent } from "vue";
 import StatisticsGeneralInformation from './StatisticsGeneralInformation.vue';
 import StatisticsMeetingsCard from './StatisticsMeetingsCard.vue';
 import StatisticsFunctionalitiesCard from "./StatisticsFunctionalitiesCard.vue";
+import StatisticsCollaborationCard from "./StatisticsCollaborationCard.vue";
 import BaseOverlay from '@/components/base/BaseOverlay.vue';
-import EditingDialog
-    from "@/components/dialogs/projects/EditingDialog.vue";
-export default defineComponent({
+import EditingDialog from "@/components/dialogs/projects/EditingDialog.vue";
+import RoleMixin from "@/components/mixins/RoleMixin.vue";
+import mixins from "vue-typed-mixins";
+
+export default mixins(RoleMixin).extend({
     components: {
         StatisticsGeneralInformation,
         StatisticsMeetingsCard,
         StatisticsFunctionalitiesCard,
+        StatisticsCollaborationCard,
         BaseOverlay,
         EditingDialog
     },
@@ -87,6 +91,7 @@ export default defineComponent({
     },
     created: async function () {
         await this.refreshProjectInfo();
+        this.setProperties();
         this.loaded = true;
     }
 });

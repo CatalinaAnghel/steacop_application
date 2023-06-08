@@ -32,7 +32,6 @@
 import { Roles } from "@/common/roles";
 import { AssignmentInterface } from "@/modules/assignment";
 import AssignmentGradingForm from "./AssignmentGradingForm.vue";
-import AssignmentService from "@/services/assignment-service";
 import AuthService from "@/services/auth-service";
 import { defineComponent } from "vue";
 
@@ -53,7 +52,7 @@ export default defineComponent({
         },
         showGradingForm: function (): boolean {
             const role = AuthService.getRole();
-            return role === Roles.ROLE_TEACHER;
+            return role === Roles.ROLE_TEACHER && typeof this.assignmentDetails.turnedInDate !== 'undefined';
         },
         showGrade: function(): boolean{
             return !this.showGradingForm && typeof this.assignmentDetails.grade !== 'undefined';
@@ -69,11 +68,6 @@ export default defineComponent({
             validRule: [
                 (value: number) => value >= 1 && value <= 10 || 'Invalid grade'
             ]
-        }
-    },
-    methods: {
-        gradeAssignment: async function(): Promise<void>{
-            await AssignmentService.gradeAssignment(Number(this.$route.params.id), this.grade);
         }
     },
     created: function(): void{

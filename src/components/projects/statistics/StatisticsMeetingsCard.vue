@@ -6,12 +6,14 @@
         <v-card-text>
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="12" md="6" lg="6" xl="6">
+                    <v-col cols="12" sm="12" md="5" lg="5" xl="5">
                         <vue-apex-charts height="auto" type="radialBar" :options="options"
                             :series="series"></vue-apex-charts>
                     </v-col>
-                    <v-divider cols="1" sm="1" vertical class="hidden-md-and-down"></v-divider>
-                    <v-col cols="12" sm="12" md="5" lg="5" xl="5">
+                    <v-col lg="1" xl="1" class="hidden-md-and-down">
+                        <v-divider vertical></v-divider>
+                    </v-col>
+                    <v-col cols="12" sm="12" md="6" lg="6" xl="6">
                         <template>
                             <v-treeview shaped hoverable :items="items"></v-treeview>
                         </template>

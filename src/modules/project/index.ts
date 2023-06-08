@@ -130,3 +130,34 @@ export function getStatusIcon(status: string): IconInterface {
     }
     return icon;
 }
+
+export interface CollaborationInfoInterface {
+    ratingScore: {
+        totalScore: number;
+    },
+    supportScore: {
+        totalScore: number;
+    },
+    structureScore: {
+        assignmentsScore: number;
+        milestoneMeetingsScore: number;
+        totalScore: number;
+    },
+    score: number;
+}
+
+export interface StudentDataInterface {
+    firstName: string;
+    lastName: string;
+}
+
+export interface StudentGradesInterface {
+    studentData: StudentDataInterface;
+    milestoneMeetingsGrade: number;
+    assignmentsGrade: number;
+    totalGrade: number;
+}
+
+export interface GradesCollectionInterface {
+    gradesCollection: StudentGradesInterface[];
+}
