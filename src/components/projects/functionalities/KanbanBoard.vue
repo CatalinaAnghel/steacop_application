@@ -83,7 +83,7 @@ export default mixins(RoleMixin).extend({
         functionalitiesList: {
             type: Array as () => FunctionalityGroupInterface[],
             required: true
-        } 
+        }
     },
     watch: {
         functionalitiesList(val: FunctionalityGroupInterface[]): void {
@@ -102,7 +102,7 @@ export default mixins(RoleMixin).extend({
     created: async function (): Promise<void> {
         this.setProperties();
         this.functionalities = this.functionalitiesList;
-            this.isDirty = false;
+        this.isDirty = false;
     },
     methods: {
         markAsDirty: function (): void {

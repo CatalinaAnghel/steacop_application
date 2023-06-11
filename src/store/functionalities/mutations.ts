@@ -3,19 +3,21 @@ import { FunctionalityGroupInterface, FunctionalityInterface, FunctionalityState
 
 export default {
     _storeFunctionalities(state: FunctionalityState, functionalities: FunctionalityGroupInterface): void {
-        state.functionalityGroups.splice(functionalities.status.orderNumber - 1, 0, functionalities);
-        state.functionalityGroups.sort((group1, group2) => {
-            if (group1.status.orderNumber > group2.status.orderNumber) {
-                return 1;
-            }
+        if (!state.functionalityGroups.some((element) => element.status.name === functionalities.status.name)) {
+            state.functionalityGroups.splice(functionalities.status.orderNumber - 1, 0, functionalities);
+            state.functionalityGroups.sort((group1, group2) => {
+                if (group1.status.orderNumber > group2.status.orderNumber) {
+                    return 1;
+                }
 
-            if (group1.status.orderNumber < group2.status.orderNumber) {
-                return -1;
-            }
+                if (group1.status.orderNumber < group2.status.orderNumber) {
+                    return -1;
+                }
 
-            return 0;
-        });
-        state.dirtyFunctionalities = false;
+                return 0;
+            });
+            state.dirtyFunctionalities = false;
+        }
     },
     _storeEpics(state: FunctionalityState, epics: FunctionalityInterface[]): void {
         epics.forEach(element => {
