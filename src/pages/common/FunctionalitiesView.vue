@@ -41,7 +41,7 @@
                 <functionality-table v-else :functionalities="epics"></functionality-table>
             </v-col>
         </v-row>
-        
+
     </div>
 </template>
     
@@ -83,22 +83,29 @@ export default defineComponent({
         closeCreateDialog(): void {
             this.createDialog = false;
         },
+        toggleLoader(): void {
+            this.loading = !this.loading;
+        },
         loadFunctionalities: async function (): Promise<void> {
-            this.loading = true;
+            if (!this.loading) {
+                this.toggleLoader();
+            }
             await storeService.functionalities.loadStatuses().then(() => {
                 const statuses = storeService.functionalities.getStatuses();
+                let promises = [] as Array<Promise<void>>;
                 statuses.forEach((element) => {
-                    storeService.functionalities.load({
+                    promises.push(storeService.functionalities.load({
                         projectId: Number(this.$route.params.id),
                         status: element
-                    } as FunctionalityPayloadInterface);
+                    } as FunctionalityPayloadInterface));
                 });
-            }).then(() => {
-                this.functionalities = storeService.functionalities.getFunctionalities();
-                this.epics = storeService.functionalities.getEpics();
-                this.loading = false;
+                Promise.all(promises).then(() => {
+                    this.functionalities = storeService.functionalities.getFunctionalities();
+                    this.epics = storeService.functionalities.getEpics();
+                });
+                this.toggleLoader();
             });
-
+            
         },
         handleAction: function (response: ResponseDto): void {
             if (response.success) {

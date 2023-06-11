@@ -77,6 +77,7 @@ export default mixins(RoleMixin).extend({
         return {
             functionalities: [] as FunctionalityGroupInterface[],
             isDirty: false,
+            loading: false
         };
     },
     props: {
@@ -96,7 +97,7 @@ export default mixins(RoleMixin).extend({
             return storeService.functionalities.getStatuses();
         },
         disableSaving(): boolean {
-            return !this.isDirty;
+            return !this.isDirty || this.loading;
         }
     },
     created: async function (): Promise<void> {
@@ -117,7 +118,9 @@ export default mixins(RoleMixin).extend({
             });
         },
         order: async function (): Promise<void> {
+            this.loading = true;
             await storeService.functionalities.saveFunctionalitiesOrdering(this.functionalities);
+            this.loading = false;
             this.$emit('update:functionalities');
         },
         getIcon: function (status: string): IconInterface {

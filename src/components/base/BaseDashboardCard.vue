@@ -1,5 +1,5 @@
 <template>
-    <v-card :loading="loading" class="mb-5">
+    <v-card class="mb-5">
         <v-card-title>
             <v-row>
                 <v-col cols="12">
@@ -8,7 +8,12 @@
             </v-row>
         </v-card-title>
         <v-card-text>
-            <v-container>
+            <v-row justify="center" v-if="loading">
+                <v-col cols="auto">
+                    <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                </v-col>
+            </v-row>
+            <v-container v-else>
                 <v-list three-line v-if="items.length">
                     <template v-for="(item) in items">
                         <v-list-item :key="item.name">
@@ -34,8 +39,8 @@
                     </v-btn>
                 </v-card-actions>
                 <span v-if="!loading && items.length === 0" class="text-subtitle-1">No items have been found...</span>
-
             </v-container>
+
         </v-card-text>
     </v-card>
 </template>
@@ -81,7 +86,7 @@ export default defineComponent({
                 name: this.items[0].to.name,
                 params: {}
             };
-            if(typeof this.items[0].to.params !== 'undefined'){
+            if (typeof this.items[0].to.params !== 'undefined') {
                 route.params = {
                     id: this.items[0].to.params.id
                 }
