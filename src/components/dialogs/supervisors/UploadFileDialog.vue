@@ -16,7 +16,7 @@
                             <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                 <v-form ref="formDialog" @submit.prevent="handleSubmit(submit)" v-model="valid">
                                     <validation-provider :rules="{ mimes: ['text/csv'] }" v-slot="{ errors }" name="File">
-                                        <v-file-input v-model="selectedFile" :error-messages="errors"></v-file-input>
+                                        <v-file-input label="CSV file" v-model="selectedFile" :error-messages="errors" prepend-icon="mdi-file-delimited-outline"></v-file-input>
                                     </validation-provider>
                                     <v-btn color="secondary" block dark type="submit" large class="my-3"
                                         @click="toggleLoader">Upload
@@ -42,7 +42,8 @@ export default defineComponent({
     props: {
         formTitle: {
             type: String,
-            required: false
+            required: false,
+            default: "Upload a provisioning file"
         },
         open: {
             type: Boolean,

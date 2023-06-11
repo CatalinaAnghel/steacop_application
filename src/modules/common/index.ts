@@ -30,9 +30,9 @@ export interface TabInterface {
 export interface DashboardDataInterface {
     to: {
         name: string;
-        params:{
+        params: {
             id: number;
-        }|null
+        } | null
     };
     name: string;
     dueDate: string;
@@ -43,7 +43,14 @@ export interface DashboardElementInterface {
     cardTitle: string;
     color: string | null;
     loading: boolean;
-    icon: string|null;
+    icon: string | null;
     cardAction: boolean;
     data: DashboardDataInterface[]
+}
+
+
+export interface ListElementInterface {
+    text: string;
+    icon: string;
+    id: number;
 }

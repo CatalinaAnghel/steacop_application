@@ -37,11 +37,11 @@
           </v-list-item-icon>
           <v-list-item-title>Log in</v-list-item-title>
         </v-list-item>
-        <v-list-item :to="{ name: 'about' }">
+        <v-list-item :to="{ name: 'contact' }">
           <v-list-item-icon>
-            <v-icon>mdi-information-variant</v-icon>
+            <v-icon>mdi-phone</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>About us</v-list-item-title>
+          <v-list-item-title>Contact us</v-list-item-title>
         </v-list-item>
 
       </v-list-item-group>

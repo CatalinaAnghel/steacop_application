@@ -42,9 +42,9 @@ export default defineComponent({
                 }
             },
             {
-                text: "About us",
+                text: "Contact us",
                 route: {
-                    name: "about"
+                    name: "contact"
                 }
             }
         ],

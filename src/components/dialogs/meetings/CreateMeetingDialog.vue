@@ -208,6 +208,7 @@ export default mixins(FormMixin).extend({
                     name: ""
                 }
             };
+            this.valid = true;
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };

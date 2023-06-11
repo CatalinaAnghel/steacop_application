@@ -16,14 +16,11 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import('../pages/AboutView.vue'),
+    path: '/contact-us',
+    name: 'contact',
+    component: () => import('../pages/ContactView.vue'),
     meta: {
-      requiresAuth: true,
-      roles: [
-        Roles.ROLE_ADMIN
-      ]
+      requiresAuth: false
     }
   },
   {

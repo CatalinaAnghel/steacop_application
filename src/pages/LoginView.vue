@@ -14,14 +14,14 @@
                             <v-form v-model="valid" @submit.prevent="handleSubmit(login)">
                                 <validation-provider rules="required|email" v-slot="{ errors }">
                                     <v-text-field label="Email" hide-details="auto" v-model="email" :error-messages="errors"
-                                        class="mt-3" @input="hideErrorMessage"></v-text-field>
+                                        class="mt-3" @input="hideErrorMessage" prepend-icon="mdi-email-outline"></v-text-field>
                                 </validation-provider>
                                 <validation-provider rules="required|min:4" v-slot="{ errors }" name="Password">
                                     <v-text-field label="Password" hide-details="auto" v-model="password" type="password"
-                                        :error-messages="errors" class="mt-3" @input="hideErrorMessage"></v-text-field>
+                                        :error-messages="errors" class="mt-3" @input="hideErrorMessage" prepend-icon="mdi-lock-outline"></v-text-field>
                                 </validation-provider>
                                 <v-btn color="secondary" block :dark="!invalid" type="submit" :disabled="invalid" large
-                                    class="my-3" @click="toggleLoader">Log
+                                    class="mt-3 mb-5" @click="toggleLoader">Log
                                     in</v-btn>
                             </v-form>
                         </validation-observer>

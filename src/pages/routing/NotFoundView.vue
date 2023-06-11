@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-layout justify-center align-center>
             <v-flex shrink>
-                <h3 class="text-center">Not found</h3>
+                <h3 class="text-center">Wow, you found it! The page you tried to access does not exist...</h3>
                 <img class="not-found-image" alt="Not found image" :src="require('@/assets/not_found.svg')" />
             </v-flex>
         </v-layout>

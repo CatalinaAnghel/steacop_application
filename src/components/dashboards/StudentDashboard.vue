@@ -16,7 +16,7 @@ import { storeService } from "@/store";
 import { defineComponent } from "vue";
 import StatisticsCollaborationCard from "../projects/statistics/StatisticsCollaborationCard.vue";
 import BaseDashboardCard from "../base/BaseDashboardCard.vue";
-import { DashboardDataInterface, DashboardElementInterface, TabInterface } from "@/modules/common";
+import { DashboardDataInterface, DashboardElementInterface } from "@/modules/common";
 import MeetingService from "@/services/meeting-service";
 import { CalendarRangeInterface } from "@/modules/calendar";
 import AssignmentService from "@/services/assignment-service";
