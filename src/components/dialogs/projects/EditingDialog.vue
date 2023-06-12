@@ -56,6 +56,7 @@ import mixins from 'vue-typed-mixins';
 import FormMixin from '@/components/mixins/FormMixin.vue';
 import { ProjectDetailsInterface, UpdateProjectInterface } from "@/modules/project";
 import ProjectService from "@/services/project-service";
+import Vue from 'vue';
 
 export default mixins(FormMixin).extend({
     props: {
@@ -134,6 +135,7 @@ export default mixins(FormMixin).extend({
                 title: "",
                 repositoryUrl: null
             } as UpdateProjectInterface;
+            (this.$refs.observer as Vue & {reset:()=>void}).reset();
         }
     }
 });

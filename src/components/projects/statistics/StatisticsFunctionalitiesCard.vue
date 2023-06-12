@@ -38,7 +38,7 @@
 import { defineComponent } from 'vue';
 import VueApexCharts from 'vue-apexcharts';
 import { storeService } from '@/store';
-import { FunctionalityGroupInterface, FunctionalityPayloadInterface, HistoryGroupInterface, HistoryInterface, HistoryPayloadInterface, StatusInterface } from '@/store/functionalities/types';
+import { FunctionalityGroupInterface, FunctionalityInterface, FunctionalityPayloadInterface, HistoryGroupInterface, HistoryInterface, HistoryPayloadInterface, StatusInterface } from '@/store/functionalities/types';
 import { FunctionalityLineChartOptionsInterface } from '@/modules/project';
 
 
@@ -47,6 +47,7 @@ export default defineComponent({
         return {
             cardTitle: 'Functionalities',
             functionalities: [] as FunctionalityGroupInterface[],
+            epics: [] as FunctionalityInterface[],
             history: [] as HistoryGroupInterface[],
             statuses: [] as StatusInterface[],
             loading: false,
@@ -75,18 +76,21 @@ export default defineComponent({
             let elements = [] as Array<number>;
 
             this.functionalities.forEach((group) => {
-                elements.push(group.functionalities.length);
+                const foundEpics = this.epics.filter(element => element.status.name === group.status.name);
+                elements.push(group.functionalities.length + foundEpics.length);
                 if (!this.options.labels.includes(group.status.name)) {
                     this.options.labels.push(group.status.name);
                 }
             });
+            
             return elements;
         },
         items: function (): Array<{ name: string, children: Array<{ name: string; }> }> {
             let info = [] as Array<{ name: string; }>;
             this.functionalities.forEach((group) => {
+                const foundEpics = this.epics.filter(element => element.status.name === group.status.name);
                 info.push({
-                    name: group.status.name + ": " + group.functionalities.length
+                    name: group.status.name + ": " + (group.functionalities.length + foundEpics.length)
                 })
             });
             return [{
@@ -178,6 +182,7 @@ export default defineComponent({
         await this.loadData();
         this.statuses = storeService.functionalities.getStatuses();
         this.functionalities = storeService.functionalities.getFunctionalities();
+        this.epics = storeService.functionalities.getEpics();
         this.history = storeService.functionalities.getHistory();
     }
 })

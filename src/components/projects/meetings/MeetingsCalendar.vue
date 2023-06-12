@@ -57,12 +57,12 @@
                             }}</a></span>
                         </div>
                         <div class="pb-5">
-                            <span class="mdi mdi-link pr-2"></span>
+                            <span class="mdi mdi-state-machine pr-2"></span>
                             <span><b>Status: </b>{{ getMeetingStatus(selectedEvent) }}</span>
                         </div>
                         <div class="pb-5" v-if="typeof selectedEvent.grade !== 'undefined'">
-                            <span class="mdi mdi-link pr-2"></span>
-                            <span><b>Grade: </b>{{ selectedEvent.grade }}</span>
+                            <span class="mdi mdi-book-education-outline pr-2"></span>
+                            <span><b>Grade: </b>{{ selectedEvent.grade }}/10</span>
                         </div>
                         <v-divider></v-divider>
                         <span class="pt-5">{{ selectedEvent.details }}</span>
@@ -186,6 +186,7 @@ export default mixins(RoleMixin).extend({
                         isCompleted: element.isCompleted,
                         link: element.link,
                         id: element.id,
+                        grade: element.grade,
                         type: EventTypes.EVENT_TYPE_MILESTONE_MEETING,
                         isMissed: element.isMissed
                     } as EventInterface

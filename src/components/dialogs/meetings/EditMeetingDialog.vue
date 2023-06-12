@@ -184,7 +184,7 @@ export default mixins(FormMixin).extend({
                 time: "",
                 duration: 0
             } as UpdateMeetingInterface;
-            this.valid = true;
+            (this.$refs.observer as Vue & {reset:()=>void}).reset();
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };

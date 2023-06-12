@@ -174,6 +174,7 @@ export default mixins(FormMixin).extend({
                 dueDate: "",
                 dueTime: ""
             };
+            (this.$refs.observer as Vue & {reset:()=>void}).reset();
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };

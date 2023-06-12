@@ -111,6 +111,7 @@ export default mixins(FormMixin).extend({
         },
         reset(): void {
             this.grade = null;
+            (this.$refs.observer as Vue & {reset:()=>void}).reset();
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };

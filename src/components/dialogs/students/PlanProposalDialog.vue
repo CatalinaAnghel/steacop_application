@@ -65,6 +65,7 @@ import { defineComponent } from 'vue';
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import PlanService from '@/services/plan-service';
 import { CustomSupervisoryPlanInterface } from '@/modules/supervisory-plan';
+import Vue from 'vue';
 
 export default defineComponent({
     emits: [ 'submitted:form', 'close:dialog'],
@@ -148,6 +149,7 @@ export default defineComponent({
             this.numberOfAssignments = 0;
             this.numberOfGuidanceMeetings = 0;
             this.suggested = false;
+            (this.$refs.observer as Vue & {reset:()=>void}).reset();
         }
     }
 });
