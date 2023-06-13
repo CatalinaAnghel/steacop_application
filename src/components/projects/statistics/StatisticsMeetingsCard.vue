@@ -6,9 +6,12 @@
         <v-card-text>
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="12" md="5" lg="5" xl="5">
+                    <v-col v-if="checkSeries" cols="12" sm="12" md="5" lg="5" xl="5">
                         <vue-apex-charts height="auto" type="radialBar" :options="options"
                             :series="series"></vue-apex-charts>
+                    </v-col>
+                    <v-col cols="12" sm="12" md="5" lg="5" xl="5" v-else>
+                        <span class="text-subtitle-1">No statistics are available yet...</span>
                     </v-col>
                     <v-col lg="1" xl="1" class="hidden-md-and-down">
                         <v-divider vertical></v-divider>
@@ -67,6 +70,11 @@ export default defineComponent({
                 Number(milestoneMeetingsPercentage.toFixed(2)),
                 Number(assignmentsPercentage.toFixed(2))
             ];
+        },
+        checkSeries: function(): boolean{
+            const values = this.series.filter(element => element > 0);
+
+            return values.length > 0;
         },
         items: function (): Array<{ name: string, children: Array<{ name: string; }> }> {
             return [

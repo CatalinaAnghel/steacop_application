@@ -11,9 +11,12 @@
                     </v-col>
                 </v-row>
                 <v-row v-else>
-                    <v-col cols="12" sm="12" md="5" lg="5" xl="5">
+                    <v-col v-if="checkSeries" cols="12" sm="12" md="5" lg="5" xl="5">
                         <vue-apex-charts height="auto" type="radialBar" :options="options"
                             :series="series"></vue-apex-charts>
+                    </v-col>
+                    <v-col cols="12" sm="12" md="5" lg="5" xl="5" v-else>
+                        <span class="text-subtitle-1">No statistics are available yet...</span>
                     </v-col>
                     <v-col lg="1" xl="1" class="hidden-md-and-down">
                         <v-divider vertical></v-divider>
@@ -29,7 +32,7 @@
                                     </p>
                                     <ul>
                                         <li><span class="text-subtitle-2">Assignments score:</span> <span class="">{{
-                                            collaborationData.structureScore.assignmentsScore }}%</span></li>
+                                            collaborationData.structureScore.assignmentsScore.toFixed(2) }}%</span></li>
                                         <li><span class="text-subtitle-2">Milestone meetings score:</span> <span class="">{{
                                             collaborationData.structureScore.milestoneMeetingsScore.toFixed(2) }}%</span></li>
                                     </ul>
@@ -98,7 +101,6 @@ export default mixins(RoleMixin).extend({
             collaborationData: null as CollaborationInfoInterface | null,
             panel: [],
             disabled: false,
-            readonly: false,
             loading: false
         }
     },
@@ -110,13 +112,18 @@ export default mixins(RoleMixin).extend({
             let values = [];
             if (this.collaborationData !== null) {
                 values.push(Number(this.collaborationData.score.toFixed(2)));
-                values.push(Number(this.collaborationData.ratingScore.totalScore.toFixed(2)));
                 values.push(Number(this.collaborationData.structureScore.totalScore.toFixed(2)));
                 values.push(Number(this.collaborationData.supportScore.totalScore.toFixed(2)));
+                values.push(Number(this.collaborationData.ratingScore.totalScore.toFixed(2)));
             }
 
             return values;
         },
+        checkSeries: function(): boolean{
+            const values = this.series.filter(element => element > 0);
+
+            return values.length > 0;
+        }
     },
     created: async function (): Promise<void> {
         this.loading = true;

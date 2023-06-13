@@ -83,7 +83,6 @@ export default defineComponent({
                 })
             }
 
-            console.log(assignmentGrades, milestoneMeetingGrades);
             return [
                 assignmentGrades,
                 milestoneMeetingGrades,
