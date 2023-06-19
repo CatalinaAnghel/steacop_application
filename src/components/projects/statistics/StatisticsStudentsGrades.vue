@@ -74,7 +74,7 @@ export default defineComponent({
         series: function (): { name: string; data: number[] }[] {
             let assignmentGrades = { name: 'Assignment grade', data: [] as number[] };
             let milestoneMeetingGrades = { name: 'Milestone meeting grade', data: [] as number[] };
-            let providedGrade = { name: 'Provided grade', data: [] as number[] };
+            let providedGrade = { name: 'Final grade', data: [] as number[] };
             if (this.grades !== null) {
                 this.grades.gradesCollection.forEach(gradesElement => {
                     assignmentGrades.data.push(gradesElement.assignmentsGrade);

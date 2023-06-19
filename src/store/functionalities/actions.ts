@@ -294,23 +294,5 @@ export default {
         }
 
         return requestStatus;
-    },
-    async deleteFunctionality({commit}: { commit: Commit }, functionalityId: number): Promise<ResponseDto>{
-        let requestStatus = {
-            success: true,
-            error: '',
-            code: null as number | null
-        };
-
-        await axios.delete(`/functionalities/${functionalityId}`)
-            .catch(error => {
-                requestStatus = ErrorHandler.handleError(error);
-            });
-
-        if (requestStatus.success) {
-            commit('_markAsDirty');
-        }
-
-        return requestStatus;
     }
 }

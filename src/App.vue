@@ -42,6 +42,9 @@ export default defineComponent({
     updateDrawerValue: function (value: boolean) {
       this.drawer = value;
     }
+  },
+  mounted: function(){
+    document.title = 'Thesico';
   }
 });
 </script>

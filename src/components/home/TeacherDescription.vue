@@ -30,7 +30,7 @@ export default defineComponent({
         return {
             items: [
                 {
-                    text: "Proposing a supervisory style (Steacop will also provide recommendations based on the supervisory styles)",
+                    text: "Proposing a supervisory style (Thesico will also provide recommendations based on the supervisory styles)",
                     icon: "mdi-clipboard-edit-outline",
                     id: 1
                 },

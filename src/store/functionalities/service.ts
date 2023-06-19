@@ -130,8 +130,4 @@ export default class extends AbstractStoreService implements LoadableInterface {
             }
         ] as DataTableHeadersInterface[];
     }
-
-    public async deleteFunctionality(functionalityId: number): Promise<ResponseDto>{
-        return this.store.dispatch(this.appendNamespace('deleteFunctionality'), functionalityId);
-    }
 }

@@ -21,14 +21,14 @@
                         <v-divider vertical></v-divider>
                     </v-col>
                     <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-                        <v-treeview shaped hoverable :items="items" />
+                        <v-treeview dense hoverable :items="items" />
                     </v-col>
                 </v-row>
                 <v-row v-if="functionalities.length">
                     <v-divider />
                 </v-row>
                 <v-row v-if="functionalities.length">
-                    <v-col cols="6" v-for="serie in lineChartSeries" :key="serie.options.chart.id">
+                    <v-col class="px-5 py-5" cols="12" md="12" lg="6" xl="6" v-for="serie in lineChartSeries" :key="serie.options.chart.id">
                         <vue-apex-charts height="250" :options="serie.options" :series="serie.series"></vue-apex-charts>
                     </v-col>
                 </v-row>
@@ -80,9 +80,9 @@ export default defineComponent({
 
             this.functionalities.forEach((group) => {
                 const foundEpics = this.epics.filter(element => element.status.name === group.status.name);
-                elements.push(group.functionalities.length + foundEpics.length);
+                elements.splice(group.status.orderNumber, 0, group.functionalities.length + foundEpics.length);
                 if (!this.options.labels.includes(group.status.name)) {
-                    this.options.labels.push(group.status.name);
+                    this.options.labels.splice(group.status.orderNumber, 0, group.status.name);
                 }
             });
             

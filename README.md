@@ -1,4 +1,4 @@
-# steacop_application
+# thesico_application
 
 ## Project setup
 ```

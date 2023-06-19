@@ -21,7 +21,9 @@ export default {
     },
     _storeEpics(state: FunctionalityState, epics: FunctionalityInterface[]): void {
         epics.forEach(element => {
+            if (!state.epics.some((epic) => element.id === epic.id)) {
             state.epics.push(element);
+            }
         })
     },
     _storeStatuses(state: FunctionalityState, statuses: StatusInterface[]): void {

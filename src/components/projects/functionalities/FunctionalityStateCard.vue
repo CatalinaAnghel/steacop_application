@@ -101,21 +101,12 @@
                         </v-col>
                     </v-row>
                     <v-row justify="space-between">
-                        <v-col cols="6">
+                        <v-col cols="12">
                             <v-btn block :disabled="!editable" color="secondary" outlined class="mb-2" @click="openDialog">
                                 <v-icon medium color="secondary">
                                     mdi-pencil
                                 </v-icon>
                                 Edit
-                            </v-btn>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-btn block :disabled="!editable" color="error" outlined class="mb-2"
-                                @click="deleteFunctionality">
-                                <v-icon medium color="error">
-                                    mdi-delete
-                                </v-icon>
-                                Delete
                             </v-btn>
                         </v-col>
                     </v-row>
@@ -129,7 +120,6 @@
 import { FunctionalityInterface } from "@/store/functionalities/types";
 import { defineComponent } from "vue";
 import { getIcon, getStatusIcon, IconInterface } from "@/modules/project";
-import { storeService } from "@/store";
 
 export default defineComponent({
     emits: ['forceRefresh:component', 'open:dialog'],
@@ -168,17 +158,6 @@ export default defineComponent({
     methods: {
         forceRefresh: function (): void {
             this.$emit('forceRefresh:component');
-        },
-        deleteFunctionality: async function (): Promise<void> {
-            const response = await storeService.functionalities.deleteFunctionality(this.functionalityDetails.id);
-            if (response.success) {
-                this.$router.push({ 
-                    name: 'projectFunctionalities', 
-                    params: { 
-                        id: this.functionalityDetails.projectId.toString() 
-                    } 
-                });
-            }
         },
         openDialog: function (): void {
             this.editDialogOpen = true;

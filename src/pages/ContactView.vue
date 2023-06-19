@@ -52,7 +52,7 @@ export default defineComponent({
         {
           name: "Email",
           icon: "mdi-email",
-          value: "support@steacop.com",
+          value: "support@thesico.com",
           mailto: true
         }
       ]

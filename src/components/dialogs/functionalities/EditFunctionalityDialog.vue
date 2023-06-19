@@ -29,7 +29,7 @@
                                         </validation-provider>
                                         <v-select v-if="statuses.length" hide-details label="Current status"
                                             :items="statuses" item-text="name" item-value="id" return-object single-line
-                                            v-model="functionality.status" required
+                                            v-model="functionality.status" required :disabled="isSupervisor"
                                             :rules="statuses.length ? requiredRule : null" color="primary"
                                             prepend-icon="mdi-cogs"></v-select>
                                         <validation-provider v-if="!closedFunctionality" rules="required"
@@ -75,8 +75,9 @@ import { storeService } from "@/store";
 import { FunctionalityInterface, StatusInterface, UpdateFunctionalityPayloadInterface } from "@/store/functionalities/types";
 import { EVENT_BUS_REFRESH_COMPONENT } from "@/common/constants";
 import { eventBus } from "@/main";
+import RoleMixin from "../../mixins/RoleMixin.vue";
 
-export default mixins(FormMixin).extend({
+export default mixins(FormMixin, RoleMixin).extend({
     props: {
         formTitle: {
             type: String,
@@ -191,6 +192,9 @@ export default mixins(FormMixin).extend({
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };
         },
+    },
+    created: function(): void{
+        this.setProperties();
     }
 });
 

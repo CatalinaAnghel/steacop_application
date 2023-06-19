@@ -30,26 +30,23 @@
                         <v-divider></v-divider>
                         <draggable :disabled="isSupervisor" class="list-group" :list="itemsGroup.functionalities"
                             group="projectFunctionalities" @change="markAsDirty">
-                            <p v-if="itemsGroup.functionalities.length === 0" class="mt-2">No functionalities
+                            <div :class="{ 'list-group-item': true, 'draggable-card': isStudent }"
+                                v-for="(element) in itemsGroup.functionalities" :key="element.id">
+                                <v-card class="border-primary px-2 my-2">
+                                    <v-card-title>
+                                        {{ element.code + ' - ' + element.title }}
+                                    </v-card-title>
+
+                                    <v-card-subtitle>{{ element.status.name }}</v-card-subtitle>
+
+                                    <v-card-actions>
+                                        <v-btn text @click="viewFunctionality(element.id)" class="secondary--text">
+                                            View details</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </div>
+                            <p v-if="itemsGroup.functionalities.length === 0" slot="footer" class="mt-2">No functionalities
                                 found</p>
-                            <transition-group v-else>
-                                <div :class="{ 'list-group-item': true, 'draggable-card': isStudent }"
-                                    v-for="(element) in itemsGroup.functionalities" :key="element.id">
-                                    <v-card class="border-primary px-2 my-2">
-                                        <v-card-title>
-                                            {{ element.code + ' - ' + element.title }}
-                                        </v-card-title>
-
-                                        <v-card-subtitle>{{ element.status.name }}</v-card-subtitle>
-
-                                        <v-card-actions>
-                                            <v-btn text @click="viewFunctionality(element.id)" class="secondary--text">
-                                                View details</v-btn>
-                                        </v-card-actions>
-                                    </v-card>
-                                </div>
-                            </transition-group>
-
                         </draggable>
 
                     </v-card-text>

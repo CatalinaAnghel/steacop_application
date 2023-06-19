@@ -1,4 +1,4 @@
-import axios, { RawAxiosRequestHeaders } from 'axios';
+import axios, { AxiosRequestHeaders, RawAxiosRequestHeaders } from 'axios';
 import { AUTHENTICATION_TOKEN_URL, REFRESH_TOKEN_URL, AUTH_URL_PATTERN, MULTIPART_FORM_DATA_ROUTES } from './constants';
 import AuthService from '@/services/auth-service';
 import router from '@/router';
@@ -16,7 +16,7 @@ axiosInstance.interceptors.request.use(
             if (typeof (AuthService.getAccessToken()) === 'undefined') {
                 logout();
             }
-            config["headers"] = config.headers ?? {};
+            config["headers"] = config.headers ?? {} as AxiosRequestHeaders;
             if(config.method === 'patch'){
                 (config.headers as RawAxiosRequestHeaders)["Content-Type"] = 'application/merge-patch+json';
             } else if (config.method === 'post' && typeof MULTIPART_FORM_DATA_ROUTES.find((route) => route === config.url) !== 'undefined'){

@@ -18,7 +18,7 @@
                     </v-col>
                     <v-col cols="12" sm="12" md="6" lg="6" xl="6">
                         <template>
-                            <v-treeview shaped hoverable :items="items"></v-treeview>
+                            <v-treeview dense hoverable :items="items"></v-treeview>
                         </template>
                     </v-col>
                 </v-row>

@@ -23,7 +23,7 @@
           class="primary darken-4 py-4 text-center white--text"
           cols="12"
         >
-          {{ new Date().getFullYear() }} — <strong>Steacop</strong>
+          {{ new Date().getFullYear() }} — <strong>Thesico</strong>
         </v-col>
       </v-row>
     </v-footer>
