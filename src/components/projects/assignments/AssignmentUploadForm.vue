@@ -1,11 +1,11 @@
 <template>
     <validation-observer ref="observer" v-slot="{ handleSubmit }">
         <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(submit)">
-            <validation-provider :rules="{ mimes: ['application/pdf'] }" v-slot="{ errors }"
-                name="Attachments">
+            <validation-provider :rules="{ mimes: ['application/pdf'] }" v-slot="{ errors }" name="Attachments">
                 <v-file-input multiple v-model="selectedFiles" counter :error-messages="errors"></v-file-input>
             </validation-provider>
-            <v-btn :disabled="disabled || processing" color="neutral" block type="submit" large class="my-3">Upload
+            <v-btn :disabled="disabled || processing || !valid" color="neutral" block type="submit" large
+                class="my-3">Upload
                 file(s)</v-btn>
             <v-btn :disabled="processing" color="secondary" block dark @click="turnIn" large class="my-3">Turn in</v-btn>
         </v-form>
@@ -52,23 +52,24 @@ export default defineComponent({
             if (setProcessing) {
                 this.processing = true;
             }
-            let addedDocuments = [] as DocumentInterface[];
+            let promises = [] as Array<Promise<DocumentInterface>>;
             if (this.selectedFiles.length > 0) {
+                this.toggleLoader();
                 this.selectedFiles.forEach(async (file) => {
                     let formData = new FormData();
                     formData.append('file', file, (file as File).name);
                     formData.append('assignmentId', this.assignmentDetails.id.toString());
-                    const document = await FileUploadService.uploadAssignmentFile(formData);
-                    if (null !== document) {
-                        addedDocuments.push(document);
-                    }
+                    promises.push(FileUploadService.uploadAssignmentFile(formData));
+
                 });
-                this.$emit('refresh:documents');
-                this.selectedFiles = [];
-                if (setProcessing) {
-                    this.processing = false;
-                }
-                this.toggleLoader();
+                Promise.all(promises).then(() => {
+                    this.$emit('refresh:documents');
+                    this.selectedFiles = [];
+                    if (setProcessing) {
+                        this.processing = false;
+                    }
+                    this.toggleLoader();
+                })
             }
         },
         turnIn: async function (): Promise<void> {

@@ -1,14 +1,12 @@
 <template>
-    <v-row justify="center" class="py-16">
-        <v-col cols="10" sm="10" md="12" lg="6" xl="6">
-            <v-card elevation="3">
-                <v-card-title><v-icon medium color="red darken-2">
-                        mdi-cancel
-                    </v-icon>{{ title }}</v-card-title>
-                <v-card-text>{{ body }}</v-card-text>
-            </v-card>
-        </v-col>
-    </v-row>
+    <v-container fluid>
+        <v-layout justify-center align-center>
+            <v-flex shrink>
+                <h3 class="text-center">Oh, no! You cannot access that page... Access denied</h3>
+                <img class="access-denied-image" alt="Access denied image" :src="require('@/assets/access_denied.svg')" />
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script lang="ts">
@@ -23,3 +21,25 @@ export default defineComponent({
     }
 });
 </script>
+
+<style lang="scss">
+@import '~vuetify/src/styles/settings/_variables';
+@import '@/style/helpers.scss';
+
+.access-denied-image {
+    max-width: rem(500);
+    width: auto;
+
+    @media #{map-get($display-breakpoints, 'md-and-down')} {
+        & {
+            width: rem(300);
+        }
+    }
+
+    @media #{map-get($display-breakpoints, 'xs-only')} {
+        & {
+            width: rem(160);
+        }
+    }
+}
+</style>

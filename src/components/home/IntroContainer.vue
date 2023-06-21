@@ -1,8 +1,8 @@
 <template>
   <v-row class="my-lg-10" justify="center">
     <v-col cols="12" sm="12" md="12" lg="4" xl="4">
-      <h1 class="primary--text pt-16 mt-10">Thesico</h1>
-      <h3><span class="primary--text">Thesico (Thesis Coordination Platform)</span></h3>
+      <v-img  class="pt-16 mt-10 mx-auto" :src="require('@/assets/logo4.svg')" max-height="150" max-width="150" contain></v-img>
+      <h3 class="text-center"><span class="primary--text">Thesico - Thesis Coordination Platform</span></h3>
       <v-btn v-if="!loggedIn" class="mx-lg-auto mt-2" color="secondary" elevation="2" @click="$router.push({ name: 'login' })">Log
         in</v-btn>
     </v-col>

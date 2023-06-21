@@ -7,7 +7,6 @@ import FunctionalitiesStoreService from '@/store/functionalities/service';
 import { Store } from 'vuex';
 import { State } from '.';
 
-
 export default class StoreService {
     private static instance: StoreService|null = null;
     private store: Store<State>;

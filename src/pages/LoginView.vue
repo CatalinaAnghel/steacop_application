@@ -14,11 +14,13 @@
                             <v-form v-model="valid" @submit.prevent="handleSubmit(login)">
                                 <validation-provider rules="required|email" v-slot="{ errors }">
                                     <v-text-field label="Email" hide-details="auto" v-model="email" :error-messages="errors"
-                                        class="mt-3" @input="hideErrorMessage" prepend-icon="mdi-email-outline"></v-text-field>
+                                        class="mt-3" @input="hideErrorMessage"
+                                        prepend-icon="mdi-email-outline"></v-text-field>
                                 </validation-provider>
-                                <validation-provider rules="required|min:4" v-slot="{ errors }" name="Password">
+                                <validation-provider rules="required|min:10" v-slot="{ errors }" name="Password">
                                     <v-text-field label="Password" hide-details="auto" v-model="password" type="password"
-                                        :error-messages="errors" class="mt-3" @input="hideErrorMessage" prepend-icon="mdi-lock-outline"></v-text-field>
+                                        :error-messages="errors" class="mt-3" @input="hideErrorMessage"
+                                        prepend-icon="mdi-lock-outline"></v-text-field>
                                 </validation-provider>
                                 <v-btn color="secondary" block :dark="!invalid" type="submit" :disabled="invalid" large
                                     class="mt-3 mb-5" @click="toggleLoader">Log
@@ -68,15 +70,9 @@ export default mixins(RoleMixin).extend({
                 this.invalidCredentials = false;
                 eventBus.$emit(EVENT_BUS_AUTH);
 
-                this.setProperties();
-                if (this.isAdmin) {
-                    this.$router.push({ name: "adminDashboard" });
-                } else {
-                    this.$router.push({ name: "dashboard" });
-                }
+                this.redirectToDashboard();
             } else {
                 this.invalidCredentials = true;
-                console.error(response.error);
             }
         },
         toggleLoader(): void {
@@ -84,7 +80,20 @@ export default mixins(RoleMixin).extend({
         },
         hideErrorMessage(): void {
             this.invalidCredentials = false;
+        },
+        redirectToDashboard(): void {
+            this.setProperties();
+            if (this.isAdmin) {
+                this.$router.push({ name: "adminDashboard" });
+            } else {
+                this.$router.push({ name: "dashboard" });
+            }
         }
     },
+    created: function () {
+        if (AuthService.isLoggedIn()) {
+            this.redirectToDashboard();
+        }
+    }
 });
 </script>
