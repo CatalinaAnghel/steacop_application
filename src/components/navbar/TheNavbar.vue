@@ -3,7 +3,7 @@
         scroll-target="#main-container">
         <v-app-bar-nav-icon @click="value = true"></v-app-bar-nav-icon>
         <v-avatar>    
-        <v-img contain :src="require('@/assets/logo4.svg')" max-height="45" max-width="45" ></v-img>
+        <v-img contain :src="require('@/assets/logo1.svg')" max-height="45" max-width="45" ></v-img>
     </v-avatar>
         <v-toolbar-title>
             <router-link :to="{ name: 'home' }" class="logo-link">Thesico</router-link></v-toolbar-title>
