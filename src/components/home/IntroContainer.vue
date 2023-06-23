@@ -1,7 +1,7 @@
 <template>
-  <v-row class="my-lg-10" justify="center">
+  <v-row class="my-lg-10" justify="center" align="center">
     <v-col cols="12" sm="12" md="12" lg="4" xl="4">
-      <v-img  class="pt-16 mt-10 mx-auto" :src="require('@/assets/logo1.svg')" max-height="150" max-width="150" contain></v-img>
+      <v-img  class="mx-auto" :src="require('@/assets/logo1.svg')" max-height="150" max-width="150" contain></v-img>
       <h2 class="text-center"><span class="primary--text">Thesis Coordination Platform</span></h2>
       <v-btn v-if="!loggedIn" class="mx-lg-auto mt-2" color="secondary" elevation="2" @click="$router.push({ name: 'login' })">Log
         in</v-btn>

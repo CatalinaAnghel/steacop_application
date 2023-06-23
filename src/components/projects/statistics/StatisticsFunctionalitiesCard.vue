@@ -5,7 +5,7 @@
         </v-card-title>
         <v-card-text>
             <v-container>
-                <v-row justify-center v-if="functionalities.length === 0">
+                <v-row justify-center v-if="loading">
                     <v-col cols="12" class="text-center">
                         <v-progress-circular indeterminate color="primary"></v-progress-circular>
                     </v-col>
@@ -186,12 +186,14 @@ export default defineComponent({
         },
     },
     created: async function (): Promise<void> {
+        this.loading = true;
         storeService.functionalities.loadTypes();
         await this.loadData();
         this.statuses = storeService.functionalities.getStatuses();
         this.functionalities = storeService.functionalities.getFunctionalities();
         this.epics = storeService.functionalities.getEpics();
         this.history = storeService.functionalities.getHistory();
+        this.loading = false;
     }
 })
 </script>

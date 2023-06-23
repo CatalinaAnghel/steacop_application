@@ -1,5 +1,5 @@
 import { extend } from 'vee-validate';
-import { required, email, min, max_value, min_value, between, regex, mimes } from 'vee-validate/dist/rules';
+import { required, email, min, max, max_value, min_value, between, regex, mimes } from 'vee-validate/dist/rules';
 
 interface ValidationRuleInterface {
     params: string[];
@@ -20,6 +20,11 @@ extend('email', {
 extend('min', {
     ...min,
     message: '{_field_} must have at least {length} characters'
+});
+
+extend('max', {
+    ...max,
+    message: '{_field_} must have at most {length} characters'
 });
 
 extend('min_value', {

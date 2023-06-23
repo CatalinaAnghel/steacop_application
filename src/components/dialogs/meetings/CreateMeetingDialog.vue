@@ -17,19 +17,17 @@
                     <v-container>
                         <v-row>
                             <v-col col="12" sm="12" md="12">
-                                <p class="red--text accent-2--text text-center" v-if="disabled">Too many milestone meetings have been scheduled</p>
+                                <p class="red--text accent-2--text text-center" v-if="disabled">Too many milestone meetings
+                                    have been scheduled</p>
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                     <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(createMeeting)">
                                         <v-select hide-details label="Type" :items="meetingTypes" item-text="name"
                                             item-value="id" return-object single-line v-model="meetingDetails.type" required
                                             :rules="requiredRule" color="primary" prepend-icon="mdi-cogs"
                                             @change="validate"></v-select>
-                                        <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
-                                            <v-text-field class="mt-2" v-model="meetingDetails.details" label="Description"
-                                                hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
-                                            </v-text-field>
-                                        </validation-provider>
-                                        <validation-provider :rules="{ required: true, regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }" v-slot="{ errors }" name="Link">
+                                        <validation-provider
+                                            :rules="{ required: true, regex: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ }"
+                                            v-slot="{ errors }" name="Link">
                                             <v-text-field class="mt-2" v-model="meetingDetails.link" label="Link"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-link">
                                             </v-text-field>
@@ -42,9 +40,8 @@
                                                         label="Scheduling date" prepend-icon="mdi-calendar" readonly
                                                         v-bind="attrs" v-on="on" :error-messages="errors"></v-text-field>
                                                 </template>
-                                                <v-date-picker :min="startingDate" v-model="meetingDetails.date"
-                                                    @input="datePicker = false"
-                                                    color="primary"></v-date-picker>
+                                                <v-date-picker required :min="startingDate" v-model="meetingDetails.date"
+                                                    @input="datePicker = false" color="primary"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
                                         <validation-provider rules="required" v-slot="{ errors }" name="Scheduling time">
@@ -56,15 +53,23 @@
                                                         label="Scheduling time" prepend-icon="mdi-calendar-clock" readonly
                                                         v-bind="attrs" v-on="on" :error-messages="errors"></v-text-field>
                                                 </template>
-                                                <v-time-picker format="24hr" v-if="timePicker" v-model="meetingDetails.time"
-                                                    full-width
+                                                <v-time-picker v-if="timePicker" v-model="meetingDetails.time"
+                                                    full-width required
                                                     @click:minute="getMenuInstance().save(meetingDetails.time)"></v-time-picker>
                                             </v-menu>
                                         </validation-provider>
-                                        <v-slider class="mt-3" prepend-icon="mdi-clock-time-four-outline"
+                                        <validation-provider rules="required|min:16|max:255" v-slot="{ errors }"
+                                            name="Description">
+                                            <v-text-field counter v-model="meetingDetails.details"
+                                                label="Description" hide-details="auto" :error-messages="errors"
+                                                prepend-icon="mdi-text-short">
+                                            </v-text-field>
+                                        </validation-provider>
+                                        <v-slider class="mt-2" prepend-icon="mdi-clock-time-four-outline"
                                             v-model="meetingDetails.duration" color="primary" label="Duration"
                                             hint="Provide the duration (number of hours)" min="0.5" step="0.5" max="4"
                                             thumb-label></v-slider>
+                                        
                                         <v-btn :disabled="loading || disabled" block :dark="!loading && !disabled"
                                             type="submit" large class="my-3" color="secondary">Save</v-btn>
                                     </v-form>
@@ -185,7 +190,7 @@ export default mixins(FormMixin).extend({
                 code: null as number | null
             };
             response = await MeetingService.createMeeting(payload as CreateMeetingPayloadInterface, this.meetingDetails.type.id);
-            if(this.meetingDetails.type.id === EVENT_TYPE_MILESTONE_MEETING){
+            if (this.meetingDetails.type.id === EVENT_TYPE_MILESTONE_MEETING) {
                 storeService.user.updateMilestoneMeetingsCounter({
                     projectId: Number(this.$route.params.id),
                     counter: this.existingMilestoneMeetings + 1
@@ -208,7 +213,7 @@ export default mixins(FormMixin).extend({
                     name: ""
                 }
             };
-            (this.$refs.observer as Vue & {reset:()=>void}).reset();
+            (this.$refs.observer as Vue & { reset: () => void }).reset();
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };

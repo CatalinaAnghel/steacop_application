@@ -55,7 +55,7 @@
                                                         prepend-icon="mdi-calendar-clock" readonly v-bind="attrs" v-on="on"
                                                         :error-messages="errors"></v-text-field>
                                                 </template>
-                                                <v-time-picker format="24hr" v-if="timePicker"
+                                                <v-time-picker v-if="timePicker"
                                                     v-model="assignmentDetails.dueTime" full-width color="primary"
                                                     @click:minute="getMenuInstance().save(assignmentDetails.dueTime)"></v-time-picker>
                                             </v-menu>
