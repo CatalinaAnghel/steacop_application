@@ -2,11 +2,13 @@
     <v-app-bar class="navbar-element" color="primary darken-4" fixed app elevate-on-scroll dark
         scroll-target="#main-container">
         <v-app-bar-nav-icon @click="value = true"></v-app-bar-nav-icon>
-        <v-avatar>    
-        <v-img contain :src="require('@/assets/logo1.svg')" max-height="45" max-width="45" ></v-img>
-    </v-avatar>
         <v-toolbar-title>
-            <router-link :to="{ name: 'home' }" class="logo-link">Thesico</router-link></v-toolbar-title>
+            <router-link :to="{ name: 'home' }" class="logo-link">
+                <v-avatar>
+                    <v-img contain :src="require('@/assets/logo1.svg')" max-height="45" max-width="45" />
+                </v-avatar>
+            </router-link>
+        </v-toolbar-title>
     </v-app-bar>
 </template>
 

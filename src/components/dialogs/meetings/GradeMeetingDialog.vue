@@ -3,14 +3,11 @@
         <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
             @update:showAlert="updateShowAlert"></base-alert>
 
-        <v-dialog v-if="meetingId > 0" v-model="dialog" max-width="500px" @click:outside="close">
+        <v-dialog v-if="meetingId > 0" v-model="dialog" max-width="500px" persistent>
             <v-card :loading="loading ? 'secondary' : false">
                 <v-card-title>
                     <span class="text-h5 primary--text text--darken-3">{{ formTitle }}</span>
                     <v-spacer></v-spacer>
-                    <v-btn icon @click="close()">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
                 </v-card-title>
 
                 <v-card-text>
@@ -20,7 +17,7 @@
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                     <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(updateMeeting)">
                                         <validation-provider
-                                            rules="between:1,10" v-slot="{ errors }" name="Grade">
+                                            rules="required|between:1,10" v-slot="{ errors }" name="Grade">
                                             <v-text-field v-model="grade" label="Grade" hide-details="auto"
                                                 :error-messages="errors" class="mt-3" type="number" prepend-icon="mdi-clipboard-check">
                                             </v-text-field>

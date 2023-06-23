@@ -19,28 +19,22 @@
                             <v-col col="12" sm="12" md="12">
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                     <v-form v-model="valid" ref="formDialog" @submit.prevent="handleSubmit(updateMeeting)">
-                                        <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
-                                            <v-text-field v-model="meetingDetails.description" label="Description"
-                                                hide-details="auto" :error-messages="errors" class="mt-3"
-                                                prepend-icon="mdi-text-short">
-                                            </v-text-field>
-                                        </validation-provider>
                                         <validation-provider rules="required|min:10" v-slot="{ errors }" name="Link">
                                             <v-text-field v-model="meetingDetails.link" label="Link" hide-details="auto"
-                                                :error-messages="errors" class="mt-3" prepend-icon="mdi-link">
+                                                :error-messages="errors" class="mt-2" prepend-icon="mdi-link">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider rules="required" v-slot="{ errors }" name="Scheduled date">
+                                        <validation-provider rules="required" v-slot="{ errors }" name="Scheduling date">
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
                                                 transition="scale-transition" offset-y min-width="auto">
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field v-model="meetingDetails.date" label="Scheduled at"
+                                                    <v-text-field hide-details="auto" class="mt-2" v-model="meetingDetails.date" label="Scheduling date"
                                                         prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"
-                                                        :error-messages="errors"></v-text-field>
+                                                        :error-messages="errors" :rules="requiredRule"></v-text-field>
                                                 </template>
                                                 <v-date-picker v-model="meetingDetails.date"
                                                     @input="datePicker = false" :min="(new Date()).toISOString().slice(0, 10)"
-                                                    color="primary"></v-date-picker>
+                                                    color="primary" label="Scheduling date"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
                                         <validation-provider rules="required" v-slot="{ errors }">
@@ -48,14 +42,20 @@
                                                 :nudge-right="40" :return-value.sync="meetingDetails.time"
                                                 transition="scale-transition" offset-y max-width="290px" min-width="290px">
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field v-model="meetingDetails.time" label="Picker in menu"
+                                                    <v-text-field hide-details="auto" v-model="meetingDetails.time" label="Scheduling time"
                                                         prepend-icon="mdi-calendar-clock" readonly v-bind="attrs" v-on="on"
-                                                        :error-messages="errors"></v-text-field>
+                                                        :error-messages="errors" :rules="requiredRule"></v-text-field>
                                                 </template>
                                                 <v-time-picker v-if="timePicker" v-model="meetingDetails.time"
                                                     full-width color="primary"
                                                     @click:minute="getMenuInstance().save(meetingDetails.time)"></v-time-picker>
                                             </v-menu>
+                                        </validation-provider>
+                                        <validation-provider rules="required|min:16|max:255" v-slot="{ errors }" name="Description">
+                                            <v-text-field v-model="meetingDetails.description" label="Description"
+                                                hide-details="auto" :error-messages="errors" counter
+                                                prepend-icon="mdi-text-short">
+                                            </v-text-field>
                                         </validation-provider>
                                         <v-slider class="mt-3" prepend-icon="mdi-clock-time-four-outline"
                                             v-model="meetingDetails.duration" color="primary" label="Duration"
@@ -124,6 +124,9 @@ export default mixins(FormMixin).extend({
             } as UpdateMeetingInterface,
             datePicker: false,
             timePicker: false,
+            requiredRule: [
+                (value: string) => value !== "" || 'The field is required'
+            ],
         }
     },
     watch: {

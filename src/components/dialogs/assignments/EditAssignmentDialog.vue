@@ -20,29 +20,25 @@
                                 <validation-observer ref="observer" v-slot="{ handleSubmit }">
                                     <v-form v-model="valid" ref="formDialog"
                                         @submit.prevent="handleSubmit(updateAssignment)">
-                                        <validation-provider rules="required|min:16" v-slot="{ errors }" name="Title">
+                                        <validation-provider rules="required|min:16|max:64" v-slot="{ errors }"
+                                            name="Title">
                                             <v-text-field class="mt-2" v-model="assignmentDetails.title" label="Title"
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
-                                            <v-textarea counter class="mt-2" clearable clear-icon="mdi-close-circle" label="Description"
-                                                v-model="assignmentDetails.description" hide-details="auto" rows="2"
-                                                :error-messages="errors"
-                                                prepend-icon="mdi-text-short"
-                                            ></v-textarea>
-                                        </validation-provider>
+
                                         <validation-provider rules="required" v-slot="{ errors }" name="Due date">
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
                                                 transition="scale-transition" offset-y min-width="auto">
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field class="mt-2" hide-details
+                                                    <v-text-field class="mt-2" hide-details="auto"
                                                         v-model="assignmentDetails.dueDate" label="Due date"
                                                         prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"
-                                                        :error-messages="errors"></v-text-field>
+                                                        :error-messages="errors" :rules="requiredRule"></v-text-field>
                                                 </template>
                                                 <v-date-picker v-model="assignmentDetails.dueDate"
-                                                    @input="datePicker = false" color="primary" :min="(new Date()).toISOString().slice(0, 10)"></v-date-picker>
+                                                    @input="datePicker = false" color="primary"
+                                                    :min="(new Date()).toISOString().slice(0, 10)"></v-date-picker>
                                             </v-menu>
                                         </validation-provider>
                                         <validation-provider rules="required" v-slot="{ errors }" name="Time">
@@ -50,15 +46,21 @@
                                                 :nudge-right="40" :return-value.sync="assignmentDetails.dueTime"
                                                 transition="scale-transition" offset-y max-width="290px" min-width="290px">
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field class="mt-2" hide-details
+                                                    <v-text-field class="mt-2" hide-details="auto"
                                                         v-model="assignmentDetails.dueTime" label="Due time"
                                                         prepend-icon="mdi-calendar-clock" readonly v-bind="attrs" v-on="on"
-                                                        :error-messages="errors"></v-text-field>
+                                                        :error-messages="errors" :rules="requiredRule"></v-text-field>
                                                 </template>
-                                                <v-time-picker v-if="timePicker"
-                                                    v-model="assignmentDetails.dueTime" full-width color="primary"
+                                                <v-time-picker v-if="timePicker" v-model="assignmentDetails.dueTime"
+                                                    full-width color="primary"
                                                     @click:minute="getMenuInstance().save(assignmentDetails.dueTime)"></v-time-picker>
                                             </v-menu>
+                                        </validation-provider>
+                                        <validation-provider rules="required|min:16" v-slot="{ errors }" name="Description">
+                                            <v-textarea counter class="mt-2" clearable clear-icon="mdi-close-circle"
+                                                label="Description" v-model="assignmentDetails.description"
+                                                hide-details="auto" rows="2" :error-messages="errors"
+                                                prepend-icon="mdi-text-short"></v-textarea>
                                         </validation-provider>
                                         <v-btn :disabled="processing" block dark type="submit" large class="my-3"
                                             color="secondary">Save</v-btn>
@@ -97,7 +99,7 @@ export default mixins(FormMixin).extend({
             default: false
         },
         assignment: {
-            type: Object as () => AssignmentEventInterface|null,
+            type: Object as () => AssignmentEventInterface | null,
             required: false,
             default: null
         }
@@ -120,7 +122,10 @@ export default mixins(FormMixin).extend({
                 dueTime: ""
             },
             datePicker: false,
-            timePicker: false
+            timePicker: false,
+            requiredRule: [
+                (value: string) => value !== null && value !== "" || 'This field is required'
+            ],
         }
     },
     watch: {
@@ -128,7 +133,7 @@ export default mixins(FormMixin).extend({
             this.dialog = val;
             if (!val) {
                 this.close();
-            } else if (null !== this.assignment){
+            } else if (null !== this.assignment) {
                 this.assignmentDetails.id = this.assignment.id;
                 this.assignmentDetails.description = this.assignment.details;
                 this.assignmentDetails.dueDate = this.assignment.end.toISOString().slice(0, 10);
@@ -144,7 +149,7 @@ export default mixins(FormMixin).extend({
             this.$emit('close:dialog');
             this.reset();
         },
-        updateAssignment: async function (): Promise<void> {     
+        updateAssignment: async function (): Promise<void> {
             this.toggleProcessingState();
             let payload = {
                 description: this.assignmentDetails.description,
@@ -174,7 +179,7 @@ export default mixins(FormMixin).extend({
                 dueDate: "",
                 dueTime: ""
             };
-            (this.$refs.observer as Vue & {reset:()=>void}).reset();
+            (this.$refs.observer as Vue & { reset: () => void }).reset();
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };

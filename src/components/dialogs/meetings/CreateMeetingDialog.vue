@@ -36,9 +36,9 @@
                                             <v-menu v-model="datePicker" :close-on-content-click="false" :nudge-right="40"
                                                 transition="scale-transition" offset-y min-width="auto">
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field class="mt-2" hide-details v-model="meetingDetails.date"
+                                                    <v-text-field class="mt-2" hide-details="auto" v-model="meetingDetails.date"
                                                         label="Scheduling date" prepend-icon="mdi-calendar" readonly
-                                                        v-bind="attrs" v-on="on" :error-messages="errors"></v-text-field>
+                                                        v-bind="attrs" v-on="on" :error-messages="errors" :rules="requiredRule"></v-text-field>
                                                 </template>
                                                 <v-date-picker required :min="startingDate" v-model="meetingDetails.date"
                                                     @input="datePicker = false" color="primary"></v-date-picker>
@@ -49,9 +49,9 @@
                                                 :nudge-right="40" :return-value.sync="meetingDetails.time"
                                                 transition="scale-transition" offset-y max-width="290px" min-width="290px">
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field class="mt-2" hide-details v-model="meetingDetails.time"
+                                                    <v-text-field class="mt-2" hide-details="auto" v-model="meetingDetails.time"
                                                         label="Scheduling time" prepend-icon="mdi-calendar-clock" readonly
-                                                        v-bind="attrs" v-on="on" :error-messages="errors"></v-text-field>
+                                                        v-bind="attrs" v-on="on" :error-messages="errors" :rules="requiredRule"></v-text-field>
                                                 </template>
                                                 <v-time-picker v-if="timePicker" v-model="meetingDetails.time"
                                                     full-width required
@@ -145,7 +145,8 @@ export default mixins(FormMixin).extend({
                 }
             ] as MeetingTypeInterface[],
             requiredRule: [
-                (value: { id: string; name: string }) => value.id !== "" || 'The meeting type is required'
+                (value: { id: string; name: string }) => value.id !== "" || 'The meeting type is required',
+                (value: string) => value !== "" || 'The field is required'
             ],
             milestoneMeetingsLimit: 0,
             disabled: false
