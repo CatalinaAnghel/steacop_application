@@ -34,7 +34,9 @@
                                 v-for="(element) in itemsGroup.functionalities" :key="element.id">
                                 <v-card class="border-primary px-2 my-2">
                                     <v-card-title>
-                                        {{ element.code + ' - ' + element.title }}
+                                        <span class="text-subtitle-2">
+                                            {{ element.code + ' - ' + element.title }}
+                                        </span>
                                     </v-card-title>
 
                                     <v-card-subtitle>{{ element.status.name }}</v-card-subtitle>

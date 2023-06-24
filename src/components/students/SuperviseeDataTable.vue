@@ -77,6 +77,7 @@ export default mixins(FormMixin).extend({
                 });
             }
         }
+        storeService.functionalities.reset();
     },
     methods: {
         viewProject(item: StudentInterface): void {
