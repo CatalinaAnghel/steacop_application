@@ -77,9 +77,9 @@ export default defineComponent({
             let providedGrade = { name: 'Final grade', data: [] as number[] };
             if (this.grades !== null) {
                 this.grades.gradesCollection.forEach(gradesElement => {
-                    assignmentGrades.data.push(gradesElement.assignmentsGrade);
-                    milestoneMeetingGrades.data.push(gradesElement.milestoneMeetingsGrade);
-                    providedGrade.data.push(gradesElement.totalGrade);
+                    assignmentGrades.data.push(Number(gradesElement.assignmentsGrade.toFixed(2)));
+                    milestoneMeetingGrades.data.push(Number(gradesElement.milestoneMeetingsGrade.toFixed(2)));
+                    providedGrade.data.push(Number(gradesElement.totalGrade.toFixed(2)));
                 })
             }
 

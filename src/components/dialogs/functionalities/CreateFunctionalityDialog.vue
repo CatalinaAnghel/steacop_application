@@ -54,7 +54,8 @@
                                                 hide-details="auto" :error-messages="errors" prepend-icon="mdi-text-short">
                                             </v-text-field>
                                         </validation-provider>
-                                        <validation-provider :rules="{ mimes: ['application/pdf', 'image/png', 'image/jpg'] }"
+                                        <validation-provider
+                                            :rules="{ mimes: ['application/pdf', 'image/png', 'image/jpg'] }"
                                             v-slot="{ errors }" name="Attachments">
                                             <v-file-input multiple v-model="functionalityDetails.selectedFiles" counter
                                                 :error-messages="errors"></v-file-input>
@@ -172,7 +173,10 @@ export default mixins(FormMixin).extend({
                 }
                 payload = { ...payload, ...tempParams };
             }
-            if (this.functionalityDetails.dueDate !== null && typeof this.functionalityDetails.dueDate !== 'undefined') {
+
+            if (this.functionalityDetails.dueDate !== null &&
+                typeof this.functionalityDetails.dueDate !== 'undefined' &&
+                this.functionalityDetails.dueDate !== '') {
                 const tempParams = {
                     dueDate: toISOLocale(new Date(this.functionalityDetails.dueDate)),
                 }
@@ -210,7 +214,7 @@ export default mixins(FormMixin).extend({
             };
             this.possibleParentIssues = [];
             this.possibleParentIssueTypes = [];
-            (this.$refs.observer as Vue & {reset:()=>void}).reset();
+            (this.$refs.observer as Vue & { reset: () => void }).reset();
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {
             return this.$refs.menu as Vue & { save: () => void };
