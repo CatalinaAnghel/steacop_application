@@ -25,8 +25,10 @@
 </template>
 
 <script lang="ts">
-import { GradesCollectionInterface } from "@/modules/project";
-import StudentService from "@/services/student-service";
+import { ScoresCollectionInterface } from "@/modules/project";
+import { ProjectData } from "@/modules/user";
+import ProjectService from "@/services/project-service";
+import { storeService } from "@/store";
 import { defineComponent } from "vue";
 import VueApexCharts from 'vue-apexcharts';
 
@@ -34,8 +36,8 @@ export default defineComponent({
     data: function () {
         return {
             loading: false,
-            cardTitle: "Students' grades",
-            grades: null as GradesCollectionInterface,
+            cardTitle: "Students collaboration scores",
+            scores: null as ScoresCollectionInterface,
             chartOptions: {
                 chart: {
                     type: 'bar',
@@ -61,11 +63,18 @@ export default defineComponent({
                 },
                 yaxis: {
                     title: {
-                        text: 'Grade'
+                        text: 'Score'
                     }
                 },
                 fill: {
                     opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val: number) {
+                            return val + "%"
+                        }
+                    }
                 }
             },
         };
@@ -75,21 +84,24 @@ export default defineComponent({
     },
     computed: {
         series: function (): { name: string; data: number[] }[] {
-            let assignmentGrades = { name: 'Assignment grade', data: [] as number[] };
-            let milestoneMeetingGrades = { name: 'Milestone meeting grade', data: [] as number[] };
-            let providedGrade = { name: 'Final grade', data: [] as number[] };
-            if (this.grades !== null) {
-                this.grades.gradesCollection.forEach(gradesElement => {
-                    assignmentGrades.data.push(Number(gradesElement.assignmentsGrade.toFixed(2)));
-                    milestoneMeetingGrades.data.push(Number(gradesElement.milestoneMeetingsGrade.toFixed(2)));
-                    providedGrade.data.push(Number(gradesElement.totalGrade.toFixed(2)));
-                })
+            let structureScores = { name: 'Structure score', data: [] as number[] };
+            let supportScores = { name: 'Support score', data: [] as number[] };
+            let ratingsScores = { name: 'Ratings score', data: [] as number[] };
+            let overallScore = { name: 'Overall collaboration score', data: [] as number[] };
+            if (this.scores !== null) {
+                this.scores.scoresCollection.forEach(scoreElement => {
+                    structureScores.data.push(Number(scoreElement.structureScore.toFixed(2)));
+                    supportScores.data.push(Number(scoreElement.supportScore.toFixed(2)));
+                    ratingsScores.data.push(Number(scoreElement.ratingsScore.toFixed(2)));
+                    overallScore.data.push(Number(scoreElement.totalScore.toFixed(2)));
+                });
             }
 
             return [
-                assignmentGrades,
-                milestoneMeetingGrades,
-                providedGrade
+                structureScores,
+                supportScores,
+                ratingsScores,
+                overallScore
             ];
         },
         checkSeries: function(): boolean{
@@ -99,15 +111,27 @@ export default defineComponent({
     },
     created: async function (): Promise<void> {
         this.loading = true;
-        this.grades = await StudentService.getGrades();
+        const projects = storeService.user.getUser().projects;
+        this.scores = {
+            scoresCollection: []
+        };
         let students = [] as string[];
-        if (this.grades !== null) {
-            this.grades.gradesCollection.forEach(gradesElement => {
-                students.push(gradesElement.studentData.firstName + ' ' + gradesElement.studentData.lastName);
-            })
-        }
+        projects.forEach(async (element: ProjectData): Promise<void> => {
+            let score = await ProjectService.getCollaborationInfo(element.id);
+            if (score !== null) {
+                students.push(score.studentData.firstName + ' ' + score.studentData.lastName);
+                this.scores.scoresCollection.push({
+                    studentData: score.studentData,
+                    structureScore: score.structureScore.totalScore,
+                    supportScore: score.supportScore.totalScore,
+                    ratingsScore: score.ratingScore.totalScore,
+                    totalScore: score.score,
+                    projectId: element.id
+                });
+                this.loading=false;
+            }
+        });
         this.chartOptions.xaxis.categories = students;
-        this.loading = false;
     }
 });
 </script>

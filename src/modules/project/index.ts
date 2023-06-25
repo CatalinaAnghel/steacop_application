@@ -143,7 +143,8 @@ export interface CollaborationInfoInterface {
         milestoneMeetingsScore: number;
         totalScore: number;
     },
-    score: number;
+    score: number,
+    studentData: StudentDataInterface|null
 }
 
 export interface StudentDataInterface {
@@ -158,6 +159,19 @@ export interface StudentGradesInterface {
     totalGrade: number;
 }
 
+export interface StudentScoresInterface {
+    studentData: StudentDataInterface;
+    structureScore: number;
+    supportScore: number;
+    ratingsScore: number;
+    totalScore: number;
+    projectId: number|null;
+}
+
 export interface GradesCollectionInterface {
     gradesCollection: StudentGradesInterface[];
+}
+
+export interface ScoresCollectionInterface {
+    scoresCollection: StudentScoresInterface[];
 }

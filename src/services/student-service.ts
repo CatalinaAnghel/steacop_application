@@ -17,8 +17,8 @@ export default class StudentService {
 
         if (requestStatus.success) {
             // the request has been successfully performed
-            const rating: GradesCollectionInterface = (response as AxiosResponse).data;
-            return rating as GradesCollectionInterface;
+            const grades: GradesCollectionInterface = (response as AxiosResponse).data;
+            return grades as GradesCollectionInterface;
         } 
 
         return null;

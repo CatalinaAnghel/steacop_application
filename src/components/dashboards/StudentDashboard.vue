@@ -65,7 +65,6 @@ export default defineComponent({
         }
     },
     created: async function (): Promise<void> {
-        console.log(storeService.user.getUser().projects[0]);
         const currentDate = new Date();
         let end = new Date();
         end.setDate(end.getDate() + 7);
