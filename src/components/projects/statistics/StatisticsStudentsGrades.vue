@@ -34,7 +34,7 @@ export default defineComponent({
     data: function () {
         return {
             loading: false,
-            cardTitle: "Students' grades",
+            cardTitle: "Grades",
             grades: null as GradesCollectionInterface,
             chartOptions: {
                 chart: {

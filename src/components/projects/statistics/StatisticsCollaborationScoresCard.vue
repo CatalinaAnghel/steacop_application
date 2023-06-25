@@ -36,7 +36,7 @@ export default defineComponent({
     data: function () {
         return {
             loading: false,
-            cardTitle: "Students collaboration scores",
+            cardTitle: "Collaboration scores",
             scores: null as ScoresCollectionInterface,
             chartOptions: {
                 chart: {
