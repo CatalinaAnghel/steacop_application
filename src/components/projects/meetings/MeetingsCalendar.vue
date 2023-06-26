@@ -314,6 +314,7 @@ export default mixins(RoleMixin).extend({
                         this.gradeMeeting();
                     } else {
                         this.handleMeetingAction(response);
+                        this.closeMeetingPreview();
                     }
                 }
             }
