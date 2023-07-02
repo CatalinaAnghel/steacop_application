@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="open">
         <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
             @update:showAlert="updateShowAlert"></base-alert>
 
@@ -214,6 +214,7 @@ export default mixins(FormMixin).extend({
                     name: ""
                 }
             };
+            this.disabled = false;
             (this.$refs.observer as Vue & { reset: () => void }).reset();
         },
         getMenuInstance(): Vue & { save: (time: string) => void; } {

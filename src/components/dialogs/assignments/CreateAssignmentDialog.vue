@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="open">
         <base-alert v-model="showAlert" :text="alertMessage" :show-alert="showAlert" :color="color"
             @update:showAlert="updateShowAlert"></base-alert>
 

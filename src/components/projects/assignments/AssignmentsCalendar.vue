@@ -138,6 +138,7 @@ export default mixins(RoleMixin).extend({
         },
         openCreateDialog: function (): void {
             this.createDialog = true;
+            console.log(this.createDialog);
         },
         closeCreateDialog: function (): void {
             this.createDialog = false;

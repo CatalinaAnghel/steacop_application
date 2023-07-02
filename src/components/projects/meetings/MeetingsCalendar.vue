@@ -3,16 +3,16 @@
         <base-overlay :overlay="loading"></base-overlay>
         <div v-if="isSupervisor">
             <create-meeting-dialog :open="createDialog" @close:dialog="closeCreateDialog"
-                @submitted:form="requestStatus => handleMeetingAction(requestStatus)" form-title="Schedule a meeting"
+                @submitted:form="requestStatus => handleMeetingAction(requestStatus, true)" form-title="Schedule a meeting"
                 :existingMilestoneMeetings="existingMilestoneMeetingsNumber"></create-meeting-dialog>
             <edit-meeting-dialog :meeting="selectedMeeting" :open="editDialog"
                 :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
                 @close:dialog="closeEditDialog" form-title="Update the details of the meeting"
-                @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></edit-meeting-dialog>
+                @submitted:form="requestStatus => handleMeetingAction(requestStatus, false)"></edit-meeting-dialog>
             <grade-meeting-dialog :meeting="selectedMeeting" :open="gradeMeetingDialog"
                 :meetingId="selectedMeeting !== null ? selectedMeeting.id : 0" @open:dialog="selectedOpen = false"
                 @close:dialog="closeGradeMeetingDialog" form-title="Grade the meeting"
-                @submitted:form="requestStatus => handleMeetingAction(requestStatus)"></grade-meeting-dialog>
+                @submitted:form="requestStatus => handleMeetingAction(requestStatus, false)"></grade-meeting-dialog>
         </div>
         <base-calendar :events="events" :activate-create-option="isSupervisor"
             @update:calendar="payload => updateCalendarEvents(payload)"
@@ -293,10 +293,12 @@ export default mixins(RoleMixin).extend({
                 }
             }
         },
-        handleMeetingAction: function (response: ResponseDto): void {
+        handleMeetingAction: function (response: ResponseDto, creationAction: boolean): void {
             if (response.success) {
                 this.updateCalendarEvents(this.calendarRange);
-                this.existingMilestoneMeetingsNumber++;
+                if(creationAction){
+                    this.existingMilestoneMeetingsNumber++;
+                }
             }
         },
         completeMeeting: async function (): Promise<void> {
@@ -313,7 +315,7 @@ export default mixins(RoleMixin).extend({
                     if (response.success && this.selectedMeeting !== null && this.selectedMeeting.type === EventTypes.EVENT_TYPE_MILESTONE_MEETING) {
                         this.gradeMeeting();
                     } else {
-                        this.handleMeetingAction(response);
+                        this.handleMeetingAction(response, false);
                         this.closeMeetingPreview();
                     }
                 }
@@ -331,7 +333,7 @@ export default mixins(RoleMixin).extend({
                     response = await MeetingService.markMissingMeeting(this.selectedMeeting.id, this.selectedMeeting.type);
                     this.toggleLoading();
                     this.closeMeetingPreview();
-                    this.handleMeetingAction(response);
+                    this.handleMeetingAction(response, false);
                 }
             }
         },
